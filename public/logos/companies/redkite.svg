@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="200" height="200">
+  <defs>
+    <style>
+      .text { font-family: Arial, sans-serif; font-size: 24px; font-weight: bold; fill: #fff; }
+    </style>
+  </defs>
+  <circle cx="100" cy="100" r="95" fill="none" stroke="#dc2626" stroke-width="2" opacity="0.3"/>
+  <path d="M100 30 L140 70 L130 90 L150 100 L130 110 L140 130 L100 170 L60 130 L70 110 L50 100 L70 90 L60 70 Z" fill="#dc2626" opacity="0.8"/>
+  <text x="100" y="185" class="text" text-anchor="middle" font-size="12">Red Kite</text>
+</svg>
