@@ -263,6 +263,9 @@ function App() {
   );
 
   useEffect(() => {
+    const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    if (reduceMotion) return;
+
     const ctx = gsap.context(() => {
       gsap.from(".nav-shell", {
         y: -20,
@@ -277,27 +280,29 @@ function App() {
         { y: 0, opacity: 1, duration: 0.75, stagger: 0.08, ease: "power3.out", delay: 0.1 },
       );
 
-      gsap.to(".portrait-card", {
-        y: -10,
-        rotate: 0.8,
-        duration: 4.2,
-        repeat: -1,
-        yoyo: true,
-        ease: "sine.inOut",
-      });
+      if (document.querySelector(".portrait-card")) {
+        gsap.to(".portrait-card", {
+          y: -10,
+          rotate: 0.8,
+          duration: 4.2,
+          repeat: -1,
+          yoyo: true,
+          ease: "sine.inOut",
+        });
+      }
 
       gsap.utils.toArray<HTMLElement>(".section-shell").forEach((shell) => {
         gsap.fromTo(
           shell,
-          { y: 20, opacity: 0.82 },
+          { opacity: 0.86 },
           {
-            y: 0,
             opacity: 1,
-            duration: 0.55,
-            ease: "power3.out",
+            duration: 0.42,
+            ease: "power2.out",
             scrollTrigger: {
               trigger: shell,
               start: "top 84%",
+              once: true,
             },
           },
         );
@@ -306,15 +311,18 @@ function App() {
         if (!items.length) return;
 
         gsap.fromTo(items, {
-          y: 18,
+          y: 12,
+          opacity: 0,
         }, {
           y: 0,
-          duration: 0.7,
-          ease: "power3.out",
-          stagger: 0.08,
+          opacity: 1,
+          duration: 0.52,
+          ease: "power2.out",
+          stagger: 0.045,
           scrollTrigger: {
             trigger: shell,
             start: "top 92%",
+            once: true,
           },
         });
       });

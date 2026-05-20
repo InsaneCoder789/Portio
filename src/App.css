@@ -320,8 +320,12 @@ img {
 }
 
 .chapter {
-  margin-top: 0.28rem;
+  margin-top: 0;
   min-height: calc(100vh - 5.5rem);
+}
+
+.chapter + .chapter {
+  margin-top: 1.15rem;
 }
 
 .section-shell {
@@ -485,7 +489,7 @@ img {
   max-width: var(--hero-copy-width);
   padding: 0.98rem 0.98rem 0.92rem;
   border-radius: 1.4rem;
-  border: 1px solid var(--line);
+  border: 0;
 }
 
 .manifesto-card p {
@@ -641,7 +645,6 @@ img {
   border-radius: inherit;
   background:
     radial-gradient(circle at 72% 42%, rgba(77, 163, 255, 0.16), transparent 18%),
-    radial-gradient(circle at 52% 54%, rgba(77, 163, 255, 0.08), transparent 34%),
     linear-gradient(90deg, rgba(10, 20, 39, 0.68) 0%, rgba(10, 20, 39, 0.42) 24%, rgba(10, 20, 39, 0.16) 42%, rgba(10, 20, 39, 0) 56%);
   opacity: 0.9;
   pointer-events: none;
@@ -1283,7 +1286,7 @@ img {
   grid-template-columns: repeat(4, minmax(0, 1fr));
   gap: 0.95rem;
   align-items: start;
-  padding-block: 0.8rem 2.2rem;
+  padding-block: 0.8rem 3.6rem;
 }
 
 .project-card {
@@ -1298,11 +1301,16 @@ img {
 }
 
 .project-card-rise {
-  transform: translateY(0.85rem);
+  margin-top: 0.85rem;
 }
 
 .project-card-fall {
-  transform: translateY(3.2rem);
+  margin-top: 3.2rem;
+}
+
+.project-mosaic .project-card:nth-child(2),
+.project-mosaic .project-card:nth-child(4) {
+  margin-top: 3.2rem;
 }
 
 .project-top {
@@ -2100,19 +2108,26 @@ img {
 
 .footer {
   width: calc(100% - 2rem);
-  margin: 1rem auto 1.5rem;
-  padding: 1rem 0 0;
+  margin: 1.15rem auto 1.8rem;
+  padding: 1rem 0 0.25rem;
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 1rem;
-  color: var(--muted);
-  border-top: 1px solid var(--line);
+  color: #cfe0f7;
+  border-top: 1px solid rgba(125, 177, 255, 0.22);
+  position: relative;
+  z-index: 3;
 }
 
 .footer p,
 .footer div {
   margin: 0;
+}
+
+.footer p {
+  font-size: 0.76rem;
+  letter-spacing: 0.08em;
 }
 
 .footer div {
@@ -2126,14 +2141,32 @@ img {
   text-decoration: none;
   text-transform: uppercase;
   letter-spacing: 0.14em;
-  font-size: 0.62rem;
+  font-size: 0.66rem;
 }
 
 .reveal {
-  will-change: transform, opacity;
+  will-change: auto;
 }
 
 @media (max-width: 1080px) {
+  .chapter + .chapter {
+    margin-top: 0.95rem;
+  }
+
+  html {
+    font-size: 96%;
+  }
+
+  .page-stack {
+    width: calc(100% - 1.35rem);
+    padding-top: 6.2rem;
+  }
+
+  .section-shell {
+    min-height: auto;
+    border-radius: 1.7rem;
+  }
+
   .hero-shell,
   .experience-layout,
   .skills-layout,
@@ -2142,7 +2175,7 @@ img {
   }
 
   .hero-shell {
-    padding: 1.1rem 1.4rem 1.2rem;
+    padding: 1rem 1.2rem 1.15rem;
   }
 
   .hero-title {
@@ -2200,12 +2233,13 @@ img {
   }
 
   .project-card {
-    min-height: 18rem;
+    min-height: 17rem;
   }
 
   .project-card-rise,
   .project-card-fall {
     transform: none;
+    margin-top: 0;
   }
 
   .skills-grid {
@@ -2227,21 +2261,49 @@ img {
 }
 
 @media (max-width: 720px) {
+  .chapter + .chapter {
+    margin-top: 0.8rem;
+  }
+
+  html {
+    font-size: 100%;
+  }
+
+  .page-stack {
+    width: calc(100% - 1rem);
+    padding-top: 8.6rem;
+    padding-bottom: 2rem;
+  }
+
   .nav-inner {
     flex-direction: column;
     align-items: flex-start;
+    width: calc(100% - 1rem);
+    padding: 0.85rem 0 1rem;
   }
 
   .nav-links {
     gap: 0.75rem 0.9rem;
   }
 
+  .section-shell {
+    border-radius: 1.45rem;
+  }
+
   .hero-title {
-    max-width: 100%;
+    font-size: clamp(3rem, 13vw, 4.15rem);
+    line-height: 0.9;
+    letter-spacing: -0.08em;
+    max-width: 7.6ch;
   }
 
   .hero-copy {
-    margin-top: 0.25rem;
+    margin-top: 0.15rem;
+  }
+
+  .manifesto-card {
+    max-width: 100%;
+    padding: 0.95rem 0.9rem 0.88rem;
   }
 
   .mobile-portrait-card {
@@ -2252,8 +2314,26 @@ img {
     grid-template-columns: 1fr;
   }
 
+  .project-mosaic .project-card:nth-child(2),
+  .project-mosaic .project-card:nth-child(4) {
+    margin-top: 0;
+  }
+
   .skills-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .signal-grid {
+    grid-template-columns: 1fr;
+    max-width: 100%;
+  }
+
+  .signal-grid article {
+    min-height: auto;
+  }
+
+  .github-language-row {
+    gap: 0.45rem;
   }
 
   .github-stats {
@@ -2278,6 +2358,8 @@ img {
   .footer {
     flex-direction: column;
     align-items: flex-start;
+    width: calc(100% - 1rem);
+    margin: 0.85rem auto 1.35rem;
   }
 
   .contact-shell {
