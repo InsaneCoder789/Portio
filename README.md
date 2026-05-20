@@ -1,163 +1,97 @@
-# 🚀 WarpFolio
+# Rohan Chatterjee Portfolio
 
-> A WARP-drive inspired console portfolio built for developers who don’t scroll — they execute.
+An immersive portfolio site built with React, TypeScript, Vite, GSAP, and Three.js.
 
----
+The current experience is centered around:
+- a cinematic desktop hero with an interactive Death Star scene
+- a boot screen that plays on reload while the app settles behind it
+- editorial full-screen sections for experience, selected works, skills, GitHub telemetry, and contact
+- a separate mobile-optimized layout
 
-## 👨‍💻 Author
+## Tech Stack
 
-**InsaneCoder789**
+- React 18
+- TypeScript
+- Vite
+- GSAP
+- Three.js
+- Tailwind CSS utilities
+- Framer Motion
 
-Engineering Mind • Terminal Native • Builder
+## Project Structure
 
----
-
-## 🌌 About WarpFolio
-
-WarpFolio is a futuristic, terminal-style developer portfolio designed to simulate a real command-line environment.
-
-Instead of traditional scrolling sections and navigation menus, users interact through commands — just like in a real system console.
-
-Minimal. Fast. Immersive. Developer-first.
-
----
-
-## ⚡ Features
-
-- 🖥️ Terminal-style UI
-- ⌨️ Command-based navigation
-- 🧠 Smart command parsing
-- ⚡ Instant response rendering
-- 🌑 Dark WARP-inspired aesthetic
-- 🎨 Clean and responsive layout
-- 🔥 Immersive developer experience
-
----
-
-## 🛠 Tech Stack
-
-- ⚡ Vite
-- ⚛ React
-- 🟦 TypeScript
-- 🎨 Tailwind CSS
-- 🧩 shadcn/ui
-
----
-
-## 📂 Project Structure
-
-```bash
-warpfolio/
-│
+```text
+.
 ├── public/
+│   ├── profile.jpg
+│   ├── Rohan_Chatterjee_Resume.pdf
+│   └── logos/
 ├── src/
 │   ├── components/
-│   ├── pages/
-│   ├── hooks/
+│   │   ├── DeathStarScene.tsx
+│   │   ├── KaliBootScreen.tsx
+│   │   └── ParticleBackground.tsx
+│   ├── data/
+│   │   └── linkedin.ts
+│   ├── features/
+│   │   └── portfolio/
+│   │       └── content.ts
 │   ├── lib/
+│   │   └── utils.ts
+│   ├── App.tsx
+│   ├── App.css
+│   ├── index.css
 │   └── main.tsx
-│
-├── index.html
 ├── package.json
-├── tsconfig.json
 └── vite.config.ts
 ```
 
----
-
-## 💻 Getting Started
+## Getting Started
 
 ### Prerequisites
 
-- Node.js v18 or higher
-- npm or yarn
+- Node.js 18+
+- npm
 
----
-
-## 🔧 Installation
-
-### 1️⃣ Clone the Repository
-
-```bash
-git clone https://github.com/InsaneCoder789/warpfolio.git
-```
-
-### 2️⃣ Navigate into the Project
-
-```bash
-cd warpfolio
-```
-
-### 3️⃣ Install Dependencies
+### Install
 
 ```bash
 npm install
 ```
 
-### 4️⃣ Start Development Server
+### Run the dev server
 
 ```bash
 npm run dev
 ```
 
-The app will launch with hot reload enabled.
-
----
-
-## 🚀 Build for Production
+### Build for production
 
 ```bash
 npm run build
 ```
 
-To preview the production build:
+### Preview the production build
 
 ```bash
 npm run preview
 ```
 
----
+## Current App Notes
 
-## 🧠 Example Commands
+- The app opens with a custom boot screen before revealing the main portfolio.
+- The About section uses a custom Three.js hero scene on desktop.
+- Mobile keeps a lighter, more constrained presentation for readability.
+- Content for experience, projects, skills, and GitHub display is centralized in `src/features/portfolio/content.ts`.
 
-```
-help        → Show available commands
-about       → About InsaneCoder789
-projects    → View projects
-skills      → Technical skills
-contact     → Contact information
-clear       → Clear terminal
-```
+## Scripts
 
-*(Command list may vary depending on implementation.)*
+- `npm run dev` — start local development
+- `npm run build` — create a production build
+- `npm run preview` — preview the built app
+- `npm run lint` — run ESLint
+- `npm run test` — run tests
 
----
+## Status
 
-## 🎯 Philosophy
-
-> A developer portfolio should feel like a developer environment.
-
-No bloated UI.  
-No unnecessary animations.  
-No distractions.  
-
-Just interaction, clarity, and personality.
-
----
-
-## 🔮 Future Enhancements
-
-- Command history navigation (↑ / ↓ keys)
-- ASCII startup animation
-- Warp jump transition effects
-- Sound effects toggle
-- Multiple theme modes (Classic Green / Cyberpunk / Deep Space)
-- AI interactive terminal mode
-
----
-
-## 📜 License
-
-MIT License  
-
-Fork it. Modify it. Warp it.
+This repository has been cleaned so that the live portfolio path is much smaller than the original prototype tree. Legacy unused components, old pages, stale hooks, test stubs, and unused public assets have been removed.
