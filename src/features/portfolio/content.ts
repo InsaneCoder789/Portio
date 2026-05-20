@@ -13,15 +13,6 @@ export const heroContent = {
 
 export const featuredProjects = [
   {
-    name: "NavGate",
-    description:
-      "Built a React Native navigation platform with real-time route rendering, location-aware UI updates, and optimized map interaction handling for smoother movement across dense screens.",
-    details:
-      "Implemented modular navigation state management, asynchronous GPS processing, and performance guardrails to reduce unnecessary rerenders in continuous tracking flows.",
-    stack: ["React Native", "TypeScript", "Realtime UX"],
-    githubUrl: "https://github.com/InsaneCoder789/NavGate",
-  },
-  {
     name: "Rail",
     description:
       "Designed an offline-first payment orchestration service with deferred synchronization pipelines that maintain operational continuity during unstable network conditions.",
@@ -40,13 +31,22 @@ export const featuredProjects = [
     githubUrl: "https://github.com/InsaneCoder789/Lakshman-Rekha",
   },
   {
-    name: "K1000 Platform",
+    name: "K1000",
     description:
       "Developed a React and Next.js platform with reusable component systems and responsive layouts for organizational operations, events, and content workflows.",
     details:
       "Improved maintainability through modular UI structuring, deployment optimization, and standardized rendering patterns across high-frequency internal pages.",
     stack: ["Next.js", "React", "UI Architecture"],
     githubUrl: "https://github.com/InsaneCoder789/K1000",
+  },
+  {
+    name: "KYLR",
+    description:
+      "Built a high-trust Android payments experience focused on clean money movement flows, sharp visual hierarchy, and confidence-first interaction design.",
+    details:
+      "Structured the app around UPI-oriented transaction states, responsive dashboard surfaces, and production-minded mobile architecture that keeps the experience fast and readable.",
+    stack: ["Android", "Kotlin", "Fintech UX"],
+    githubUrl: "https://github.com/InsaneCoder789/KYLR",
   },
 ];
 

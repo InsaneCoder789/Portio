@@ -11,7 +11,7 @@ import {
   skillsMatrix,
 } from "@/features/portfolio/content";
 import DeathStarScene from "@/components/DeathStarScene";
-import ParticleBackground from "@/components/ParticleBackground";
+import KaliBootScreen from "@/components/KaliBootScreen";
 import { publicAsset } from "@/lib/utils";
 import "./App.css";
 
@@ -144,6 +144,7 @@ function formatRangeLabel(startDate: string) {
 }
 
 function App() {
+  const [booting, setBooting] = useState(true);
   const [githubProfile, setGithubProfile] = useState<GithubProfile | null>(null);
   const [githubStats, setGithubStats] = useState({
     publicRepos: 0,
@@ -288,12 +289,11 @@ function App() {
       gsap.utils.toArray<HTMLElement>(".section-shell").forEach((shell) => {
         gsap.fromTo(
           shell,
-          { y: 24, opacity: 0.72, scale: 0.992 },
+          { y: 20, opacity: 0.82 },
           {
             y: 0,
             opacity: 1,
-            scale: 1,
-            duration: 0.7,
+            duration: 0.55,
             ease: "power3.out",
             scrollTrigger: {
               trigger: shell,
@@ -327,7 +327,13 @@ function App() {
     let alive = true;
 
     const projectContentMap = new Map(
-      featuredProjects.map((project) => [project.name.toLowerCase(), project]),
+      featuredProjects.flatMap((project) => {
+        const repoSlug = project.githubUrl.split("/").pop()?.toLowerCase();
+        return [
+          [project.name.toLowerCase(), project] as const,
+          ...(repoSlug ? [[repoSlug, project] as const] : []),
+        ];
+      }),
     );
 
     const normalizePinnedProject = (repo: GithubRepo): ProjectCard => {
@@ -431,7 +437,8 @@ function App() {
 
   return (
     <div className="portfolio-root">
-      <ParticleBackground />
+      {booting ? <KaliBootScreen onComplete={() => setBooting(false)} /> : null}
+      <div className="background-stage" aria-hidden="true" />
 
       <nav className="nav-shell">
         <div className="nav-inner">
@@ -596,8 +603,8 @@ function App() {
               <p className="section-label">02 / Portfolio</p>
               <h2>Selected Works</h2>
               <p className="section-intro">
-                Live pinned repositories from GitHub, recast into a more curated showcase so the work reads
-                like a designed portfolio rather than a flat list of links.
+                A curated selection of systems, product builds, and technical experiments shaped into
+                portfolio-ready case studies.
               </p>
             </div>
 
@@ -605,7 +612,7 @@ function App() {
               {projectShowcase.map((project, index) => (
                 <article
                   key={project.name}
-                  className={`project-card reveal ${index % 2 === 0 ? "project-card-rise" : "project-card-fall"}`}
+                  className={`project-card reveal ${index === 0 || index === 2 ? "project-card-rise" : "project-card-fall"}`}
                 >
                   <div className="project-top">
                     <span className="project-number">{String(index + 1).padStart(2, "0")}</span>
@@ -692,8 +699,8 @@ function App() {
               <p className="section-label">04 / GitHub</p>
               <h2>Telemetry</h2>
               <p className="section-intro">
-                A live proof-of-work view with public repo counts, total stars, and the last year of
-                contributions only.
+                A professional snapshot of public repository activity, contribution consistency, and open-source
+                output across the past year.
               </p>
             </div>
 

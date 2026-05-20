@@ -1,6 +1,5 @@
 import { useEffect, useRef, useState } from "react";
 import * as THREE from "three";
-import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
 import { gsap } from "gsap";
 
 type FiringState = "ready" | "charging" | "firing";
@@ -180,7 +179,6 @@ export default function DeathStarScene({ className = "" }: DeathStarSceneProps) 
     renderer: null,
     scene: null,
     camera: null,
-    controls: null,
     stationGroup: null,
     tributaryBeams: [],
     mainBeam: null,
@@ -191,6 +189,13 @@ export default function DeathStarScene({ className = "" }: DeathStarSceneProps) 
     dishGlow: null,
     dishLocalLight: null,
     hullClipPlane: null,
+    sceneVisible: true,
+    pageVisible: true,
+    starTweens: [],
+    isPointerDown: false,
+    pointerId: null,
+    lastPointerX: 0,
+    lastPointerY: 0,
     shakeStrength: 0,
     frameId: null,
     isAnimatingRotation: false,
@@ -206,6 +211,9 @@ export default function DeathStarScene({ className = "" }: DeathStarSceneProps) 
 
   useEffect(() => {
     let active = true;
+    let cleanupCanvasEvents: (() => void) | null = null;
+    let visibilityObserver: IntersectionObserver | null = null;
+    let cleanupVisibility: (() => void) | null = null;
 
     const setupGraphicsEngine = () => {
       const container = mountRef.current;
@@ -230,17 +238,6 @@ export default function DeathStarScene({ className = "" }: DeathStarSceneProps) 
       container.appendChild(renderer.domElement);
       threeRefs.current.renderer = renderer;
 
-      const controls = new OrbitControls(camera, renderer.domElement);
-      controls.enableDamping = true;
-      controls.dampingFactor = 0.05;
-      controls.enablePan = false;
-      controls.minDistance = 9;
-      controls.maxDistance = 9;
-      controls.enableZoom = false;
-      controls.enableRotate = true;
-      controls.rotateSpeed = 1.15;
-      threeRefs.current.controls = controls;
-
       const ambientLight = new THREE.AmbientLight("#121622", 0.45);
       scene.add(ambientLight);
 
@@ -262,7 +259,6 @@ export default function DeathStarScene({ className = "" }: DeathStarSceneProps) 
       stationGroup.scale.setScalar(0.85);
       scene.add(stationGroup);
       threeRefs.current.stationGroup = stationGroup;
-      controls.target.set(0.7, 0, 0);
 
       const textureCanvas = generateDetailedDeathStarTexture();
       const hullTexture = new THREE.CanvasTexture(textureCanvas);
@@ -518,7 +514,82 @@ export default function DeathStarScene({ className = "" }: DeathStarSceneProps) 
         renderer.setSize(w, h);
       };
 
+      const handlePointerDown = (event: PointerEvent) => {
+        if (!threeRefs.current.stationGroup || threeRefs.current.isAnimatingRotation) return;
+        threeRefs.current.isPointerDown = true;
+        threeRefs.current.pointerId = event.pointerId;
+        threeRefs.current.lastPointerX = event.clientX;
+        threeRefs.current.lastPointerY = event.clientY;
+        renderer.domElement.setPointerCapture(event.pointerId);
+      };
+
+      const handlePointerMove = (event: PointerEvent) => {
+        const refs = threeRefs.current;
+        if (!refs.isPointerDown || refs.pointerId !== event.pointerId || !refs.stationGroup || refs.isAnimatingRotation) {
+          return;
+        }
+
+        const deltaX = event.clientX - refs.lastPointerX;
+        const deltaY = event.clientY - refs.lastPointerY;
+        refs.lastPointerX = event.clientX;
+        refs.lastPointerY = event.clientY;
+
+        refs.stationGroup.rotation.y += deltaX * 0.0085;
+        refs.stationGroup.rotation.x = THREE.MathUtils.clamp(
+          refs.stationGroup.rotation.x + deltaY * 0.0032,
+          -0.32,
+          0.32,
+        );
+      };
+
+      const handlePointerUp = (event: PointerEvent) => {
+        const refs = threeRefs.current;
+        if (refs.pointerId === event.pointerId) {
+          refs.isPointerDown = false;
+          refs.pointerId = null;
+          if (renderer.domElement.hasPointerCapture(event.pointerId)) {
+            renderer.domElement.releasePointerCapture(event.pointerId);
+          }
+        }
+      };
+
+      const syncSceneActivity = () => {
+        const refs = threeRefs.current;
+        const shouldRun = refs.sceneVisible && refs.pageVisible;
+        (refs.starTweens as gsap.core.Tween[]).forEach((tween) => {
+          tween.paused(!shouldRun);
+        });
+      };
+
+      const handleVisibilityChange = () => {
+        threeRefs.current.pageVisible = !document.hidden;
+        syncSceneActivity();
+      };
+
       window.addEventListener("resize", resizeViewport);
+      renderer.domElement.addEventListener("pointerdown", handlePointerDown);
+      renderer.domElement.addEventListener("pointermove", handlePointerMove);
+      renderer.domElement.addEventListener("pointerup", handlePointerUp);
+      renderer.domElement.addEventListener("pointercancel", handlePointerUp);
+      cleanupCanvasEvents = () => {
+        renderer.domElement.removeEventListener("pointerdown", handlePointerDown);
+        renderer.domElement.removeEventListener("pointermove", handlePointerMove);
+        renderer.domElement.removeEventListener("pointerup", handlePointerUp);
+        renderer.domElement.removeEventListener("pointercancel", handlePointerUp);
+      };
+      visibilityObserver = new IntersectionObserver(
+        ([entry]) => {
+          threeRefs.current.sceneVisible = Boolean(entry?.isIntersecting);
+          syncSceneActivity();
+        },
+        { threshold: 0.08 },
+      );
+      visibilityObserver.observe(container);
+      document.addEventListener("visibilitychange", handleVisibilityChange);
+      cleanupVisibility = () => {
+        visibilityObserver?.disconnect();
+        document.removeEventListener("visibilitychange", handleVisibilityChange);
+      };
       resizeViewport();
 
       const clock = new THREE.Clock();
@@ -530,6 +601,10 @@ export default function DeathStarScene({ className = "" }: DeathStarSceneProps) 
 
         if (stationGroup && !threeRefs.current.isAnimatingRotation) {
           stationGroup.rotation.y += delta * 0.022;
+        }
+
+        if (!threeRefs.current.sceneVisible || !threeRefs.current.pageVisible) {
+          return;
         }
 
         if (dishGlow && firingStateRef.current === "ready") {
@@ -558,7 +633,6 @@ export default function DeathStarScene({ className = "" }: DeathStarSceneProps) 
           hullClipPlane.constant = constant;
         }
 
-        controls.update();
         renderer.render(scene, camera);
       };
 
@@ -592,7 +666,8 @@ export default function DeathStarScene({ className = "" }: DeathStarSceneProps) 
 
         panel.appendChild(dot);
 
-        gsap.to(dot, {
+        const opacityTween = gsap.to(dot, {
+          paused: !threeRefs.current.sceneVisible || !threeRefs.current.pageVisible,
           opacity: Math.random() * 0.95 + 0.05,
           duration: Math.random() * 2.5 + 0.8,
           repeat: -1,
@@ -600,7 +675,8 @@ export default function DeathStarScene({ className = "" }: DeathStarSceneProps) 
           ease: "power2.inOut",
         });
 
-        gsap.to(dot, {
+        const driftTween = gsap.to(dot, {
+          paused: !threeRefs.current.sceneVisible || !threeRefs.current.pageVisible,
           x: `+=${Math.random() * 40 - 20}`,
           y: `+=${Math.random() * 40 - 20}`,
           duration: Math.random() * 40 + 40,
@@ -608,6 +684,8 @@ export default function DeathStarScene({ className = "" }: DeathStarSceneProps) 
           yoyo: true,
           ease: "sine.inOut",
         });
+
+        threeRefs.current.starTweens.push(opacityTween, driftTween);
       }
     };
 
@@ -628,7 +706,10 @@ export default function DeathStarScene({ className = "" }: DeathStarSceneProps) 
       active = false;
       const refs = threeRefs.current;
       if (refs.frameId) cancelAnimationFrame(refs.frameId);
-      if (refs.controls) refs.controls.dispose();
+      cleanupCanvasEvents?.();
+      cleanupVisibility?.();
+      (refs.starTweens as gsap.core.Tween[]).forEach((tween) => tween.kill());
+      refs.starTweens = [];
       if (refs.renderer) {
         refs.renderer.dispose();
         if (mountRef.current && refs.renderer.domElement.parentElement === mountRef.current) {

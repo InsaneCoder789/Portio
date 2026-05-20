@@ -48,9 +48,11 @@ export default function ParticleBackground({
     if (mediaQuery.matches) return;
 
     let animationFrameId = 0;
+    let lastFrameTime = 0;
     let width = 0;
     let height = 0;
     let isMobile = false;
+    let isPageVisible = !document.hidden;
     let particles: Particle[] = [];
     const mouse = { x: 0, y: 0, targetX: 0, targetY: 0 };
 
@@ -89,7 +91,19 @@ export default function ParticleBackground({
       mouse.targetY = event.clientY;
     };
 
-    const animate = () => {
+    const handleVisibilityChange = () => {
+      isPageVisible = !document.hidden;
+      if (isPageVisible) {
+        lastFrameTime = 0;
+      }
+    };
+
+    const animate = (timestamp: number) => {
+      animationFrameId = window.requestAnimationFrame(animate);
+      if (!isPageVisible) return;
+      if (lastFrameTime && timestamp - lastFrameTime < 33) return;
+      lastFrameTime = timestamp;
+
       context.clearRect(0, 0, width, height);
 
       mouse.x += (mouse.targetX - mouse.x) * 0.08;
@@ -139,17 +153,18 @@ export default function ParticleBackground({
         }
       }
 
-      animationFrameId = window.requestAnimationFrame(animate);
     };
 
     resize();
     window.addEventListener("resize", resize);
     window.addEventListener("pointermove", handlePointerMove, { passive: true });
+    document.addEventListener("visibilitychange", handleVisibilityChange);
     animationFrameId = window.requestAnimationFrame(animate);
 
     return () => {
       window.removeEventListener("resize", resize);
       window.removeEventListener("pointermove", handlePointerMove);
+      document.removeEventListener("visibilitychange", handleVisibilityChange);
       window.cancelAnimationFrame(animationFrameId);
     };
   }, [
