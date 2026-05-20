@@ -28,12 +28,12 @@ const GLOW_RGB = "111, 194, 255";
 export default function ParticleBackground({
   className = "",
   zIndex = 0,
-  densityDesktop = 12000,
-  densityMobile = 18000,
-  maxParticles = 120,
-  lineDistance = 120,
-  mouseRadius = 155,
-  disableLinesOnMobile = false,
+  densityDesktop = 18000,
+  densityMobile = 26000,
+  maxParticles = 72,
+  lineDistance = 96,
+  mouseRadius = 132,
+  disableLinesOnMobile = true,
 }: ParticleBackgroundProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
@@ -94,6 +94,8 @@ export default function ParticleBackground({
 
       mouse.x += (mouse.targetX - mouse.x) * 0.08;
       mouse.y += (mouse.targetY - mouse.y) * 0.08;
+      const mouseRadiusSq = mouseRadius * mouseRadius;
+      const lineDistanceSq = lineDistance * lineDistance;
 
       for (let i = 0; i < particles.length; i += 1) {
         const particle = particles[i];
@@ -105,15 +107,15 @@ export default function ParticleBackground({
 
         const dx = mouse.x - particle.x;
         const dy = mouse.y - particle.y;
-        const distance = Math.sqrt(dx * dx + dy * dy);
-        const targetSize = distance < mouseRadius ? particle.baseSize * 2.8 : particle.baseSize;
+        const distanceSq = dx * dx + dy * dy;
+        const isNearMouse = distanceSq < mouseRadiusSq;
+        const targetSize = isNearMouse ? particle.baseSize * 2.8 : particle.baseSize;
 
-        particle.size += (targetSize - particle.size) * (distance < mouseRadius ? 0.12 : 0.06);
+        particle.size += (targetSize - particle.size) * (isNearMouse ? 0.12 : 0.06);
 
-        context.beginPath();
-        context.fillStyle = `rgba(${PRIMARY_RGB}, ${distance < mouseRadius ? 0.9 : 0.72})`;
-        context.shadowBlur = distance < mouseRadius ? 12 : 6;
-        context.shadowColor = `rgba(${GLOW_RGB}, ${distance < mouseRadius ? 0.45 : 0.16})`;
+        context.fillStyle = `rgba(${PRIMARY_RGB}, ${isNearMouse ? 0.9 : 0.72})`;
+        context.shadowBlur = isNearMouse ? 6 : 3;
+        context.shadowColor = `rgba(${GLOW_RGB}, ${isNearMouse ? 0.42 : 0.14})`;
         context.fillRect(particle.x, particle.y, particle.size, particle.size);
         context.shadowBlur = 0;
 
@@ -123,12 +125,13 @@ export default function ParticleBackground({
           const neighbor = particles[j];
           const lineDx = particle.x - neighbor.x;
           const lineDy = particle.y - neighbor.y;
-          const lineDistanceCurrent = Math.sqrt(lineDx * lineDx + lineDy * lineDy);
+          const lineDistanceCurrentSq = lineDx * lineDx + lineDy * lineDy;
 
-          if (lineDistanceCurrent < lineDistance) {
+          if (lineDistanceCurrentSq < lineDistanceSq) {
+            const opacity = 0.28 * (1 - lineDistanceCurrentSq / lineDistanceSq);
             context.beginPath();
-            context.strokeStyle = `rgba(${PRIMARY_RGB}, ${0.28 * (1 - lineDistanceCurrent / lineDistance)})`;
-            context.lineWidth = 0.8;
+            context.strokeStyle = `rgba(${PRIMARY_RGB}, ${opacity})`;
+            context.lineWidth = 0.65;
             context.moveTo(particle.x, particle.y);
             context.lineTo(neighbor.x, neighbor.y);
             context.stroke();

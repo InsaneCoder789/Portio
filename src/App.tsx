@@ -10,6 +10,7 @@ import {
   performanceBenchmarks,
   skillsMatrix,
 } from "@/features/portfolio/content";
+import DeathStarScene from "@/components/DeathStarScene";
 import ParticleBackground from "@/components/ParticleBackground";
 import { publicAsset } from "@/lib/utils";
 import "./App.css";
@@ -76,6 +77,56 @@ const githubLanguageLogoMap: Record<string, string> = {
 };
 
 const contributionTone = ["", "is-soft", "is-mid", "is-strong", "is-bright"];
+
+const skillBadgeTextMap: Record<string, string> = {
+  C: "C",
+  Dart: "DA",
+  Java: "JV",
+  Vercel: "VC",
+  "Google Cloud": "GC",
+  TailwindCSS: "TW",
+  "React Router": "RR",
+  OpenCV: "CV",
+  "Next.js": "NX",
+  "Node.js": "ND",
+  Flutter: "FL",
+  FastAPI: "FA",
+  "Express.js": "EX",
+  MongoDB: "MG",
+  Redis: "RD",
+  SQLite: "SQ",
+  Postgres: "PG",
+};
+
+const skillBadgeToneMap: Record<string, string> = {
+  C: "linear-gradient(135deg, rgba(68,138,255,0.24), rgba(37,73,146,0.9))",
+  Dart: "linear-gradient(135deg, rgba(88,207,255,0.24), rgba(28,88,170,0.9))",
+  Java: "linear-gradient(135deg, rgba(255,176,107,0.26), rgba(127,58,21,0.92))",
+  Vercel: "linear-gradient(135deg, rgba(255,255,255,0.16), rgba(18,25,39,0.92))",
+  "Google Cloud": "linear-gradient(135deg, rgba(114,197,255,0.22), rgba(52,96,186,0.92))",
+  TailwindCSS: "linear-gradient(135deg, rgba(93,230,255,0.24), rgba(24,112,138,0.92))",
+  "React Router": "linear-gradient(135deg, rgba(255,107,129,0.24), rgba(131,29,48,0.92))",
+  OpenCV: "linear-gradient(135deg, rgba(255,186,124,0.24), rgba(132,65,22,0.92))",
+  "Next.js": "linear-gradient(135deg, rgba(255,255,255,0.18), rgba(40,49,67,0.92))",
+  "Node.js": "linear-gradient(135deg, rgba(140,232,120,0.22), rgba(47,104,48,0.92))",
+  Flutter: "linear-gradient(135deg, rgba(96,198,255,0.24), rgba(25,93,166,0.92))",
+  FastAPI: "linear-gradient(135deg, rgba(101,255,212,0.22), rgba(18,108,94,0.92))",
+  "Express.js": "linear-gradient(135deg, rgba(195,213,255,0.22), rgba(54,76,121,0.92))",
+  MongoDB: "linear-gradient(135deg, rgba(139,239,145,0.22), rgba(31,102,49,0.92))",
+  Redis: "linear-gradient(135deg, rgba(255,129,129,0.24), rgba(133,31,31,0.92))",
+  SQLite: "linear-gradient(135deg, rgba(117,195,255,0.22), rgba(24,85,142,0.92))",
+  Postgres: "linear-gradient(135deg, rgba(115,160,255,0.22), rgba(44,66,132,0.92))",
+};
+
+function skillBadgeText(label: string) {
+  return skillBadgeTextMap[label] ?? label.slice(0, 2).toUpperCase();
+}
+
+function skillBadgeStyle(label: string) {
+  return skillBadgeToneMap[label]
+    ? { background: skillBadgeToneMap[label] }
+    : undefined;
+}
 
 function contributionLevel(count: number) {
   if (count <= 0) return 0;
@@ -205,6 +256,11 @@ function App() {
     });
   }, [githubLanguages]);
 
+  const logoSkills = useMemo(
+    () => skillsMatrix.filter((skill) => Boolean(skill.logo)),
+    [],
+  );
+
   useEffect(() => {
     const ctx = gsap.context(() => {
       gsap.from(".nav-shell", {
@@ -249,15 +305,16 @@ function App() {
         const items = shell.querySelectorAll(".reveal");
         if (!items.length) return;
 
-        gsap.from(items, {
+        gsap.fromTo(items, {
           y: 18,
-          opacity: 0,
+        }, {
+          y: 0,
           duration: 0.7,
           ease: "power3.out",
           stagger: 0.08,
           scrollTrigger: {
             trigger: shell,
-            start: "top 80%",
+            start: "top 92%",
           },
         });
       });
@@ -275,6 +332,8 @@ function App() {
 
     const normalizePinnedProject = (repo: GithubRepo): ProjectCard => {
       const fallback = projectContentMap.get(repo.name.toLowerCase());
+      const languageLabel = repo.language ?? "a modern application stack";
+      const deliveryLabel = repo.homepage ? "a published live build" : "an open-source delivery flow";
 
       return {
         name: repo.name === "K1000" ? "K1000 Platform" : repo.name,
@@ -284,8 +343,7 @@ function App() {
           "Repository details will appear here once the live metadata resolves.",
         details:
           fallback?.details ||
-          repo.description ||
-          "A concise implementation note that explains the shipping outcome and technical shape of the repo.",
+          `Built with ${languageLabel} and ${deliveryLabel}, with an emphasis on maintainable structure, dependable execution, and clean interface delivery.`,
         stack: Array.from(
           new Set(
             [
@@ -404,33 +462,10 @@ function App() {
 
       <main className="page-stack">
         <section id="about" className="chapter section-shell hero-shell">
-          <div className="hero-copy">
-            <p className="eyebrow reveal">
-              <span className="eyebrow-dot" />
-              Full Stack Engineer
-            </p>
-            <h1 className="hero-title reveal">
-              <span>Engineering</span>
-              <span className="hero-title-accent">Scalable</span>
-              <span>Systems.</span>
-            </h1>
-            <div className="manifesto-card reveal">
-              <p className="manifesto-kicker">A portfolio with a point of view</p>
-              <p>{heroContent.intro}</p>
-              <p>{heroContent.summary}</p>
-            </div>
-            <div className="hero-actions reveal">
-              <a href="#contact" className="button button-primary">
-                Start Conversation
-              </a>
-              <a href="#projects" className="button button-secondary">
-                Selected Works
-              </a>
-            </div>
-          </div>
-
           <div className="hero-visual">
-            <div className="portrait-card reveal">
+            <div className="hero-starfield" />
+
+            <div className="portrait-card mobile-portrait-card reveal">
               <div className="portrait-badge">Rohan Chatterjee</div>
               <div className="portrait-frame">
                 <img src={heroContent.profilePhoto} alt={heroContent.name} />
@@ -442,17 +477,42 @@ function App() {
               </div>
             </div>
 
-            <div className="signal-grid reveal">
-              <article>
-                <span>Built for</span>
-                <strong>People, products, and platforms</strong>
-              </article>
-              <article>
-                <span>Current stack</span>
-                <strong>Kotlin • React • Next.js • FastAPI • Node.js</strong>
-              </article>
+            <div className="deathstar-panel reveal">
+              <DeathStarScene className="deathstar-panel-inner" />
             </div>
           </div>
+
+          <div className="hero-copy">
+            <h1 className="hero-title reveal">
+              <span>Engineering</span>
+              <span className="hero-title-accent">Scalable</span>
+              <span>Systems.</span>
+            </h1>
+            <div className="manifesto-card reveal">
+              <p className="manifesto-kicker">A portfolio with a point of view</p>
+              <p>{heroContent.intro}</p>
+              <p>{heroContent.summary}</p>
+            </div>
+            <div className="signal-grid reveal">
+              <article>
+                <span>Operating mode</span>
+                <strong>Builder with systems taste</strong>
+              </article>
+              <article>
+                <span>Current focus</span>
+                <strong>Web platforms, product interfaces, resilient backends</strong>
+              </article>
+            </div>
+            <div className="hero-actions reveal">
+              <a href="#contact" className="button button-primary">
+                Start Conversation
+              </a>
+              <a href="#projects" className="button button-secondary">
+                Selected Works
+              </a>
+            </div>
+          </div>
+
         </section>
 
         <section id="experience" className="chapter">
@@ -467,11 +527,26 @@ function App() {
 
             <div className="experience-layout">
               <aside className="experience-note reveal">
-                <p className="note-title">Working thesis</p>
+                <p className="note-title">Field notes</p>
                 <p>
                   Great software feels deliberate. I like roles that combine product judgment, technical
                   execution, and a clear visual system around the work.
                 </p>
+                <p>
+                  The through-line in my work is systems thinking that stays understandable: interfaces that
+                  feel clear, operations that remain maintainable, and engineering that still knows how to
+                  communicate.
+                </p>
+                <div className="note-meta">
+                  <div>
+                    <span>Focus areas</span>
+                    <strong>Frontend systems, Android delivery, backend coordination</strong>
+                  </div>
+                  <div>
+                    <span>Working style</span>
+                    <strong>Fast iterations, reusable structure, product-aware implementation</strong>
+                  </div>
+                </div>
                 <div className="note-pills">
                   <span>Frontend systems</span>
                   <span>Mobile workflows</span>
@@ -521,14 +596,17 @@ function App() {
               <p className="section-label">02 / Portfolio</p>
               <h2>Selected Works</h2>
               <p className="section-intro">
-                Live pinned repositories from GitHub, recast into a uniform grid so the work reads like a
-                curated portfolio rather than a list of links.
+                Live pinned repositories from GitHub, recast into a more curated showcase so the work reads
+                like a designed portfolio rather than a flat list of links.
               </p>
             </div>
 
-            <div className="project-grid">
+            <div className="project-mosaic">
               {projectShowcase.map((project, index) => (
-                <article key={project.name} className="project-card reveal">
+                <article
+                  key={project.name}
+                  className={`project-card reveal ${index % 2 === 0 ? "project-card-rise" : "project-card-fall"}`}
+                >
                   <div className="project-top">
                     <span className="project-number">{String(index + 1).padStart(2, "0")}</span>
                     <span className="project-badge">Pinned repository</span>
@@ -569,14 +647,13 @@ function App() {
 
             <div className="skills-layout">
               <div className="skills-grid reveal">
-                {allSkills.map((skill) => (
-                  <article key={skill.label} className="skill-tile">
+                {logoSkills.map((skill, index) => (
+                  <article
+                    key={skill.label}
+                    className={`skill-tile ${index === 0 || index === 4 ? "skill-tile-wide" : ""}`}
+                  >
                     <div className="skill-icon">
-                      {skill.logo ? (
-                        <img src={skill.logo} alt={skill.label} />
-                      ) : (
-                        <span>{skill.label.slice(0, 2).toUpperCase()}</span>
-                      )}
+                      <img src={skill.logo} alt={skill.label} />
                     </div>
                     <div className="skill-copy">
                       <strong>{skill.label}</strong>
@@ -651,7 +728,7 @@ function App() {
               <div className="graph-scroll">
                 <div className="graph-months">
                   {contributionGrid.monthLabels.map((month) => (
-                    <span key={month.index} style={{ gridColumnStart: month.index + 1 }}>
+                    <span key={month.index} style={{ gridColumnStart: month.index + 2 }}>
                       {month.label}
                     </span>
                   ))}
@@ -688,34 +765,84 @@ function App() {
                 <span>More</span>
               </div>
             </div>
+
+            <div className="github-lower reveal">
+              <article className="github-lower-card">
+                <p className="section-label">Profile signal</p>
+                <h3>{githubProfile?.bio || "Public work that leans toward product-minded engineering."}</h3>
+                <p>
+                  The public graph reflects a mix of Android, frontend, and backend experiments shaped into
+                  real portfolio systems.
+                </p>
+              </article>
+
+              <article className="github-lower-card">
+                <p className="section-label">Most used languages</p>
+                <div className="github-language-row">
+                  {githubLanguages.slice(0, 5).map((language) => (
+                    <span key={language.name}>
+                      {language.name}
+                      <strong>{language.count}</strong>
+                    </span>
+                  ))}
+                </div>
+              </article>
+
+              <article className="github-lower-card">
+                <p className="section-label">Current snapshot</p>
+                <p>
+                  {githubStats.publicRepos || githubProfile?.public_repos || projectShowcase.length} public
+                  repositories, {githubStats.totalStars} total stars, and {pastYearContributionTotal} tracked
+                  contributions across the last twelve months.
+                </p>
+              </article>
+            </div>
           </div>
         </section>
 
         <section id="contact" className="chapter">
           <div className="section-shell contact-shell reveal">
-            <div className="contact-copy">
-              <p className="section-label">05 / Contact</p>
-              <h2>Connect</h2>
-              <p>
-                Code • Create • Collaborate. If the work feels right, let’s turn the next idea into a
-                serious build.
-              </p>
-            </div>
+            <div className="contact-surface contact-surface-single">
+              <div className="contact-card contact-card-single">
+                <div className="contact-panel-grid">
+                  <div className="contact-panel-left">
+                    <p className="section-label">05 / Contact</p>
+                    <h2>Connect</h2>
+                    <p className="contact-lead">
+                      Code • Create • Collaborate. If the work feels right, let’s turn the next idea into a
+                      serious build.
+                    </p>
+                    <p className="contact-subcopy">
+                      Open to product work, engineering partnerships, and ambitious interface builds that
+                      need a strong point of view.
+                    </p>
+                  </div>
 
-            <div className="contact-card">
-              <a href={`mailto:${contactContent.email}`} className="contact-cta">
-                Start Conversation
-              </a>
-              <div className="contact-links">
-                <a href={contactContent.instagram} target="_blank" rel="noreferrer">
-                  Instagram
-                </a>
-                <a href={contactContent.linkedin} target="_blank" rel="noreferrer">
-                  LinkedIn
-                </a>
-                <a href={contactContent.github} target="_blank" rel="noreferrer">
-                  GitHub
-                </a>
+                  <div className="contact-panel-right">
+                    <div className="contact-status">
+                      <span className="contact-status-dot" />
+                      Available for selected collaborations
+                    </div>
+                    <p className="contact-right-copy">
+                      Product-minded engineering, frontend systems, and high-conviction interfaces built with
+                      technical clarity.
+                    </p>
+                    <a href={`mailto:${contactContent.email}`} className="contact-cta">
+                      Start Conversation
+                    </a>
+                    <div className="contact-links">
+                      <a href={contactContent.instagram} target="_blank" rel="noreferrer">
+                        Instagram
+                      </a>
+                      <a href={contactContent.linkedin} target="_blank" rel="noreferrer">
+                        LinkedIn
+                      </a>
+                      <a href={contactContent.github} target="_blank" rel="noreferrer">
+                        GitHub
+                      </a>
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
           </div>

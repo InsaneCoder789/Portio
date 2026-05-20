@@ -7,7 +7,7 @@ export const heroContent = {
   intro:
     "I engineer software systems that are reliable in production, intentional in UX, and scalable under real usage. My focus sits at the intersection of product thinking and systems discipline.",
   summary:
-    "Across mobile, backend, and frontend domains, I work with Kotlin, React, Next.js, FastAPI, Node.js, MySQL, and PostgreSQL to build fast, maintainable platforms with clear technical architecture.",
+    "Across frontend, backend, and Android domains, I work with Next.js, Express.js, React, Kotlin, Jetpack Compose, Android SDK tools, MySQL, and PostgreSQL to build fast, maintainable platforms with clear technical architecture.",
   profilePhoto: PROFILE_PHOTO,
 };
 
@@ -50,7 +50,9 @@ export const featuredProjects = [
   },
 ];
 
-export const experienceItems = EXPERIENCE;
+export const experienceItems = EXPERIENCE.filter(
+  (item) => !item.company.toLowerCase().includes("national service scheme"),
+);
 
 export const contactContent = {
   email: "chatterjeerohan0204@gmail.com",
@@ -62,18 +64,35 @@ export const contactContent = {
 export const githubUsername = "InsaneCoder789";
 
 export const skillsMatrix = [
-  { label: "React", logo: publicAsset("logos/react.svg") },
+  { label: "C" },
+  { label: "Dart" },
+  { label: "Java" },
+  { label: "HTML5", logo: publicAsset("logos/html.svg") },
+  { label: "Python", logo: publicAsset("logos/python.svg") },
   { label: "TypeScript", logo: publicAsset("logos/typescript.svg") },
+  { label: "Vercel" },
+  { label: "Firebase", logo: publicAsset("logos/firebase.svg") },
+  { label: "Google Cloud" },
+  { label: "TailwindCSS" },
+  { label: "React Router" },
+  { label: "React", logo: publicAsset("logos/react.svg") },
+  { label: "OpenCV" },
+  { label: "Next.js" },
+  { label: "Node.js" },
+  { label: "Flutter" },
+  { label: "FastAPI" },
+  { label: "Express.js" },
+  { label: "MongoDB" },
   { label: "Kotlin", logo: publicAsset("logos/kotlin.svg") },
   { label: "MySQL", logo: publicAsset("logos/mysql.svg") },
-  { label: "PostgreSQL", logo: publicAsset("logos/postgresql.svg") },
-  { label: "Firebase", logo: publicAsset("logos/firebase.svg") },
-  { label: "Python", logo: publicAsset("logos/python.svg") },
-  { label: "Linux", logo: publicAsset("logos/linux.svg") },
+  { label: "Postgres", logo: publicAsset("logos/postgresql.svg") },
+  { label: "Redis" },
+  { label: "SQLite" },
   { label: "Git", logo: publicAsset("logos/git.svg") },
   { label: "JavaScript", logo: publicAsset("logos/javascript.svg") },
-  { label: "HTML", logo: publicAsset("logos/html.svg") },
   { label: "CSS", logo: publicAsset("logos/css.svg") },
+  { label: "C++", logo: publicAsset("logos/cpp.svg") },
+  { label: "Tcl", logo: publicAsset("logos/tcl.svg") },
 ];
 
 export const performanceBenchmarks = [
