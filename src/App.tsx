@@ -2,13 +2,16 @@ import { useEffect, useMemo, useState } from "react";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import {
+  credibilitySignals,
   contactContent,
   experienceItems,
   featuredProjects,
   githubUsername,
   heroContent,
   performanceBenchmarks,
+  portfolioSignals,
   skillsMatrix,
+  writingNotes,
 } from "@/features/portfolio/content";
 import DeathStarScene from "@/components/DeathStarScene";
 import KaliBootScreen from "@/components/KaliBootScreen";
@@ -44,6 +47,9 @@ type ProjectCard = {
   name: string;
   description: string;
   details: string;
+  challenge?: string;
+  outcome?: string;
+  learning?: string;
   stack: string[];
   githubUrl: string;
   homepage?: string | null;
@@ -143,8 +149,14 @@ function formatRangeLabel(startDate: string) {
   return `${formatter.format(start)} → ${formatter.format(end)}`;
 }
 
-function App() {
-  const [booting, setBooting] = useState(true);
+type AppProps = {
+  initialBooting?: boolean;
+  staticMode?: boolean;
+};
+
+function App({ initialBooting = true, staticMode = false }: AppProps) {
+  const [booting, setBooting] = useState(initialBooting);
+  const [theme, setTheme] = useState<"dark" | "light">("dark");
   const [githubProfile, setGithubProfile] = useState<GithubProfile | null>(null);
   const [githubStats, setGithubStats] = useState({
     publicRepos: 0,
@@ -156,6 +168,9 @@ function App() {
       name: project.name,
       description: project.description,
       details: project.details,
+      challenge: project.challenge,
+      outcome: project.outcome,
+      learning: project.learning,
       stack: project.stack,
       githubUrl: project.githubUrl,
     })),
@@ -263,6 +278,22 @@ function App() {
   );
 
   useEffect(() => {
+    if (typeof window === "undefined" || staticMode) return;
+    const storedTheme = window.localStorage.getItem("portfolio-theme");
+    if (storedTheme === "light" || storedTheme === "dark") {
+      setTheme(storedTheme);
+    }
+  }, [staticMode]);
+
+  useEffect(() => {
+    if (typeof document === "undefined") return;
+    document.body.dataset.theme = theme;
+    if (!staticMode && typeof window !== "undefined") {
+      window.localStorage.setItem("portfolio-theme", theme);
+    }
+  }, [staticMode, theme]);
+
+  useEffect(() => {
     const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     if (reduceMotion) return;
 
@@ -358,6 +389,9 @@ function App() {
         details:
           fallback?.details ||
           `Built with ${languageLabel} and ${deliveryLabel}, with an emphasis on maintainable structure, dependable execution, and clean interface delivery.`,
+        challenge: fallback?.challenge,
+        outcome: fallback?.outcome,
+        learning: fallback?.learning,
         stack: Array.from(
           new Set(
             [
@@ -411,6 +445,9 @@ function App() {
                 name: project.name,
                 description: project.description,
                 details: project.details,
+                challenge: project.challenge,
+                outcome: project.outcome,
+                learning: project.learning,
                 stack: project.stack,
                 githubUrl: project.githubUrl,
               })),
@@ -458,19 +495,30 @@ function App() {
             </span>
           </a>
 
-          <div className="nav-links">
-            {[
-              ["About", "#about"],
-              ["Experience", "#experience"],
-              ["Projects", "#projects"],
-              ["Skills", "#skills"],
-              ["GitHub", "#github"],
-              ["Contact", "#contact"],
-            ].map(([label, href]) => (
-              <a key={label} href={href}>
-                {label}
-              </a>
-            ))}
+          <div className="nav-cluster">
+            <div className="nav-links">
+              {[
+                ["About", "#about"],
+                ["Experience", "#experience"],
+                ["Projects", "#projects"],
+                ["Skills", "#skills"],
+                ["Signals", "#signals"],
+                ["GitHub", "#github"],
+                ["Contact", "#contact"],
+              ].map(([label, href]) => (
+                <a key={label} href={href}>
+                  {label}
+                </a>
+              ))}
+            </div>
+            <button
+              type="button"
+              className="theme-toggle"
+              onClick={() => setTheme((current) => (current === "dark" ? "light" : "dark"))}
+              aria-label={`Switch to ${theme === "dark" ? "light" : "dark"} mode`}
+            >
+              {theme === "dark" ? "Light" : "Dark"}
+            </button>
           </div>
         </div>
       </nav>
@@ -505,6 +553,7 @@ function App() {
             </h1>
             <div className="manifesto-card reveal">
               <p className="manifesto-kicker">A portfolio with a point of view</p>
+              <p className="hero-current-line">{heroContent.current}</p>
               <p>{heroContent.intro}</p>
               <p>{heroContent.summary}</p>
             </div>
@@ -519,11 +568,11 @@ function App() {
               </article>
             </div>
             <div className="hero-actions reveal">
+              <a href={publicAsset("Rohan_Chatterjee_Resume.pdf")} className="button button-primary" target="_blank" rel="noreferrer">
+                Download Resume
+              </a>
               <a href="#contact" className="button button-primary">
                 Start Conversation
-              </a>
-              <a href="#projects" className="button button-secondary">
-                Selected Works
               </a>
             </div>
           </div>
@@ -534,9 +583,10 @@ function App() {
           <div className="section-shell experience-shell">
             <div className="section-heading reveal">
               <p className="section-label">01 / Journey</p>
+              <p className="section-command">~ /experience --timeline</p>
               <h2>Experience</h2>
               <p className="section-intro">
-                A clean archive of the roles, systems, and teams that shaped how I build and ship products.
+                A structured record of the roles, systems, and teams that shaped how I build, ship, and scale product work.
               </p>
             </div>
 
@@ -609,6 +659,7 @@ function App() {
           <div className="section-shell projects-shell">
             <div className="section-heading reveal">
               <p className="section-label">02 / Portfolio</p>
+              <p className="section-command">~ /projects --curated --case-studies</p>
               <h2>Selected Works</h2>
               <p className="section-intro">
                 A curated selection of systems, product builds, and technical experiments shaped into
@@ -629,6 +680,33 @@ function App() {
                   <h3>{project.name}</h3>
                   <p className="project-description">{project.description}</p>
                   <p className="project-details">{project.details}</p>
+                  <div className="project-system-row">
+                    <span>Structure</span>
+                    <strong>{project.language ?? project.stack[0] ?? "System build"}</strong>
+                    <span className="project-divider" />
+                    <span>Signal</span>
+                    <strong>{project.homepage ? "Live deployment" : "Open-source release"}</strong>
+                  </div>
+                  <div className="project-case-study">
+                    {project.challenge ? (
+                      <div>
+                        <span>Challenge</span>
+                        <p>{project.challenge}</p>
+                      </div>
+                    ) : null}
+                    {project.outcome ? (
+                      <div>
+                        <span>Outcome</span>
+                        <p>{project.outcome}</p>
+                      </div>
+                    ) : null}
+                    {project.learning ? (
+                      <div>
+                        <span>Learning</span>
+                        <p>{project.learning}</p>
+                      </div>
+                    ) : null}
+                  </div>
                   <div className="project-tags">
                     {project.stack.map((tag) => (
                       <span key={tag}>{tag}</span>
@@ -654,6 +732,7 @@ function App() {
           <div className="section-shell skills-shell">
             <div className="section-heading reveal">
               <p className="section-label">03 / Stack</p>
+              <p className="section-command">~ /stack --atlas --core-tools</p>
               <h2>Capability Atlas</h2>
               <p className="section-intro">
                 The tools I lean on most, plus the language mix surfaced from my public GitHub repositories.
@@ -701,10 +780,72 @@ function App() {
           </div>
         </section>
 
+        <section id="signals" className="chapter">
+          <div className="section-shell signals-shell">
+            <div className="section-heading reveal">
+              <p className="section-label">04 / Signals</p>
+              <p className="section-command">~ /signals --metrics --writing --proof</p>
+              <h2>Signals</h2>
+              <p className="section-intro">
+                The numbers, notes, and credibility markers that make the work easier to evaluate beyond visuals alone.
+              </p>
+            </div>
+
+            <div className="signals-layout">
+              <article className="signal-panel reveal">
+                <div className="signal-panel-head">
+                  <p className="section-label">Fit</p>
+                  <span>Working signal</span>
+                </div>
+                <div className="portfolio-signal-grid">
+                  {portfolioSignals.map((item) => (
+                    <div key={item.title} className="portfolio-signal-card">
+                      <strong>{item.title}</strong>
+                      <span>{item.description}</span>
+                    </div>
+                  ))}
+                </div>
+              </article>
+
+              <article className="signal-panel reveal">
+                <div className="signal-panel-head">
+                  <p className="section-label">Writing</p>
+                  <span>Field notes in progress</span>
+                </div>
+                <div className="writing-stack">
+                  {writingNotes.map((note) => (
+                    <div key={note.title} className="writing-card">
+                      <span>{note.status}</span>
+                      <h3>{note.title}</h3>
+                      <p>{note.summary}</p>
+                    </div>
+                  ))}
+                </div>
+              </article>
+
+              <article className="signal-panel reveal">
+                <div className="signal-panel-head">
+                  <p className="section-label">Proof</p>
+                  <span>Collaboration signal</span>
+                </div>
+                <div className="credibility-stack">
+                  {credibilitySignals.map((signal) => (
+                    <div key={signal.title} className="credibility-card">
+                      <h3>{signal.title}</h3>
+                      <p>{signal.description}</p>
+                    </div>
+                  ))}
+                </div>
+              </article>
+            </div>
+          </div>
+        </section>
+
         <section id="github" className="chapter">
           <div className="section-shell github-shell">
             <div className="section-heading reveal">
-              <p className="section-label">04 / GitHub</p>
+              <p className="section-label">05 / GitHub</p>
+              <p className="section-command">~ /github --telemetry --public-signal</p>
               <h2>Telemetry</h2>
               <p className="section-intro">
                 A professional snapshot of public repository activity, contribution consistency, and open-source
@@ -821,7 +962,8 @@ function App() {
               <div className="contact-card contact-card-single">
                 <div className="contact-panel-grid">
                   <div className="contact-panel-left">
-                    <p className="section-label">05 / Contact</p>
+                    <p className="section-label">06 / Contact</p>
+                    <p className="section-command">~ /contact --open-channel</p>
                     <h2>Connect</h2>
                     <p className="contact-lead">
                       Code • Create • Collaborate. If the work feels right, let’s turn the next idea into a
@@ -844,6 +986,14 @@ function App() {
                     </p>
                     <a href={`mailto:${contactContent.email}`} className="contact-cta">
                       Start Conversation
+                    </a>
+                    <a
+                      href={publicAsset("Rohan_Chatterjee_Resume.pdf")}
+                      className="contact-resume-link"
+                      target="_blank"
+                      rel="noreferrer"
+                    >
+                      Download Resume
                     </a>
                     <div className="contact-links">
                       <a href={contactContent.instagram} target="_blank" rel="noreferrer">

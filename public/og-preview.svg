@@ -1,0 +1,53 @@
+<svg width="1200" height="630" viewBox="0 0 1200 630" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="1200" height="630" rx="36" fill="#050A13"/>
+  <rect x="24" y="24" width="1152" height="582" rx="30" fill="url(#bg)"/>
+  <rect x="24" y="24" width="1152" height="582" rx="30" stroke="rgba(139,184,255,0.2)"/>
+  <path d="M0 520C144 472 199 415 312 431C425 447 519 329 651 344C783 359 848 228 970 247C1077 263 1132 163 1200 137V630H0V520Z" fill="url(#shape)" opacity="0.55"/>
+  <circle cx="985" cy="174" r="226" fill="url(#orb)" opacity="0.72"/>
+  <circle cx="980" cy="170" r="172" fill="#0B111D"/>
+  <circle cx="980" cy="170" r="171" stroke="#223248" stroke-width="2"/>
+  <ellipse cx="955" cy="121" rx="64" ry="58" fill="#05080E"/>
+  <ellipse cx="955" cy="121" rx="80" ry="74" stroke="#1B2638" stroke-width="16"/>
+  <path d="M808 162H1152" stroke="#182233" stroke-width="18"/>
+  <path d="M808 178H1152" stroke="#0A111B" stroke-width="6"/>
+  <g opacity="0.9">
+    <circle cx="122" cy="95" r="2" fill="#DDEEFF"/>
+    <circle cx="214" cy="172" r="2.2" fill="#7DB7FF"/>
+    <circle cx="328" cy="82" r="1.8" fill="#DDEEFF"/>
+    <circle cx="424" cy="190" r="2" fill="#DDEEFF"/>
+    <circle cx="538" cy="112" r="2.4" fill="#7DB7FF"/>
+    <circle cx="670" cy="174" r="2" fill="#DDEEFF"/>
+    <circle cx="742" cy="103" r="1.6" fill="#DDEEFF"/>
+    <circle cx="1088" cy="70" r="2.1" fill="#DDEEFF"/>
+  </g>
+  <text x="92" y="122" fill="#9EC7FF" font-family="JetBrains Mono, monospace" font-size="24" letter-spacing="6">ROHAN CHATTERJEE / SOFTWARE ENGINEER</text>
+  <text x="92" y="248" fill="#F3F7FF" font-family="Outfit, Arial, sans-serif" font-size="88" font-weight="900" letter-spacing="-4">ENGINEERING</text>
+  <text x="92" y="338" fill="url(#accent)" font-family="Outfit, Arial, sans-serif" font-size="88" font-weight="900" letter-spacing="-4">SCALABLE</text>
+  <text x="92" y="428" fill="#F3F7FF" font-family="Outfit, Arial, sans-serif" font-size="88" font-weight="900" letter-spacing="-4">SYSTEMS.</text>
+  <text x="96" y="498" fill="#DCEAFE" font-family="JetBrains Mono, monospace" font-size="24" letter-spacing="3">
+    Cinematic portfolio, selected works, systems thinking,
+  </text>
+  <text x="96" y="538" fill="#DCEAFE" font-family="JetBrains Mono, monospace" font-size="24" letter-spacing="3">
+    GitHub telemetry, Android + web engineering.
+  </text>
+  <defs>
+    <linearGradient id="bg" x1="102" y1="48" x2="1098" y2="606" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#0C1E38"/>
+      <stop offset="1" stop-color="#08111D"/>
+    </linearGradient>
+    <linearGradient id="accent" x1="92" y1="338" x2="506" y2="338" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#D0E7FF"/>
+      <stop offset="0.35" stop-color="#74C7FF"/>
+      <stop offset="0.7" stop-color="#2D7CFF"/>
+      <stop offset="1" stop-color="#6CEBD1"/>
+    </linearGradient>
+    <radialGradient id="shape" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(699 473) rotate(135.881) scale(661.295 386.766)">
+      <stop stop-color="#4699FF"/>
+      <stop offset="1" stop-color="#173B79"/>
+    </radialGradient>
+    <radialGradient id="orb" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(985 174) rotate(90) scale(226)">
+      <stop stop-color="#7EB6FF"/>
+      <stop offset="1" stop-color="#2F63C2"/>
+    </radialGradient>
+  </defs>
+</svg>
