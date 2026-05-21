@@ -1,3 +1,5 @@
+"use client";
+
 import { useEffect, useMemo, useState } from "react";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
@@ -16,7 +18,6 @@ import {
 import DeathStarScene from "@/components/DeathStarScene";
 import KaliBootScreen from "@/components/KaliBootScreen";
 import { publicAsset } from "@/lib/utils";
-import "./App.css";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -157,6 +158,7 @@ type AppProps = {
 function App({ initialBooting = true, staticMode = false }: AppProps) {
   const [booting, setBooting] = useState(initialBooting);
   const [theme, setTheme] = useState<"dark" | "light">("dark");
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [githubProfile, setGithubProfile] = useState<GithubProfile | null>(null);
   const [githubStats, setGithubStats] = useState({
     publicRepos: 0,
@@ -184,6 +186,16 @@ function App({ initialBooting = true, staticMode = false }: AppProps) {
   }, []);
 
   const contributionRangeLabel = useMemo(() => formatRangeLabel(contributionStartDate), [contributionStartDate]);
+
+  const navItems = [
+    ["About", "#about"],
+    ["Experience", "#experience"],
+    ["Projects", "#projects"],
+    ["Skills", "#skills"],
+    ["Signals", "#signals"],
+    ["GitHub", "#github"],
+    ["Contact", "#contact"],
+  ] as const;
 
   const pastYearContributionTotal = useMemo(
     () =>
@@ -484,8 +496,22 @@ function App({ initialBooting = true, staticMode = false }: AppProps) {
     <div className="portfolio-root">
       {booting ? <KaliBootScreen onComplete={() => setBooting(false)} /> : null}
       <div className="background-stage" aria-hidden="true" />
+      <div className={`mobile-nav-control ${mobileMenuOpen ? "is-open" : ""}`.trim()}>
+        <button
+          type="button"
+          className={`nav-menu-toggle ${mobileMenuOpen ? "is-open" : ""}`.trim()}
+          aria-label={mobileMenuOpen ? "Close navigation menu" : "Open navigation menu"}
+          aria-expanded={mobileMenuOpen}
+          aria-controls="primary-navigation"
+          onClick={() => setMobileMenuOpen((current) => !current)}
+        >
+          <span className="nav-menu-glyph" aria-hidden="true">
+            {mobileMenuOpen ? "×" : "☰"}
+          </span>
+        </button>
+      </div>
 
-      <nav className="nav-shell">
+      <nav className={`nav-shell ${mobileMenuOpen ? "is-menu-open" : ""}`.trim()}>
         <div className="nav-inner">
           <a href="#about" className="brand-shell">
             <img src={heroContent.profilePhoto} alt={heroContent.name} className="brand-avatar" />
@@ -496,29 +522,13 @@ function App({ initialBooting = true, staticMode = false }: AppProps) {
           </a>
 
           <div className="nav-cluster">
-            <div className="nav-links">
-              {[
-                ["About", "#about"],
-                ["Experience", "#experience"],
-                ["Projects", "#projects"],
-                ["Skills", "#skills"],
-                ["Signals", "#signals"],
-                ["GitHub", "#github"],
-                ["Contact", "#contact"],
-              ].map(([label, href]) => (
-                <a key={label} href={href}>
+            <div id="primary-navigation" className={`nav-links ${mobileMenuOpen ? "is-open" : ""}`.trim()}>
+              {navItems.map(([label, href]) => (
+                <a key={label} href={href} onClick={() => setMobileMenuOpen(false)}>
                   {label}
                 </a>
               ))}
             </div>
-            <button
-              type="button"
-              className="theme-toggle"
-              onClick={() => setTheme((current) => (current === "dark" ? "light" : "dark"))}
-              aria-label={`Switch to ${theme === "dark" ? "light" : "dark"} mode`}
-            >
-              {theme === "dark" ? "Light" : "Dark"}
-            </button>
           </div>
         </div>
       </nav>
@@ -566,14 +576,6 @@ function App({ initialBooting = true, staticMode = false }: AppProps) {
                 <span>Current focus</span>
                 <strong>Web platforms, product interfaces, resilient backends</strong>
               </article>
-            </div>
-            <div className="hero-actions reveal">
-              <a href={publicAsset("Rohan_Chatterjee_Resume.pdf")} className="button button-primary" target="_blank" rel="noreferrer">
-                Download Resume
-              </a>
-              <a href="#contact" className="button button-primary">
-                Start Conversation
-              </a>
             </div>
           </div>
 
