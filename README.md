@@ -1,32 +1,38 @@
 # Rohan Chatterjee Portfolio
 
-An immersive portfolio site built with React, TypeScript, Vite, GSAP, and Three.js.
+An immersive portfolio site built with Next.js, React, TypeScript, GSAP, and Three.js.
 
-The current experience is centered around:
+The experience includes:
 - a cinematic desktop hero with an interactive Death Star scene
-- a boot screen that plays on reload while the app settles behind it
-- editorial full-screen sections for experience, selected works, skills, GitHub telemetry, and contact
-- a separate mobile-optimized layout
+- a boot screen that appears on reload while the app settles behind it
+- editorial sections for experience, selected works, skills, GitHub telemetry, and contact
+- a mobile-optimized layout with lighter visuals
 
 ## Tech Stack
 
+- Next.js 16
 - React 18
 - TypeScript
-- Vite
 - GSAP
 - Three.js
-- Tailwind CSS utilities
 - Framer Motion
+- Tailwind CSS utilities
 
 ## Project Structure
 
 ```text
 .
 ├── public/
+│   ├── favicon.ico
+│   ├── favicon.png
+│   ├── og-preview.png
 │   ├── profile.jpg
 │   ├── Rohan_Chatterjee_Resume.pdf
 │   └── logos/
 ├── src/
+│   ├── app/
+│   │   ├── layout.tsx
+│   │   └── page.tsx
 │   ├── components/
 │   │   ├── DeathStarScene.tsx
 │   │   ├── KaliBootScreen.tsx
@@ -40,10 +46,10 @@ The current experience is centered around:
 │   │   └── utils.ts
 │   ├── App.tsx
 │   ├── App.css
-│   ├── index.css
-│   └── main.tsx
+│   └── index.css
+├── next-env.d.ts
 ├── package.json
-└── vite.config.ts
+└── tsconfig.json
 ```
 
 ## Getting Started
@@ -71,27 +77,15 @@ npm run dev
 npm run build
 ```
 
-### Preview the production build
+### Start the production server
 
 ```bash
-npm run preview
+npm run start
 ```
 
-## Current App Notes
+## Notes
 
-- The app opens with a custom boot screen before revealing the main portfolio.
-- The About section uses a custom Three.js hero scene on desktop.
-- Mobile keeps a lighter, more constrained presentation for readability.
-- Content for experience, projects, skills, and GitHub display is centralized in `src/features/portfolio/content.ts`.
-
-## Scripts
-
-- `npm run dev` — start local development
-- `npm run build` — create a production build
-- `npm run preview` — preview the built app
-- `npm run lint` — run ESLint
-- `npm run test` — run tests
-
-## Status
-
-This repository has been cleaned so that the live portfolio path is much smaller than the original prototype tree. Legacy unused components, old pages, stale hooks, test stubs, and unused public assets have been removed.
+- Metadata, Open Graph tags, Twitter cards, and favicon links live in `src/app/layout.tsx`.
+- The main landing page is rendered through the App Router in `src/app/page.tsx`.
+- Content for experience, projects, skills, GitHub display, and contact is centralized in `src/features/portfolio/content.ts`.
+- `src/components/ParticleBackground.tsx` is kept in the repo, but not mounted in the current app.
