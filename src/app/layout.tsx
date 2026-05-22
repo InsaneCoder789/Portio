@@ -6,8 +6,7 @@ import "../App.css";
 export const metadata: Metadata = {
   metadataBase: new URL("https://rochiee24.vercel.app"),
   title: "Rohan Chatterjee | Software Engineer",
-  description:
-    "Rohan Chatterjee's cinematic portfolio — software engineering, selected works, systems thinking, GitHub telemetry, and contact.",
+  description: "Rohan Chatterjee's cinematic portfolio...",
   keywords: [
     "Rohan Chatterjee",
     "Software Engineer",
@@ -23,14 +22,14 @@ export const metadata: Metadata = {
   openGraph: {
     type: "website",
     title: "Rohan Chatterjee | Software Engineer",
-    description: "Rohan Chatterjee's cinematic portfolio — software engineering, selected works & more.",
-    url: "https://rochiee24.vercel.app/",
+    description: "Rohan Chatterjee's cinematic portfolio...",
+    url: "https://rochiee24.vercel.app",
     siteName: "Rohan Chatterjee Portfolio",
     images: [
       {
-        url: "/og-preview.jpeg",
-        width: 2400,
-        height: 1792,
+        url: "/og-image.png",
+        width: 1200,
+        height: 630,
         alt: "Rohan Chatterjee portfolio preview banner",
       },
     ],
@@ -38,8 +37,8 @@ export const metadata: Metadata = {
   twitter: {
     card: "summary_large_image",
     title: "Rohan Chatterjee | Software Engineer",
-    description: "Cinematic portfolio for Rohan Chatterjee — software engineering, selected works, systems thinking, and more.",
-    images: ["/og-preview.jpeg"],
+    description: "Rohan Chatterjee's cinematic portfolio...",
+    images: ["/og-image.png"],
   },
   icons: {
     icon: "/favicon.ico",
