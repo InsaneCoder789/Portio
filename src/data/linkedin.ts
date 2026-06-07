@@ -15,12 +15,12 @@ export interface ExperienceItem {
   skills?: string[];
 }
 
-export const PROFILE_PHOTO = publicAsset("profile.jpg");
+export const PROFILE_PHOTO = publicAsset("profile-portrait.webp");
 
 export const EXPERIENCE: ExperienceItem[] = [
   {
     company: "Red Kite Productions",
-    logo: publicAsset("logos/companies/redkite.svg"),
+    logo: publicAsset("logos/companies/redkite-square.jpeg"),
     role: "ReactJS Architect Intern (Part-Time)",
     type: "Internship",
     duration: "Apr 2026 — Present",
@@ -35,7 +35,7 @@ export const EXPERIENCE: ExperienceItem[] = [
   },
   {
     company: "Donum Technologies",
-    logo: publicAsset("logos/companies/donum.jpg"),
+    logo: publicAsset("logos/companies/donum-square.jpeg"),
     role: "Junior Software Developer & Marketing Intern",
     type: "Internship",
     duration: "Aug 2025 — Present",

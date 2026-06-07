@@ -11,11 +11,16 @@ export const heroContent = {
   summary:
     "Across frontend, backend, and Android domains, I work with Next.js, Express.js, React, Kotlin, Jetpack Compose, Android SDK tools, MySQL, and PostgreSQL to build fast, maintainable platforms with clear technical architecture.",
   profilePhoto: PROFILE_PHOTO,
+  heroPrimary: publicAsset("transparent1.png"),
+  heroSecondary: publicAsset("transparent2.png"),
 };
 
 export const featuredProjects = [
   {
     name: "Rail",
+    headerImage: publicAsset("projects/rail-header.png"),
+    headerImageAlt: "Rail offline payment orchestration architecture",
+    headerImagePosition: "center top",
     description:
       "Designed an offline-first payment orchestration service with deferred synchronization pipelines that maintain operational continuity during unstable network conditions.",
     details:
@@ -31,6 +36,9 @@ export const featuredProjects = [
   },
   {
     name: "Lakshman-Rekha",
+    headerImage: publicAsset("projects/lakshman-rekha-header.png"),
+    headerImageAlt: "Lakshman Rekha mobile scam protection product overview",
+    headerImagePosition: "center center",
     description:
       "Built an Android safety application focused on scam and phishing detection during calls and messaging workflows with contextual warning systems.",
     details:
@@ -46,6 +54,9 @@ export const featuredProjects = [
   },
   {
     name: "K1000",
+    headerImage: publicAsset("projects/k1000-platform-header.png"),
+    headerImageAlt: "K-1000 student platform systems interface",
+    headerImagePosition: "center center",
     description:
       "Developed a React and Next.js platform with reusable component systems and responsive layouts for organizational operations, events, and content workflows.",
     details:
@@ -61,6 +72,9 @@ export const featuredProjects = [
   },
   {
     name: "KYLR",
+    headerImage: publicAsset("projects/kylr-header.png"),
+    headerImageAlt: "KYLR UPI payments application product overview",
+    headerImagePosition: "center center",
     description:
       "Built a high-trust Android payments experience focused on clean money movement flows, sharp visual hierarchy, and confidence-first interaction design.",
     details:
@@ -90,30 +104,30 @@ export const contactContent = {
 export const githubUsername = "InsaneCoder789";
 
 export const skillsMatrix = [
-  { label: "C" },
-  { label: "Dart" },
-  { label: "Java" },
+  { label: "C", logo: publicAsset("logos/c.svg") },
+  { label: "Dart", logo: publicAsset("logos/dart.svg") },
+  { label: "Java", logo: publicAsset("logos/java.svg") },
   { label: "HTML5", logo: publicAsset("logos/html.svg") },
   { label: "Python", logo: publicAsset("logos/python.svg") },
   { label: "TypeScript", logo: publicAsset("logos/typescript.svg") },
-  { label: "Vercel" },
+  { label: "Vercel", logo: publicAsset("logos/vercel.svg") },
   { label: "Firebase", logo: publicAsset("logos/firebase.svg") },
-  { label: "Google Cloud" },
-  { label: "TailwindCSS" },
-  { label: "React Router" },
+  { label: "Google Cloud", logo: publicAsset("logos/google-cloud.svg") },
+  { label: "TailwindCSS", logo: publicAsset("logos/tailwindcss.svg") },
+  { label: "React Router", logo: publicAsset("logos/react-router.svg") },
   { label: "React", logo: publicAsset("logos/react.svg") },
-  { label: "OpenCV" },
-  { label: "Next.js" },
-  { label: "Node.js" },
-  { label: "Flutter" },
-  { label: "FastAPI" },
-  { label: "Express.js" },
-  { label: "MongoDB" },
+  { label: "OpenCV", logo: publicAsset("logos/opencv.svg") },
+  { label: "Next.js", logo: publicAsset("logos/nextjs.svg") },
+  { label: "Node.js", logo: publicAsset("logos/nodejs.svg") },
+  { label: "Flutter", logo: publicAsset("logos/flutter.svg") },
+  { label: "FastAPI", logo: publicAsset("logos/fastapi.svg") },
+  { label: "Express.js", logo: publicAsset("logos/express.svg") },
+  { label: "MongoDB", logo: publicAsset("logos/mongodb.svg") },
   { label: "Kotlin", logo: publicAsset("logos/kotlin.svg") },
   { label: "MySQL", logo: publicAsset("logos/mysql.svg") },
   { label: "Postgres", logo: publicAsset("logos/postgresql.svg") },
-  { label: "Redis" },
-  { label: "SQLite" },
+  { label: "Redis", logo: publicAsset("logos/redis.svg") },
+  { label: "SQLite", logo: publicAsset("logos/sqlite.svg") },
   { label: "Git", logo: publicAsset("logos/git.svg") },
   { label: "JavaScript", logo: publicAsset("logos/javascript.svg") },
   { label: "CSS", logo: publicAsset("logos/css.svg") },
