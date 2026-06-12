@@ -42,7 +42,7 @@ function App({ initialBooting = true, staticMode = false }: AppProps) {
     <div className={`portfolio-root theme-${theme} relative min-h-screen overflow-x-hidden`}>
       {booting ? <CinematicBootScreen staticMode={staticMode} onComplete={completeBoot} /> : null}
 
-      <SpectralAuraBackground />
+      <SpectralAuraBackground active={!booting} />
       <main className="portfolio-main relative z-10 pb-0">
         <HeroSection hero={heroContent} theme={theme} onToggleTheme={() => setTheme((current) => (current === "light" ? "dark" : "light"))} />
         <AboutSection />

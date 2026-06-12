@@ -1,11 +1,6 @@
-"use client";
-
-import { useRef } from "react";
-import { motion, useInView } from "framer-motion";
-import { CheckCircle2, Cpu, Orbit, Radar } from "lucide-react";
+import { CheckCircle2, ChevronDown, Cpu, Orbit, Radar } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
-import { CountUpValue } from "@/components/portfolio/CountUpValue";
 import { SectionHeader } from "@/components/portfolio/SectionHeader";
 import type { SkillItem } from "@/components/portfolio/types";
 
@@ -48,10 +43,38 @@ const deliveryChecks = [
   "Performance measured before visual excess",
 ];
 
-export function ProcessSection({ skills, benchmarks }: ProcessSectionProps) {
-  const benchmarkRef = useRef<HTMLDivElement>(null);
-  const benchmarksInView = useInView(benchmarkRef, { once: true, amount: 0.35 });
+function ToolkitGrid({ skills }: { skills: SkillItem[] }) {
+  return (
+    <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
+      {skills.map((skill) => (
+        <div
+          key={skill.label}
+          className="toolkit-tile rounded-[1.35rem] border border-white/10 bg-white/[0.04] px-4 py-4 shadow-[inset_0_1px_0_rgba(255,255,255,0.05)]"
+        >
+          <div className="flex items-center gap-3">
+            <div className="toolkit-logo flex h-11 w-11 items-center justify-center rounded-2xl border border-white/10 bg-slate-950/40">
+              {skill.logo ? (
+                <img src={skill.logo} alt="" aria-hidden="true" className="h-7 w-7 object-contain" />
+              ) : (
+                <span className="font-['Outfit'] text-sm font-semibold tracking-[-0.04em] text-sky-200">
+                  {skill.label.slice(0, 2).toUpperCase()}
+                </span>
+              )}
+            </div>
+            <div>
+              <p className="font-['Outfit'] text-lg font-semibold tracking-[-0.04em] text-white">{skill.label}</p>
+              <p className="text-[0.62rem] uppercase tracking-[0.24em] text-slate-500">
+                {skill.count ? `${skill.count} repos` : "core lane"}
+              </p>
+            </div>
+          </div>
+        </div>
+      ))}
+    </div>
+  );
+}
 
+export function ProcessSection({ skills, benchmarks }: ProcessSectionProps) {
   return (
     <section id="process" className="w-full">
       <div className="section-frame relative overflow-hidden px-5 py-8 sm:px-8 sm:py-10 lg:px-12 lg:py-12">
@@ -85,7 +108,21 @@ export function ProcessSection({ skills, benchmarks }: ProcessSectionProps) {
             </CardContent>
           </Card>
 
-          <Card className="portfolio-card portfolio-card-strong process-toolkit-card overflow-hidden border-white/10 bg-[linear-gradient(180deg,rgba(16,34,64,0.82),rgba(8,18,37,0.98))]">
+          <details className="toolkit-mobile-disclosure portfolio-card portfolio-card-strong process-toolkit-card overflow-hidden border border-white/10 bg-[linear-gradient(180deg,rgba(16,34,64,0.82),rgba(8,18,37,0.98))] sm:hidden">
+            <summary className="flex cursor-pointer list-none items-center gap-3 p-6 text-sky-300">
+              <Cpu className="h-4 w-4" />
+              <div className="min-w-0 flex-1">
+                <p className="text-[0.62rem] uppercase tracking-[0.32em] text-sky-300">Selected toolkit</p>
+                <p className="mt-1 text-sm text-slate-300">{skills.length} technologies</p>
+              </div>
+              <ChevronDown className="toolkit-disclosure-icon h-5 w-5 shrink-0 text-slate-300 transition-transform duration-300" />
+            </summary>
+            <div className="border-t border-white/10 px-5 py-5">
+              <ToolkitGrid skills={skills} />
+            </div>
+          </details>
+
+          <Card className="portfolio-card portfolio-card-strong process-toolkit-card hidden overflow-hidden border-white/10 bg-[linear-gradient(180deg,rgba(16,34,64,0.82),rgba(8,18,37,0.98))] sm:block">
             <CardContent className="relative p-6">
               <div className="pointer-events-none absolute inset-x-0 bottom-0 h-36 bg-gradient-to-t from-sky-400/10 to-transparent" />
               <div className="space-y-5">
@@ -93,41 +130,13 @@ export function ProcessSection({ skills, benchmarks }: ProcessSectionProps) {
                   <Cpu className="h-4 w-4" />
                   <p className="text-[0.62rem] uppercase tracking-[0.32em] text-sky-300">Selected toolkit</p>
                 </div>
-                <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
-                  {skills.map((skill) => (
-                    <div
-                      key={skill.label}
-                      className="toolkit-tile rounded-[1.35rem] border border-white/10 bg-white/[0.04] px-4 py-4 shadow-[inset_0_1px_0_rgba(255,255,255,0.05)]"
-                    >
-                      <div className="flex items-center gap-3">
-                        <div className="toolkit-logo flex h-11 w-11 items-center justify-center rounded-2xl border border-white/10 bg-slate-950/40">
-                          {skill.logo ? (
-                            <img src={skill.logo} alt="" aria-hidden="true" className="h-7 w-7 object-contain" />
-                          ) : (
-                            <span className="font-['Outfit'] text-sm font-semibold tracking-[-0.04em] text-sky-200">
-                              {skill.label.slice(0, 2).toUpperCase()}
-                            </span>
-                          )}
-                        </div>
-                        <div>
-                          <p className="font-['Outfit'] text-lg font-semibold tracking-[-0.04em] text-white">{skill.label}</p>
-                          <p className="text-[0.62rem] uppercase tracking-[0.24em] text-slate-500">
-                            {skill.count ? `${skill.count} repos` : "core lane"}
-                          </p>
-                        </div>
-                      </div>
-                    </div>
-                  ))}
-                </div>
+                <ToolkitGrid skills={skills} />
               </div>
             </CardContent>
           </Card>
 
           <div className="space-y-6">
-            <Card
-              ref={benchmarkRef}
-              className="portfolio-card portfolio-card-strong border-white/10 bg-[linear-gradient(180deg,rgba(17,37,73,0.86),rgba(8,16,31,0.98))]"
-            >
+            <Card className="portfolio-card portfolio-card-strong border-white/10 bg-[linear-gradient(180deg,rgba(17,37,73,0.86),rgba(8,16,31,0.98))]">
               <CardContent className="space-y-5 p-6">
                 <div className="flex items-center gap-3 text-sky-300">
                   <Radar className="h-4 w-4" />
@@ -137,17 +146,12 @@ export function ProcessSection({ skills, benchmarks }: ProcessSectionProps) {
                   <div key={item.name} className="space-y-2">
                     <div className="flex items-center justify-between text-sm text-slate-300">
                       <span>{item.name}</span>
-                      <strong className="font-['Outfit'] text-white">
-                        <CountUpValue active={benchmarksInView} value={item.value} />%
-                      </strong>
+                      <strong className="font-['Outfit'] text-white">{item.value}%</strong>
                     </div>
                     <div className="benchmark-track relative h-3 overflow-hidden rounded-full border border-white/10 bg-slate-950/45 shadow-[inset_0_1px_4px_rgba(0,0,0,0.35)]">
-                      <motion.div
+                      <div
                         className="benchmark-fill absolute inset-0 w-full rounded-full bg-gradient-to-r from-cyan-300 via-sky-400 to-blue-500 shadow-[0_0_18px_rgba(56,189,248,0.4)]"
-                        initial={{ scaleX: 0 }}
-                        animate={{ scaleX: benchmarksInView ? item.value / 100 : 0 }}
-                        transition={{ duration: 0.85, ease: [0.22, 1, 0.36, 1] }}
-                        style={{ transformOrigin: "left center" }}
+                        style={{ transform: `scaleX(${item.value / 100})`, transformOrigin: "left center" }}
                       />
                     </div>
                   </div>

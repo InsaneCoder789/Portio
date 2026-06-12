@@ -11,7 +11,7 @@ type MetricTileProps = {
 
 export function MetricTile({ label, value, icon: Icon, valueNode }: MetricTileProps) {
   return (
-    <Card className="portfolio-card border-white/10 bg-white/[0.035] shadow-[inset_0_1px_0_rgba(255,255,255,0.06)] backdrop-blur-xl">
+    <Card className="portfolio-card border-white/10 bg-white/[0.055] shadow-[inset_0_1px_0_rgba(255,255,255,0.06)]">
       <CardContent className="flex items-start justify-between gap-4 p-5">
         <div className="space-y-2">
           <p className="metric-tile-label text-[0.65rem] uppercase tracking-[0.32em] text-slate-500">{label}</p>
