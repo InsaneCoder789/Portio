@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, type CSSProperties, type MouseEvent } from "react";
+import { useEffect, useRef, useState, type CSSProperties, type MouseEvent } from "react";
 import { motion } from "framer-motion";
 import { contactContent } from "@/features/portfolio/content";
 
@@ -19,6 +19,9 @@ export function HeroSection({ hero, theme, onToggleTheme }: HeroSectionProps) {
   const shellRef = useRef<HTMLDivElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   const overlayRef = useRef<HTMLDivElement>(null);
+  const pendingPointerRef = useRef<{ x: number; y: number; clientX: number; clientY: number } | null>(null);
+  const frameRef = useRef<number | null>(null);
+  const [supportsHoverMask, setSupportsHoverMask] = useState(false);
   const SIZE = 280;
   const marqueeTopText = "ENGINEERING SCALABLE SYSTEMS";
   const marqueeBottomText = "PRODUCT DESIGN MARKETING WEB DESIGN";
@@ -27,20 +30,47 @@ export function HeroSection({ hero, theme, onToggleTheme }: HeroSectionProps) {
   const primaryMaskImage = primaryImage?.replace(/\.png$/i, "-fill-mask.png");
   const secondaryMaskImage = secondaryImage?.replace(/\.png$/i, "-fill-mask.png");
 
+  useEffect(() => {
+    const hoverQuery = window.matchMedia("(hover: hover) and (pointer: fine)");
+    const compactQuery = window.matchMedia("(max-width: 768px)");
+    const syncHoverSupport = () => setSupportsHoverMask(hoverQuery.matches && !compactQuery.matches);
+
+    syncHoverSupport();
+    hoverQuery.addEventListener("change", syncHoverSupport);
+    compactQuery.addEventListener("change", syncHoverSupport);
+
+    return () => {
+      hoverQuery.removeEventListener("change", syncHoverSupport);
+      compactQuery.removeEventListener("change", syncHoverSupport);
+      if (frameRef.current !== null) window.cancelAnimationFrame(frameRef.current);
+    };
+  }, []);
+
   const handleMove = (event: MouseEvent<HTMLDivElement>) => {
     const rect = event.currentTarget.getBoundingClientRect();
-    const overlay = overlayRef.current;
-    const shell = shellRef.current;
-    if (!overlay) return;
 
-    const x = event.clientX - rect.left;
-    const y = event.clientY - rect.top;
-    overlay.style.setProperty("--mx", `${x}px`);
-    overlay.style.setProperty("--my", `${y}px`);
-    if (shell) {
-      shell.style.setProperty("--mx", `${event.clientX}px`);
-      shell.style.setProperty("--my", `${event.clientY}px`);
-    }
+    pendingPointerRef.current = {
+      x: event.clientX - rect.left,
+      y: event.clientY - rect.top,
+      clientX: event.clientX,
+      clientY: event.clientY,
+    };
+
+    if (frameRef.current !== null) return;
+    frameRef.current = window.requestAnimationFrame(() => {
+      frameRef.current = null;
+      const pointer = pendingPointerRef.current;
+      const overlay = overlayRef.current;
+      const shell = shellRef.current;
+      if (!pointer || !overlay) return;
+
+      overlay.style.setProperty("--mx", `${pointer.x}px`);
+      overlay.style.setProperty("--my", `${pointer.y}px`);
+      if (shell) {
+        shell.style.setProperty("--mx", `${pointer.clientX}px`);
+        shell.style.setProperty("--my", `${pointer.clientY}px`);
+      }
+    });
   };
 
   const handleEnter = () => {
@@ -153,32 +183,39 @@ export function HeroSection({ hero, theme, onToggleTheme }: HeroSectionProps) {
                 width={1536}
                 height={1536}
                 className="hero-mask-image hero-mask-primary"
+                loading="eager"
+                decoding="async"
+                fetchPriority="high"
                 draggable={false}
               />
-              <div
-                ref={overlayRef}
-                className="hero-mask-overlay"
-                style={
-                  {
-                    ["--mx" as string]: "50%",
-                    ["--my" as string]: "50%",
-                    ["--r" as string]: "0px",
-                    ["--primary-mask-url" as string]: `url("${primaryMaskImage}")`,
-                    ["--secondary-url" as string]: `url("${secondaryImage}")`,
-                    ["--secondary-mask-url" as string]: `url("${secondaryMaskImage}")`,
-                  } as CSSProperties
-                }
-              >
-                <img
-                  src={secondaryImage}
-                  alt=""
-                  aria-hidden="true"
-                  width={1536}
-                  height={1536}
-                  className="hero-mask-image hero-mask-secondary"
-                  draggable={false}
-                />
-              </div>
+              {supportsHoverMask ? (
+                <div
+                  ref={overlayRef}
+                  className="hero-mask-overlay"
+                  style={
+                    {
+                      ["--mx" as string]: "50%",
+                      ["--my" as string]: "50%",
+                      ["--r" as string]: "0px",
+                      ["--primary-mask-url" as string]: `url("${primaryMaskImage}")`,
+                      ["--secondary-url" as string]: `url("${secondaryImage}")`,
+                      ["--secondary-mask-url" as string]: `url("${secondaryMaskImage}")`,
+                    } as CSSProperties
+                  }
+                >
+                  <img
+                    src={secondaryImage}
+                    alt=""
+                    aria-hidden="true"
+                    width={1536}
+                    height={1536}
+                    className="hero-mask-image hero-mask-secondary"
+                    loading="lazy"
+                    decoding="async"
+                    draggable={false}
+                  />
+                </div>
+              ) : null}
             </div>
           </div>
         </motion.div>

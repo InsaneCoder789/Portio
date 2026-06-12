@@ -45,7 +45,7 @@ export function ContactSection({ contact }: ContactSectionProps) {
             </div>
           </div>
 
-          <Card className="contact-panel-card portfolio-card border-white/10 bg-slate-950/32 shadow-[inset_0_1px_0_rgba(255,255,255,0.06)] backdrop-blur-xl">
+          <Card className="contact-panel-card portfolio-card border-white/10 bg-slate-950/72 shadow-[inset_0_1px_0_rgba(255,255,255,0.06)]">
             <CardContent className="contact-panel-content space-y-6 p-6">
               <div className="space-y-3">
                 <p className="text-[0.62rem] uppercase tracking-[0.32em] text-sky-100/78">Available for selected collaborations</p>

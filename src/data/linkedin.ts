@@ -51,7 +51,7 @@ export const EXPERIENCE: ExperienceItem[] = [
   {
     company: "K-1000",
     logo: publicAsset("logos/companies/k1000.jpg"),
-    role: "Software Developer & Strategy Associate (Student Organization)",
+    role: "Deputy Chief | Office of Technology & Innovation",
     type: "Full-time",
     duration: "May 2025 — Present",
     location: "Bhubaneswar, Odisha",
