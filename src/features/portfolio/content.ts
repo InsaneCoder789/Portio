@@ -13,6 +13,30 @@ export const heroContent = {
   profilePhoto: PROFILE_PHOTO,
 };
 
+export const aboutContent = {
+  eyebrow: "01 / About",
+  command: "~ /about --systems --product --execution",
+  title: "Software that stays useful when the real world gets involved.",
+  lead:
+    "Software Developer with hands-on experience in Android, Flutter, backend systems, and modern web technologies. Skilled in Kotlin, TypeScript, React Native, Node.js, FastAPI, Express.js, and RESTful API development, with experience building scalable mobile applications and system-oriented projects.",
+  body:
+    "Contributed to technical leadership, event management, and cross-functional collaboration through multiple roles at K1000 and student technical organizations. Passionate about software architecture, scalable systems, UI/UX engineering, and real-world product development.",
+  points: [
+    "I build across the stack, from user-facing applications to backend systems and developer workflows.",
+    "I care about how software behaves in real-world environments, not just in ideal demos.",
+    "I am actively deepening my understanding of system design, distributed systems, and software architecture.",
+    "I am interested in building systems that handle scale, failure, and reliability with clarity.",
+    "I enjoy working on different kinds of projects, not just to ship them, but to understand how they should be designed, tested, and maintained in production.",
+  ],
+  focus: [
+    "Backend systems and architecture",
+    "End-to-end product development",
+    "Scalable system design",
+    "Exploring technologies across mobile, web, and backend",
+  ],
+  philosophy: "Build it. Break it. Understand it. Then build it better.",
+};
+
 export const featuredProjects = [
   {
     name: "Rail",

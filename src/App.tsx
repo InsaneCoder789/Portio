@@ -4,6 +4,7 @@ import { useEffect, useMemo, useState } from "react";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import {
+  aboutContent,
   credibilitySignals,
   contactContent,
   experienceItems,
@@ -513,7 +514,7 @@ function App({ initialBooting = true, staticMode = false }: AppProps) {
 
       <nav className={`nav-shell ${mobileMenuOpen ? "is-menu-open" : ""}`.trim()}>
         <div className="nav-inner">
-          <a href="#about" className="brand-shell">
+          <a href="#home" className="brand-shell">
             <img src={heroContent.profilePhoto} alt={heroContent.name} className="brand-avatar" />
             <span className="brand-copy">
               <strong>{heroContent.name}</strong>
@@ -534,7 +535,7 @@ function App({ initialBooting = true, staticMode = false }: AppProps) {
       </nav>
 
       <main className="page-stack">
-        <section id="about" className="chapter section-shell hero-shell">
+        <section id="home" className="chapter section-shell hero-shell">
           <div className="hero-visual">
             <div className="hero-starfield" />
 
@@ -581,10 +582,60 @@ function App({ initialBooting = true, staticMode = false }: AppProps) {
 
         </section>
 
+        <section id="about" className="chapter">
+          <div className="section-shell about-shell">
+            <div className="section-heading reveal">
+              <p className="section-label">{aboutContent.eyebrow}</p>
+              <p className="section-command">{aboutContent.command}</p>
+              <h2>{aboutContent.title}</h2>
+              <p className="section-intro">
+                {aboutContent.lead} {aboutContent.body}
+              </p>
+            </div>
+
+            <div className="about-layout">
+              <article className="about-primary reveal">
+                <p className="about-kicker">About Me</p>
+                <p>{aboutContent.lead}</p>
+                <p>{aboutContent.body}</p>
+                <div className="about-quote">
+                  <span>Philosophy</span>
+                  <strong>{aboutContent.philosophy}</strong>
+                </div>
+              </article>
+
+              <div className="about-secondary">
+                <article className="about-list-card reveal">
+                  <p className="about-kicker">How I Work</p>
+                  <div className="about-point-list">
+                    {aboutContent.points.map((point) => (
+                      <div key={point} className="about-point">
+                        <span className="about-point-dot" />
+                        <p>{point}</p>
+                      </div>
+                    ))}
+                  </div>
+                </article>
+
+                <article className="about-focus-card reveal">
+                  <p className="about-kicker">What I&apos;m Focused On</p>
+                  <div className="about-focus-grid">
+                    {aboutContent.focus.map((item) => (
+                      <div key={item} className="about-focus-pill">
+                        <span>{item}</span>
+                      </div>
+                    ))}
+                  </div>
+                </article>
+              </div>
+            </div>
+          </div>
+        </section>
+
         <section id="experience" className="chapter">
           <div className="section-shell experience-shell">
             <div className="section-heading reveal">
-              <p className="section-label">01 / Journey</p>
+              <p className="section-label">02 / Journey</p>
               <p className="section-command">~ /experience --timeline</p>
               <h2>Experience</h2>
               <p className="section-intro">
@@ -660,7 +711,7 @@ function App({ initialBooting = true, staticMode = false }: AppProps) {
         <section id="projects" className="chapter">
           <div className="section-shell projects-shell">
             <div className="section-heading reveal">
-              <p className="section-label">02 / Portfolio</p>
+              <p className="section-label">03 / Portfolio</p>
               <p className="section-command">~ /projects --curated --case-studies</p>
               <h2>Selected Works</h2>
               <p className="section-intro">
@@ -733,7 +784,7 @@ function App({ initialBooting = true, staticMode = false }: AppProps) {
         <section id="skills" className="chapter">
           <div className="section-shell skills-shell">
             <div className="section-heading reveal">
-              <p className="section-label">03 / Stack</p>
+              <p className="section-label">04 / Stack</p>
               <p className="section-command">~ /stack --atlas --core-tools</p>
               <h2>Capability Atlas</h2>
               <p className="section-intro">
@@ -785,7 +836,7 @@ function App({ initialBooting = true, staticMode = false }: AppProps) {
         <section id="signals" className="chapter">
           <div className="section-shell signals-shell">
             <div className="section-heading reveal">
-              <p className="section-label">04 / Signals</p>
+              <p className="section-label">05 / Signals</p>
               <p className="section-command">~ /signals --metrics --writing --proof</p>
               <h2>Signals</h2>
               <p className="section-intro">
@@ -846,7 +897,7 @@ function App({ initialBooting = true, staticMode = false }: AppProps) {
         <section id="github" className="chapter">
           <div className="section-shell github-shell">
             <div className="section-heading reveal">
-              <p className="section-label">05 / GitHub</p>
+              <p className="section-label">06 / GitHub</p>
               <p className="section-command">~ /github --telemetry --public-signal</p>
               <h2>Telemetry</h2>
               <p className="section-intro">
@@ -964,7 +1015,7 @@ function App({ initialBooting = true, staticMode = false }: AppProps) {
               <div className="contact-card contact-card-single">
                 <div className="contact-panel-grid">
                   <div className="contact-panel-left">
-                    <p className="section-label">06 / Contact</p>
+                    <p className="section-label">07 / Contact</p>
                     <p className="section-command">~ /contact --open-channel</p>
                     <h2>Connect</h2>
                     <p className="contact-lead">
