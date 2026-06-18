@@ -1149,13 +1149,13 @@ html.lenis body {
 .theme-light .contact-linkedin-action,
 .theme-light .contact-linkedin-pill {
   border-color: rgba(207, 214, 227, 0.18) !important;
-  background: #ffffff !important;
+  background: linear-gradient(135deg, #f7f7f5, #dfe5f0) !important;
   color: #1f2940 !important;
 }
 
 .theme-light .contact-linkedin-action:hover,
 .theme-light .contact-linkedin-pill:hover {
-  background: #ffffff !important;
+  background: linear-gradient(135deg, #ffffff, #e8edf6) !important;
   color: #111827 !important;
 }
 
