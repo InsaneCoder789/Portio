@@ -773,6 +773,12 @@ html.lenis body {
   color: #f7f3ed !important;
 }
 
+.theme-light #process .process-principle-card .inline-flex,
+.theme-light #process .process-principle-card [class*="bg-white/"],
+.theme-light #process .process-principle-card .text-slate-200 {
+  color: #f7f3ed !important;
+}
+
 .theme-light .contact-primary-action {
   border-color: rgba(207, 214, 227, 0.14) !important;
   background: linear-gradient(135deg, #f7f7f5, #dfe5f0) !important;

@@ -32,7 +32,7 @@ export function ContactSection({ contact }: ContactSectionProps) {
                   {contact.email}
                 </a>
               </Button>
-              <Button asChild variant="outline" className="contact-secondary-action rounded-full">
+              <Button asChild className="contact-primary-action contact-linkedin-action rounded-full">
                 <a href={contact.linkedin} target="_blank" rel="noreferrer" className="contact-linkedin-action">
                   LinkedIn
                   <ArrowUpRight className="h-4 w-4" />
