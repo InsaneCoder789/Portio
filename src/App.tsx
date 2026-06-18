@@ -1,6 +1,7 @@
 "use client";
 
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
+import Lenis from "lenis";
 import { contactContent, heroContent } from "@/features/portfolio/content";
 import { HeroSection } from "@/components/portfolio/HeroSection";
 import { AboutSection } from "@/components/portfolio/AboutSection";
@@ -37,6 +38,31 @@ function App({ initialBooting = true, staticMode = false }: AppProps) {
     credibilitySignals,
     performanceBenchmarks,
   } = usePortfolioData(staticMode);
+
+  useEffect(() => {
+    if (staticMode) return undefined;
+
+    const lenis = new Lenis({
+      duration: 1.08,
+      smoothWheel: true,
+      wheelMultiplier: 0.92,
+      touchMultiplier: 0.9,
+    });
+
+    let frameId = 0;
+
+    const tick = (time: number) => {
+      lenis.raf(time);
+      frameId = window.requestAnimationFrame(tick);
+    };
+
+    frameId = window.requestAnimationFrame(tick);
+
+    return () => {
+      window.cancelAnimationFrame(frameId);
+      lenis.destroy();
+    };
+  }, [staticMode]);
 
   return (
     <div className={`portfolio-root theme-${theme} relative min-h-screen overflow-x-hidden`}>

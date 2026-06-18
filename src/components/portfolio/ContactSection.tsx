@@ -26,18 +26,14 @@ export function ContactSection({ contact }: ContactSectionProps) {
               Open to software engineering roles, frontend-heavy builds, product-minded internships, and collaborative work where technical clarity still matters.
             </p>
             <div className="contact-cta-row flex flex-wrap gap-3">
-              <Button asChild className="contact-primary-action rounded-full bg-black text-white hover:bg-slate-900">
+              <Button asChild className="contact-primary-action rounded-full">
                 <a href={`mailto:${contact.email}`}>
                   <Mail className="h-4 w-4" />
                   {contact.email}
                 </a>
               </Button>
-              <Button
-                asChild
-                variant="outline"
-                className="rounded-full border-white/12 bg-white/[0.06] text-white hover:bg-white/12"
-              >
-                <a href={contact.linkedin} target="_blank" rel="noreferrer">
+              <Button asChild variant="outline" className="contact-secondary-action rounded-full">
+                <a href={contact.linkedin} target="_blank" rel="noreferrer" className="contact-linkedin-action">
                   LinkedIn
                   <ArrowUpRight className="h-4 w-4" />
                 </a>
@@ -45,7 +41,7 @@ export function ContactSection({ contact }: ContactSectionProps) {
             </div>
           </div>
 
-          <Card className="contact-panel-card portfolio-card border-white/10 bg-slate-950/72 shadow-[inset_0_1px_0_rgba(255,255,255,0.06)]">
+          <Card className="contact-panel-card portfolio-card border shadow-[inset_0_1px_0_rgba(255,255,255,0.06)]">
             <CardContent className="contact-panel-content space-y-6 p-6">
               <div className="space-y-3">
                 <p className="text-[0.62rem] uppercase tracking-[0.32em] text-sky-100/78">Available for selected collaborations</p>
@@ -71,7 +67,7 @@ export function ContactSection({ contact }: ContactSectionProps) {
                   href={contact.linkedin}
                   target="_blank"
                   rel="noreferrer"
-                  className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/[0.05] px-3 py-3 text-[0.62rem] uppercase tracking-[0.22em] text-white transition hover:bg-white/10 sm:px-4 sm:text-[0.68rem] sm:tracking-[0.3em]"
+                  className="contact-linkedin-pill inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/[0.05] px-3 py-3 text-[0.62rem] uppercase tracking-[0.22em] text-white transition hover:bg-white/10 sm:px-4 sm:text-[0.68rem] sm:tracking-[0.3em]"
                 >
                   <Linkedin className="h-4 w-4" />
                   LinkedIn

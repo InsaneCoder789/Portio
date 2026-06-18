@@ -85,7 +85,7 @@ export function ProcessSection({ skills, benchmarks }: ProcessSectionProps) {
         />
 
         <div className="mt-12 grid gap-6 xl:grid-cols-[minmax(0,0.92fr)_minmax(0,1.08fr)_22rem]">
-          <Card className="portfolio-card border-white/10 bg-[linear-gradient(180deg,rgba(10,18,33,0.9),rgba(5,10,20,0.98))]">
+          <Card className="portfolio-card process-build-card border">
             <CardContent className="space-y-5 p-6">
               <div className="flex items-center gap-3 text-cyan-300">
                 <Orbit className="h-4 w-4" />
@@ -108,7 +108,7 @@ export function ProcessSection({ skills, benchmarks }: ProcessSectionProps) {
             </CardContent>
           </Card>
 
-          <details className="toolkit-mobile-disclosure portfolio-card portfolio-card-strong process-toolkit-card overflow-hidden border border-white/10 bg-[linear-gradient(180deg,rgba(16,34,64,0.82),rgba(8,18,37,0.98))] sm:hidden">
+          <details className="toolkit-mobile-disclosure portfolio-card portfolio-card-strong process-toolkit-card overflow-hidden border sm:hidden">
             <summary className="flex cursor-pointer list-none items-center gap-3 p-6 text-sky-300">
               <Cpu className="h-4 w-4" />
               <div className="min-w-0 flex-1">
@@ -122,7 +122,7 @@ export function ProcessSection({ skills, benchmarks }: ProcessSectionProps) {
             </div>
           </details>
 
-          <Card className="portfolio-card portfolio-card-strong process-toolkit-card hidden overflow-hidden border-white/10 bg-[linear-gradient(180deg,rgba(16,34,64,0.82),rgba(8,18,37,0.98))] sm:block">
+          <Card className="portfolio-card portfolio-card-strong process-toolkit-card hidden overflow-hidden border sm:block">
             <CardContent className="relative p-6">
               <div className="pointer-events-none absolute inset-x-0 bottom-0 h-36 bg-gradient-to-t from-sky-400/10 to-transparent" />
               <div className="space-y-5">
@@ -136,7 +136,7 @@ export function ProcessSection({ skills, benchmarks }: ProcessSectionProps) {
           </Card>
 
           <div className="space-y-6">
-            <Card className="portfolio-card portfolio-card-strong border-white/10 bg-[linear-gradient(180deg,rgba(17,37,73,0.86),rgba(8,16,31,0.98))]">
+            <Card className="portfolio-card portfolio-card-strong process-benchmark-card border">
               <CardContent className="space-y-5 p-6">
                 <div className="flex items-center gap-3 text-sky-300">
                   <Radar className="h-4 w-4" />
@@ -159,7 +159,7 @@ export function ProcessSection({ skills, benchmarks }: ProcessSectionProps) {
               </CardContent>
             </Card>
 
-            <Card className="portfolio-card border-white/10 bg-white/[0.03]">
+            <Card className="portfolio-card process-principle-card border">
               <CardContent className="space-y-4 p-6">
                 <p className="text-[0.62rem] uppercase tracking-[0.32em] text-slate-500">Delivery principle</p>
                 <h3 className="font-['Outfit'] text-2xl font-semibold tracking-[-0.05em] text-white">

@@ -81,7 +81,7 @@ export function ProofSection({
         </div>
 
         <div className="mt-6 grid gap-6 xl:grid-cols-[minmax(0,1.1fr)_minmax(0,0.9fr)]">
-          <Card className="portfolio-card portfolio-card-strong overflow-hidden border-white/10 bg-[linear-gradient(180deg,rgba(17,38,72,0.84),rgba(8,17,34,0.98))]">
+          <Card className="portfolio-card portfolio-card-strong proof-grid-card overflow-hidden border">
             <CardContent className="space-y-6 p-6">
               <div className="flex items-end justify-between gap-4">
                 <div>
@@ -144,7 +144,7 @@ export function ProofSection({
           </Card>
 
           <div className="grid gap-6">
-            <Card className="portfolio-card border-white/10 bg-[linear-gradient(180deg,rgba(11,19,35,0.92),rgba(5,10,20,0.98))]">
+            <Card className="portfolio-card proof-writing-card border">
               <CardContent className="space-y-5 p-6">
                 <div className="flex items-center gap-3 text-cyan-300">
                   <NotebookPen className="h-4 w-4" />
@@ -160,7 +160,7 @@ export function ProofSection({
               </CardContent>
             </Card>
 
-            <Card className="portfolio-card border-white/10 bg-white/[0.03]">
+            <Card className="portfolio-card proof-signals-card border">
               <CardContent className="grid gap-5 p-6 md:grid-cols-2">
                 <div className="space-y-4">
                   <div className="flex items-center gap-3 text-sky-300">

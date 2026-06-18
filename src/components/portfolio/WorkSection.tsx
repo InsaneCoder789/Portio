@@ -95,7 +95,7 @@ export function WorkSection({ projects }: WorkSectionProps) {
           {featuredProjects.map((project, index) => (
             <details
               key={project.name}
-              className="project-mobile-disclosure portfolio-card portfolio-card-strong overflow-hidden border border-white/10 bg-[linear-gradient(180deg,rgba(18,39,77,0.84),rgba(8,18,37,0.98))]"
+              className="project-mobile-disclosure portfolio-card portfolio-card-strong work-case-card overflow-hidden border"
             >
               <summary className="cursor-pointer list-none">
                 {project.headerImage ? (
@@ -126,7 +126,7 @@ export function WorkSection({ projects }: WorkSectionProps) {
           {featuredProjects.map((project, index) => (
             <Card
               key={project.name}
-              className={`portfolio-card portfolio-card-strong col-span-1 overflow-hidden border-white/10 bg-[linear-gradient(180deg,rgba(18,39,77,0.84),rgba(8,18,37,0.98))] shadow-[0_30px_90px_-60px_rgba(56,189,248,0.45)] lg:col-span-6 ${
+              className={`portfolio-card portfolio-card-strong work-case-card col-span-1 overflow-hidden border lg:col-span-6 ${
                 index % 2 === 1 ? "lg:translate-y-8" : ""
               }`}
             >
