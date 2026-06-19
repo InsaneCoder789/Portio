@@ -28,10 +28,13 @@ export const EXPERIENCE: ExperienceItem[] = [
     mode: "Part-time",
     points: [
       "Building a Next.js-based frontend platform using React.js, TypeScript, and Node.js for dynamic content rendering and modular UI management.",
+      "Refactored page-level composition into reusable interface systems so new screens and content modules could be introduced without visual drift.",
+      "Worked closely with content and product direction to translate broad creative asks into implementation-ready frontend structures.",
       "Developed reusable frontend components and centralized state handling to improve maintainability across multiple pages.",
-      "Worked on responsive UI optimization, frontend performance improvements, and rapid prototyping workflows."
+      "Worked on responsive UI optimization, frontend performance improvements, and rapid prototyping workflows.",
+      "Reviewed interaction quality, implementation consistency, and shipping readiness before internal handoff."
     ],
-    skills: ["Next.js", "TypeScript", "Node.js", "Performance Optimization"],
+    skills: ["Next.js", "TypeScript", "Node.js", "Architecture", "Performance Optimization"],
   },
   {
     company: "Donum Technologies",
@@ -43,10 +46,12 @@ export const EXPERIENCE: ExperienceItem[] = [
     mode: "Hybrid",
     points: [
       "Assisted in frontend improvements and digital product presentation for additive-manufacturing campaigns.",
+      "Helped align interface presentation, product communication, and landing-page direction so technical offerings could be explained more clearly.",
       "Worked on branding assets, UI-focused promotional systems, and technical communication strategies.",
-      "Collaborated on marketing workflows integrating design coordination with product visibility initiatives."
+      "Collaborated on marketing workflows integrating design coordination with product visibility initiatives.",
+      "Supported campaign execution by shaping assets, layouts, and messaging into more structured product-facing outputs."
     ],
-    skills: ["React.js", "UI/UX", "Branding Assets", "Technical Communication"],
+    skills: ["React.js", "UI/UX", "Branding Assets", "Technical Communication", "Product Positioning"],
   },
   {
     company: "K-1000",
@@ -57,12 +62,14 @@ export const EXPERIENCE: ExperienceItem[] = [
     location: "Bhubaneswar, Odisha",
     mode: "On-site",
     points: [
-      "Developing Android and Flutter applications with reusable UI structures and backend-integrated mobile workflows.",
-      "Developed and deployed the official K1000 website using React.js and Next.js for organizational platforms and event initiatives.",
-      "Integrated REST APIs, asynchronous data handling, and dynamic frontend rendering across internal systems.",
-      "Contributed to technical coordination, event execution, operational planning, and platform management across multiple organizational initiatives."
+      "Acting as the second-in-command of K-1000's Office of Technology & Innovation, helping manage the technical backbone behind websites, internal tools, event systems, dashboards, automation flows, and innovation-led execution.",
+      "Supported the Chief of OTI in planning, building, maintaining, and improving K-1000's technical infrastructure across web platforms, member systems, operational tooling, and branch support requests.",
+      "Reviewed technical feasibility for proposed digital systems by evaluating scalability, security, delivery effort, resource constraints, and implementation realism before work moved forward.",
+      "Contributed directly to development, debugging, code review, feature refinement, and launch-readiness for systems used before and during events.",
+      "Helped translate cross-branch requirements into actionable technical plans by coordinating with teams that needed registration portals, dashboards, workflow systems, and operational tooling.",
+      "Guided technical execution through documentation, progress monitoring, internal coordination, system reliability checks, and continuous exploration of automation ideas, AI tools, and infrastructure improvements."
     ],
-    skills: ["Project Management", "Strategic Planning", "Leadership"],
+    skills: ["Technical Leadership", "Feasibility Review", "System Planning", "Cross-Branch Coordination", "Documentation"],
   },
   {
     company: "Geeks for Geeks KIIT",
@@ -74,10 +81,12 @@ export const EXPERIENCE: ExperienceItem[] = [
     mode: "Remote",
     points: [
       "Developing Android applications using Kotlin with modular activity structures and maintainable application logic.",
+      "Structured features around cleaner activity boundaries and reusable patterns so the codebase stayed easier to debug and extend.",
       "Integrated REST APIs, asynchronous data loading, and backend-driven UI rendering for production-like workflows.",
-      "Worked on debugging, performance optimization, and responsive mobile interaction handling."
+      "Worked on debugging, performance optimization, and responsive mobile interaction handling.",
+      "Collaborated with the team on implementation decisions, release stability, and improvements to day-to-day development flow."
     ],
-    skills: ["Kotlin", "Modular Architecture", "REST APIs", "Debugging"],
+    skills: ["Kotlin", "Modular Architecture", "REST APIs", "Debugging", "Mobile Performance"],
   },
   {
     company: "National Service Scheme (NSS SCE KIIT)",

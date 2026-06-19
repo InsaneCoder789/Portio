@@ -86,7 +86,7 @@ export function WorkSection({ projects }: WorkSectionProps) {
       <div className="section-frame relative overflow-hidden px-5 py-8 sm:px-8 sm:py-10 lg:px-12 lg:py-12">
         <div className="liquid-blob liquid-blob-soft right-[-12rem] top-[-6rem]" />
         <SectionHeader
-          eyebrow="03 / Work"
+          eyebrow="04 / Work"
           title="Selected work, told like product case studies."
           description="The portfolio should show more than what was built. Each case study here focuses on the problem, the technical decision, and the product outcome that made the work worth shipping."
         />

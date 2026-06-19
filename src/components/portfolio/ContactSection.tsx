@@ -18,7 +18,7 @@ export function ContactSection({ contact }: ContactSectionProps) {
         <div className="liquid-blob liquid-blob-contact" />
         <div className="contact-layout relative grid gap-7 lg:grid-cols-[minmax(0,1fr)_24rem] lg:items-end">
           <div className="contact-copy space-y-6">
-            <p className="text-[0.68rem] uppercase tracking-[0.42em] text-sky-100/72">06 / Contact</p>
+            <p className="text-[0.68rem] uppercase tracking-[0.42em] text-sky-100/72">07 / Contact</p>
             <h2 className="contact-title max-w-4xl font-['Outfit'] text-[clamp(2.7rem,8vw,7rem)] font-semibold uppercase leading-[0.88] tracking-[-0.08em] text-white">
               Let&apos;s build something with taste and backbone.
             </h2>

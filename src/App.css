@@ -87,30 +87,33 @@ html.lenis body {
 }
 
 .theme-light {
-  --portfolio-page-bg: #121826;
+  --portfolio-page-bg: #0f1524;
   --portfolio-body-text: #f2eee8;
   --portfolio-frame-border: rgba(207, 214, 227, 0.14);
   --portfolio-frame-bg:
-    radial-gradient(circle at top left, rgba(145, 156, 182, 0.18), transparent 27%),
-    radial-gradient(circle at bottom right, rgba(37, 43, 68, 0.18), transparent 30%),
-    linear-gradient(180deg, rgba(21, 28, 42, 0.995), rgba(14, 19, 31, 0.995));
+    radial-gradient(circle at 12% 4%, rgba(138, 127, 137, 0.28), transparent 23%),
+    radial-gradient(circle at 82% 14%, rgba(229, 227, 229, 0.12), transparent 22%),
+    radial-gradient(circle at 78% 86%, rgba(100, 109, 141, 0.16), transparent 28%),
+    linear-gradient(180deg, rgba(27, 34, 54, 0.995), rgba(15, 21, 36, 0.995));
   --portfolio-frame-shadow: none;
   --portfolio-inner-frame: rgba(207, 214, 227, 0.08);
   --portfolio-footer-border: rgba(207, 214, 227, 0.14);
   --portfolio-footer-text: rgba(242, 238, 232, 0.7);
   --portfolio-card-border: rgba(207, 214, 227, 0.14);
   --portfolio-card-bg:
-    radial-gradient(circle at top left, rgba(145, 156, 182, 0.14), transparent 34%),
-    linear-gradient(180deg, rgba(27, 35, 52, 0.99), rgba(18, 24, 38, 0.98));
+    radial-gradient(circle at 16% 10%, rgba(138, 127, 137, 0.24), transparent 28%),
+    radial-gradient(circle at 88% 92%, rgba(229, 227, 229, 0.07), transparent 32%),
+    linear-gradient(180deg, rgba(34, 42, 64, 0.99), rgba(18, 24, 38, 0.985));
   --portfolio-card-strong-bg:
-    radial-gradient(circle at top left, rgba(145, 156, 182, 0.16), transparent 36%),
-    linear-gradient(180deg, rgba(31, 39, 58, 0.99), rgba(18, 24, 38, 0.99));
+    radial-gradient(circle at 14% 6%, rgba(138, 127, 137, 0.3), transparent 28%),
+    radial-gradient(circle at 84% 88%, rgba(229, 227, 229, 0.08), transparent 34%),
+    linear-gradient(180deg, rgba(38, 47, 72, 0.995), rgba(20, 26, 43, 0.995));
   --portfolio-card-shadow:
-    0 20px 48px rgba(3, 7, 18, 0.34),
+    0 28px 68px rgba(2, 6, 18, 0.4),
     inset 0 1px 0 rgba(255, 255, 255, 0.05);
   --portfolio-card-text: #f2eee8;
-  --portfolio-section-glow-a: rgba(145, 156, 182, 0.18);
-  --portfolio-section-glow-b: rgba(101, 110, 129, 0.16);
+  --portfolio-section-glow-a: rgba(138, 127, 137, 0.24);
+  --portfolio-section-glow-b: rgba(100, 109, 141, 0.18);
   --portfolio-section-sheen: rgba(255, 255, 255, 0.025);
 }
 
@@ -180,11 +183,11 @@ html.lenis body {
   display: block;
   pointer-events: none;
   background:
-    radial-gradient(circle at 18% 22%, rgba(145, 156, 182, 0.14), transparent 22%),
-    radial-gradient(circle at 82% 18%, rgba(88, 98, 121, 0.12), transparent 24%),
-    radial-gradient(circle at 55% 88%, rgba(214, 220, 228, 0.08), transparent 28%);
+    radial-gradient(circle at 18% 22%, rgba(138, 127, 137, 0.18), transparent 22%),
+    radial-gradient(circle at 82% 18%, rgba(100, 109, 141, 0.15), transparent 24%),
+    radial-gradient(circle at 55% 88%, rgba(229, 227, 229, 0.1), transparent 28%);
   filter: blur(18px);
-  opacity: 0.24;
+  opacity: 0.34;
   mix-blend-mode: screen;
   transform: translate3d(0, 0, 0);
 }
@@ -396,6 +399,125 @@ html.lenis body {
   transform: rotate(180deg);
 }
 
+.experience-shell,
+.process-shell,
+.experience-metric-shell {
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(255, 255, 255, 0.03);
+  box-shadow:
+    0 24px 60px rgba(3, 7, 18, 0.2),
+    inset 0 1px 0 rgba(255, 255, 255, 0.05);
+}
+
+.experience-carousel-core,
+.experience-metric-core,
+.process-overview-panel,
+.experience-signal-card,
+.experience-point-row,
+.process-lane-card,
+.benchmark-track {
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(255, 255, 255, 0.03);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.04);
+}
+
+.experience-logo-shell {
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background:
+    radial-gradient(circle at 25% 20%, rgba(255, 255, 255, 0.08), transparent 34%),
+    rgba(255, 255, 255, 0.03);
+  box-shadow:
+    0 18px 40px rgba(3, 7, 18, 0.16),
+    inset 0 1px 0 rgba(255, 255, 255, 0.05);
+}
+
+.experience-meta-badge,
+.experience-skill-badge,
+.process-principle-badge {
+  border-color: rgba(255, 255, 255, 0.1) !important;
+  background: rgba(255, 255, 255, 0.03) !important;
+}
+
+.experience-nav-button,
+.experience-brand-pill,
+.experience-dot,
+.toolkit-tile,
+.experience-point-row,
+.experience-signal-card,
+.process-lane-shell,
+.process-lane-card,
+.process-overview-panel,
+.benchmark-track,
+.benchmark-fill {
+  transition:
+    transform 700ms cubic-bezier(0.32, 0.72, 0, 1),
+    opacity 700ms cubic-bezier(0.32, 0.72, 0, 1),
+    border-color 320ms cubic-bezier(0.32, 0.72, 0, 1),
+    background 320ms cubic-bezier(0.32, 0.72, 0, 1),
+    color 320ms cubic-bezier(0.32, 0.72, 0, 1),
+    box-shadow 320ms cubic-bezier(0.32, 0.72, 0, 1);
+}
+
+.experience-dot {
+  height: 0.55rem;
+  width: 0.55rem;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  background: rgba(255, 255, 255, 0.18);
+}
+
+.experience-dot.is-active {
+  width: 2rem;
+  background: rgba(255, 255, 255, 0.95);
+}
+
+.experience-brand-pill {
+  display: inline-flex;
+  min-width: 0;
+  align-items: flex-start;
+  gap: 0.45rem;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(255, 255, 255, 0.03);
+  padding: 0.85rem 1rem;
+  text-align: left;
+}
+
+.experience-brand-pill span:first-child {
+  font-family: "Iowan Old Style", "Book Antiqua", "Palatino Linotype", Georgia, serif;
+  font-size: 0.95rem;
+}
+
+.experience-brand-pill span:last-child {
+  font-size: 0.62rem;
+  letter-spacing: 0.24em;
+  opacity: 0.66;
+  text-transform: uppercase;
+}
+
+.experience-brand-pill.is-active {
+  transform: translateY(-2px);
+}
+
+.experience-nav-button {
+  height: 2.5rem !important;
+  width: 2.5rem !important;
+}
+
+.process-lane-shell {
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(255, 255, 255, 0.025);
+}
+
+.benchmark-track {
+  overflow: hidden;
+}
+
+.benchmark-fill {
+  background-image: linear-gradient(90deg, #cfd6e3 0%, #ffffff 100%);
+  box-shadow: 0 0 24px rgba(255, 255, 255, 0.14);
+}
+
 .portfolio-main > section:not(#about) .section-frame > :not(.liquid-blob):not(.about-orbit) {
   position: relative;
   z-index: 1;
@@ -426,6 +548,66 @@ html.lenis body {
   mix-blend-mode: screen;
 }
 
+.theme-light .experience-shell,
+.theme-light .process-shell,
+.theme-light .experience-metric-shell {
+  border-color: rgba(207, 214, 227, 0.14);
+  background: rgba(255, 255, 255, 0.035);
+}
+
+.theme-light .experience-carousel-core,
+.theme-light .experience-metric-core,
+.theme-light .process-overview-panel,
+.theme-light .experience-signal-card,
+.theme-light .experience-point-row,
+.theme-light .process-lane-card,
+.theme-light .benchmark-track,
+.theme-light .experience-logo-shell,
+.theme-light .process-lane-shell {
+  border-color: rgba(207, 214, 227, 0.14);
+  background:
+    radial-gradient(circle at top left, rgba(145, 156, 182, 0.14), transparent 38%),
+    rgba(255, 255, 255, 0.03);
+}
+
+.theme-light .experience-brand-pill,
+.theme-light .experience-nav-button,
+.theme-light .experience-meta-badge,
+.theme-light .experience-skill-badge,
+.theme-light .process-principle-badge {
+  border-color: rgba(207, 214, 227, 0.16) !important;
+  background: rgba(255, 255, 255, 0.04) !important;
+  color: #f2eee8 !important;
+}
+
+.theme-light .experience-dot {
+  border-color: rgba(207, 214, 227, 0.28);
+  background: rgba(207, 214, 227, 0.26);
+}
+
+.theme-light .experience-dot.is-active {
+  background: #f7f3ed;
+}
+
+.theme-light .experience-brand-pill span,
+.theme-light .experience-brand-pill {
+  color: rgba(242, 238, 232, 0.84);
+}
+
+.theme-light .experience-brand-pill.is-active,
+.theme-light .experience-nav-button:hover,
+.theme-light .toolkit-tile:hover,
+.theme-light .process-lane-shell:hover {
+  border-color: rgba(207, 214, 227, 0.24) !important;
+  background: rgba(255, 255, 255, 0.06) !important;
+  box-shadow: 0 22px 50px rgba(3, 7, 18, 0.22);
+}
+
+.theme-light .benchmark-fill {
+  background-image: linear-gradient(90deg, #aab6cb 0%, #f7f3ed 100%);
+  box-shadow: 0 0 24px rgba(170, 182, 203, 0.24);
+}
+
 .theme-dark .portfolio-main > section:not(#about) .section-frame::after {
   background:
     radial-gradient(circle at 15% 20%, rgba(205, 33, 42, 0.3), transparent 23%),
@@ -433,6 +615,67 @@ html.lenis body {
     radial-gradient(circle at 54% 88%, rgba(26, 34, 56, 0.7), transparent 28%);
   opacity: 0.54;
   mix-blend-mode: screen;
+}
+
+.theme-dark .experience-shell,
+.theme-dark .process-shell,
+.theme-dark .experience-metric-shell {
+  border-color: rgba(255, 215, 0, 0.16);
+  background: rgba(255, 215, 0, 0.03);
+}
+
+.theme-dark .experience-carousel-core,
+.theme-dark .experience-metric-core,
+.theme-dark .process-overview-panel,
+.theme-dark .experience-signal-card,
+.theme-dark .experience-point-row,
+.theme-dark .process-lane-card,
+.theme-dark .benchmark-track,
+.theme-dark .experience-logo-shell,
+.theme-dark .process-lane-shell {
+  border-color: rgba(255, 215, 0, 0.18);
+  background:
+    radial-gradient(circle at top left, rgba(205, 33, 42, 0.16), transparent 36%),
+    radial-gradient(circle at bottom right, rgba(255, 215, 0, 0.08), transparent 34%),
+    rgba(26, 34, 56, 0.36);
+}
+
+.theme-dark .experience-brand-pill,
+.theme-dark .experience-nav-button,
+.theme-dark .experience-meta-badge,
+.theme-dark .experience-skill-badge,
+.theme-dark .process-principle-badge {
+  border-color: rgba(255, 215, 0, 0.22) !important;
+  background: rgba(26, 34, 56, 0.62) !important;
+  color: var(--puma-ivory) !important;
+}
+
+.theme-dark .experience-dot {
+  border-color: rgba(255, 215, 0, 0.22);
+  background: rgba(255, 215, 0, 0.18);
+}
+
+.theme-dark .experience-dot.is-active {
+  background: var(--puma-gold);
+}
+
+.theme-dark .experience-brand-pill span,
+.theme-dark .experience-brand-pill {
+  color: rgba(255, 250, 240, 0.84);
+}
+
+.theme-dark .experience-brand-pill.is-active,
+.theme-dark .experience-nav-button:hover,
+.theme-dark .toolkit-tile:hover,
+.theme-dark .process-lane-shell:hover {
+  border-color: rgba(205, 33, 42, 0.42) !important;
+  background: rgba(65, 30, 43, 0.4) !important;
+  box-shadow: 0 26px 64px rgba(15, 10, 8, 0.3);
+}
+
+.theme-dark .benchmark-fill {
+  background-image: linear-gradient(90deg, #ffd700 0%, #cd212a 100%);
+  box-shadow: 0 0 28px rgba(205, 33, 42, 0.28);
 }
 
 .theme-dark .portfolio-main > section:not(#about) .section-frame {
@@ -793,17 +1036,19 @@ html.lenis body {
 
 .theme-light .hero-framer-shell {
   background:
-    radial-gradient(circle at 18% 12%, rgba(164, 173, 194, 0.16), transparent 26%),
-    radial-gradient(circle at 82% 70%, rgba(62, 72, 97, 0.16), transparent 30%),
-    linear-gradient(180deg, #1d2537 0%, #151d2d 54%, #0f1522 100%);
+    radial-gradient(circle at 14% 8%, rgba(138, 127, 137, 0.24), transparent 24%),
+    radial-gradient(circle at 82% 68%, rgba(100, 109, 141, 0.18), transparent 30%),
+    radial-gradient(circle at 52% 88%, rgba(229, 227, 229, 0.06), transparent 26%),
+    linear-gradient(180deg, #242b44 0%, #1a2035 56%, #11182a 100%);
   color: #f2eee8;
 }
 
 .theme-light .hero-framer-surface {
   background:
-    radial-gradient(circle at 50% 38%, rgba(164, 173, 194, 0.12), transparent 30%),
-    radial-gradient(circle at 20% 10%, rgba(242, 238, 232, 0.03), transparent 22%),
-    linear-gradient(180deg, rgba(29, 37, 55, 0.96), rgba(15, 21, 34, 0.98));
+    radial-gradient(circle at 50% 38%, rgba(138, 127, 137, 0.16), transparent 28%),
+    radial-gradient(circle at 20% 10%, rgba(229, 227, 229, 0.05), transparent 22%),
+    radial-gradient(circle at 80% 92%, rgba(100, 109, 141, 0.07), transparent 25%),
+    linear-gradient(180deg, rgba(34, 42, 64, 0.965), rgba(17, 24, 40, 0.985));
 }
 
 .theme-light .hero-signature span,
@@ -839,16 +1084,16 @@ html.lenis body {
 
 .theme-light .hero-social-actions .hero-social-primary {
   border-color: rgba(207, 214, 227, 0.18);
-  background: linear-gradient(135deg, #d6dde8, #aab6cb);
-  color: #111827;
+  background: linear-gradient(135deg, #e5e3e5, #b5bfd9);
+  color: #252b44;
 }
 
 .theme-light .hero-scroll-lane-faint .hero-scroll-track span {
-  color: rgba(207, 214, 227, 0.16);
+  color: rgba(229, 227, 229, 0.14);
 }
 
 .theme-light .hero-scroll-lane-bold .hero-scroll-track span {
-  color: rgba(242, 238, 232, 0.94);
+  color: rgba(247, 243, 237, 0.96);
 }
 
 .theme-light .hero-center-line {
@@ -857,8 +1102,9 @@ html.lenis body {
 
 .theme-light .hero-mask-overlay {
   --hero-fill-bg:
-    radial-gradient(circle at 50% 42%, rgba(164, 173, 194, 0.16), transparent 30%),
-    linear-gradient(180deg, rgba(29, 37, 55, 0.985), rgba(15, 21, 34, 0.995));
+    radial-gradient(circle at 50% 42%, rgba(138, 127, 137, 0.2), transparent 30%),
+    radial-gradient(circle at 86% 88%, rgba(100, 109, 141, 0.08), transparent 28%),
+    linear-gradient(180deg, rgba(34, 42, 64, 0.985), rgba(17, 24, 40, 0.995));
 }
 
 .theme-dark .section-header-title {
@@ -1071,9 +1317,11 @@ html.lenis body {
 .theme-light #process .section-header-title,
 .theme-light #proof .section-header-title,
 .theme-light #contact h2 {
-  color: #f7f3ed !important;
-  background: none;
-  -webkit-text-fill-color: currentColor;
+  color: transparent !important;
+  background: linear-gradient(108deg, #fff8f1 0%, #e5e3e5 38%, #bac4db 74%, #897f89 100%);
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
   text-shadow: 0 16px 42px rgba(0, 0, 0, 0.18);
 }
 
@@ -1082,9 +1330,258 @@ html.lenis body {
 }
 
 .theme-light .about-title span {
-  color: #cfd6e3;
-  background: none;
-  -webkit-text-fill-color: currentColor;
+  color: transparent;
+  background: linear-gradient(105deg, #fff8f1, #b5bfd9 54%, #897f89 100%);
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.achievement-rail-shell,
+.achievement-card,
+.achievement-stat-shell,
+.achievement-rail-point,
+.achievement-detail-shell,
+.achievement-icon-shell,
+.achievement-metric-badge {
+  position: relative;
+}
+
+.achievement-rail-shell::before,
+.achievement-card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.achievement-rail-card {
+  overflow: hidden;
+  background: transparent !important;
+}
+
+.achievement-index {
+  position: absolute;
+  right: 1.75rem;
+  top: 1.2rem;
+  font-family: "Outfit", sans-serif;
+  font-size: clamp(4.5rem, 7vw, 7rem);
+  font-weight: 700;
+  letter-spacing: -0.08em;
+  line-height: 0.85;
+  color: rgba(255, 255, 255, 0.04);
+  pointer-events: none;
+}
+
+.achievement-kicker,
+.achievement-metric-badge {
+  border-color: rgba(255, 255, 255, 0.12) !important;
+  background: rgba(255, 255, 255, 0.04) !important;
+}
+
+.achievement-rail-title {
+  max-width: 13ch;
+}
+
+.achievement-rail-copy {
+  max-width: 56ch;
+}
+
+.achievement-stat-shell {
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.045), rgba(255, 255, 255, 0.015));
+}
+
+.achievement-stat-value {
+  line-height: 0.9;
+}
+
+.achievement-principles {
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  padding-top: 1rem;
+}
+
+.achievement-rail-point {
+  border-left: 2px solid rgba(255, 255, 255, 0.12);
+  background: rgba(255, 255, 255, 0.02);
+}
+
+.achievement-main-grid {
+  align-items: start;
+}
+
+.achievement-card {
+  overflow: hidden;
+}
+
+.achievement-card-primary {
+  background:
+    radial-gradient(circle at 84% 12%, rgba(255, 255, 255, 0.06), transparent 28%),
+    radial-gradient(circle at 12% 12%, rgba(255, 255, 255, 0.05), transparent 24%),
+    var(--portfolio-card-strong-bg) !important;
+}
+
+.achievement-card-secondary {
+  min-height: 100%;
+}
+
+.achievement-media-shell {
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(255, 255, 255, 0.03);
+}
+
+.achievement-media-shell-compact {
+  margin-bottom: 0.1rem;
+}
+
+.achievement-media-frame {
+  position: relative;
+  aspect-ratio: 16 / 9;
+  overflow: hidden;
+}
+
+.achievement-media-image {
+  display: block;
+  height: 100%;
+  width: 100%;
+  object-fit: cover;
+  transition: transform 420ms ease;
+}
+
+.achievement-card:hover .achievement-media-image {
+  transform: scale(1.035);
+}
+
+.achievement-icon-shell {
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0.03));
+}
+
+.achievement-detail-shell {
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(255, 255, 255, 0.03);
+}
+
+.theme-light .achievement-rail-shell::before,
+.theme-light .achievement-card::before {
+  border-color: rgba(229, 227, 229, 0.08);
+}
+
+.theme-light .achievement-rail-card {
+  background:
+    radial-gradient(circle at 12% 6%, rgba(138, 127, 137, 0.24), transparent 28%),
+    radial-gradient(circle at 82% 86%, rgba(229, 227, 229, 0.07), transparent 34%),
+    linear-gradient(180deg, rgba(40, 48, 72, 0.99), rgba(18, 24, 38, 0.995)) !important;
+  box-shadow:
+    0 28px 80px rgba(3, 7, 18, 0.38),
+    inset 0 1px 0 rgba(255, 255, 255, 0.05) !important;
+}
+
+.theme-light .achievement-index {
+  color: rgba(229, 227, 229, 0.055);
+}
+
+.theme-light .achievement-kicker,
+.theme-light .achievement-metric-badge {
+  border-color: rgba(229, 227, 229, 0.12) !important;
+  background: rgba(229, 227, 229, 0.04) !important;
+  color: #d2d5e2 !important;
+}
+
+.theme-light .achievement-rail-title {
+  color: transparent !important;
+  background: linear-gradient(106deg, #fff8f1 0%, #e5e3e5 44%, #bfc8dc 100%);
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.theme-light .achievement-stat-shell,
+.theme-light .achievement-detail-shell,
+.theme-light .achievement-rail-point,
+.theme-light .achievement-icon-shell,
+.theme-light .achievement-media-shell {
+  border-color: rgba(229, 227, 229, 0.09);
+}
+
+.theme-light .achievement-stat-shell {
+  background:
+    linear-gradient(180deg, rgba(229, 227, 229, 0.06), rgba(137, 127, 137, 0.04));
+}
+
+.theme-light .achievement-stat-value {
+  color: #fff8f1 !important;
+}
+
+.theme-light .achievement-rail-point,
+.theme-light .achievement-detail-shell {
+  background: rgba(229, 227, 229, 0.028);
+}
+
+.theme-light .achievement-media-shell {
+  background:
+    linear-gradient(180deg, rgba(229, 227, 229, 0.05), rgba(137, 127, 137, 0.025));
+}
+
+.theme-light .achievement-icon-shell svg,
+.theme-light .achievement-rail-point svg {
+  color: #d6dcea;
+}
+
+.theme-dark .achievement-rail-card {
+  background:
+    radial-gradient(circle at 10% 4%, rgba(205, 33, 42, 0.22), transparent 28%),
+    radial-gradient(circle at 84% 86%, rgba(255, 215, 0, 0.08), transparent 34%),
+    linear-gradient(180deg, rgba(28, 39, 67, 0.99), rgba(13, 19, 34, 0.995)) !important;
+}
+
+.theme-dark .achievement-index {
+  color: rgba(255, 215, 0, 0.07);
+}
+
+.theme-dark .achievement-kicker,
+.theme-dark .achievement-metric-badge {
+  border-color: rgba(255, 215, 0, 0.18) !important;
+  background: rgba(255, 215, 0, 0.04) !important;
+  color: var(--puma-gold) !important;
+}
+
+.theme-dark .achievement-rail-title {
+  color: transparent !important;
+  background: linear-gradient(105deg, var(--puma-gold), #fff3a6 46%, var(--puma-scarlet) 100%);
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.theme-dark .achievement-stat-shell {
+  border-color: rgba(255, 215, 0, 0.14);
+  background: linear-gradient(180deg, rgba(255, 215, 0, 0.05), rgba(205, 33, 42, 0.04));
+}
+
+.theme-dark .achievement-stat-value {
+  color: var(--puma-gold) !important;
+}
+
+.theme-dark .achievement-rail-point,
+.theme-dark .achievement-detail-shell,
+.theme-dark .achievement-media-shell {
+  border-color: rgba(255, 215, 0, 0.1);
+  background: rgba(255, 250, 240, 0.025);
+}
+
+.theme-dark .achievement-icon-shell {
+  border-color: rgba(255, 215, 0, 0.18);
+  background: linear-gradient(180deg, rgba(255, 215, 0, 0.08), rgba(205, 33, 42, 0.05));
+}
+
+.theme-dark .achievement-icon-shell svg,
+.theme-dark .achievement-rail-point svg {
+  color: var(--puma-gold);
 }
 
 .theme-light .section-header-eyebrow,
@@ -3243,4 +3740,832 @@ html.lenis body {
 .theme-dark .about-philosophy blockquote {
   color: #ffffff !important;
   -webkit-text-fill-color: #ffffff !important;
+}
+
+.experience-atlas-shell,
+.experience-selector-shell,
+.process-column-shell,
+.process-marquee-shell {
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(255, 255, 255, 0.03);
+  box-shadow:
+    0 24px 64px rgba(3, 7, 18, 0.18),
+    inset 0 1px 0 rgba(255, 255, 255, 0.05);
+}
+
+.experience-stage-card,
+.experience-selector-card,
+.process-story-card,
+.process-instruments-card,
+.process-doctrine-card {
+  background: transparent !important;
+}
+
+.experience-logo-capsule,
+.experience-stage-signal,
+.experience-stage-point,
+.experience-selector-card-button,
+.process-intent-panel,
+.process-step-shell,
+.process-step-card,
+.process-doctrine-row,
+.process-skill-chip,
+.process-benchmark-track {
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(255, 255, 255, 0.03);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.04);
+}
+
+.experience-floating-badge,
+.experience-skill-chip,
+.experience-selector-badge,
+.experience-company-pill,
+.process-token-badge {
+  border-color: rgba(255, 255, 255, 0.1) !important;
+  background: rgba(255, 255, 255, 0.03) !important;
+}
+
+.experience-selector-card-button,
+.experience-company-pill,
+.process-step-shell,
+.process-skill-chip,
+.process-doctrine-row,
+.process-benchmark-track {
+  transition:
+    transform 700ms cubic-bezier(0.32, 0.72, 0, 1),
+    opacity 700ms cubic-bezier(0.32, 0.72, 0, 1),
+    border-color 320ms cubic-bezier(0.32, 0.72, 0, 1),
+    background 320ms cubic-bezier(0.32, 0.72, 0, 1),
+    color 320ms cubic-bezier(0.32, 0.72, 0, 1),
+    box-shadow 320ms cubic-bezier(0.32, 0.72, 0, 1);
+}
+
+.experience-selector-card-button {
+  width: 100%;
+  display: grid;
+  gap: 1rem;
+  border-radius: 1.5rem;
+  padding: 1rem;
+  text-align: left;
+}
+
+.experience-selector-card-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+}
+
+.experience-company-pill {
+  white-space: nowrap;
+}
+
+.process-marquee-track {
+  display: flex;
+  width: max-content;
+  align-items: center;
+  gap: 0.9rem;
+  will-change: transform;
+  animation: process-marquee-forward 34s linear infinite;
+}
+
+.process-marquee-track.is-reverse {
+  animation-name: process-marquee-reverse;
+  animation-duration: 38s;
+}
+
+.process-marquee-item {
+  flex: 0 0 auto;
+}
+
+.process-skill-chip {
+  min-width: 14.5rem;
+}
+
+.process-skill-icon img {
+  display: block;
+}
+
+.process-benchmark-track {
+  overflow: hidden;
+}
+
+.process-benchmark-fill {
+  background-image: linear-gradient(90deg, #cfd6e3 0%, #ffffff 100%);
+  box-shadow: 0 0 24px rgba(255, 255, 255, 0.14);
+}
+
+@keyframes process-marquee-forward {
+  from {
+    transform: translate3d(0, 0, 0);
+  }
+  to {
+    transform: translate3d(-50%, 0, 0);
+  }
+}
+
+@keyframes process-marquee-reverse {
+  from {
+    transform: translate3d(-50%, 0, 0);
+  }
+  to {
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+.theme-light .experience-atlas-shell,
+.theme-light .experience-selector-shell,
+.theme-light .process-column-shell,
+.theme-light .process-marquee-shell {
+  border-color: rgba(207, 214, 227, 0.15);
+  background: rgba(255, 255, 255, 0.035);
+}
+
+.theme-light .experience-logo-capsule,
+.theme-light .experience-stage-signal,
+.theme-light .experience-stage-point,
+.theme-light .experience-selector-card-button,
+.theme-light .process-intent-panel,
+.theme-light .process-step-shell,
+.theme-light .process-step-card,
+.theme-light .process-doctrine-row,
+.theme-light .process-skill-chip,
+.theme-light .process-benchmark-track {
+  border-color: rgba(207, 214, 227, 0.14);
+  background:
+    radial-gradient(circle at top left, rgba(145, 156, 182, 0.12), transparent 34%),
+    rgba(255, 255, 255, 0.04);
+}
+
+.theme-light .experience-floating-badge,
+.theme-light .experience-skill-chip,
+.theme-light .experience-selector-badge,
+.theme-light .experience-company-pill,
+.theme-light .process-token-badge {
+  border-color: rgba(207, 214, 227, 0.16) !important;
+  background: rgba(255, 255, 255, 0.04) !important;
+  color: #f2eee8 !important;
+}
+
+.theme-light .experience-selector-card-button,
+.theme-light .experience-company-pill,
+.theme-light .process-step-shell,
+.theme-light .process-skill-chip,
+.theme-light .process-doctrine-row {
+  color: #f2eee8;
+}
+
+.theme-light .experience-selector-card-button.is-active,
+.theme-light .experience-company-pill.is-active,
+.theme-light .experience-selector-card-button:hover,
+.theme-light .process-step-shell:hover,
+.theme-light .process-skill-chip:hover,
+.theme-light .process-doctrine-row:hover {
+  border-color: rgba(207, 214, 227, 0.25) !important;
+  background:
+    radial-gradient(circle at top left, rgba(145, 156, 182, 0.18), transparent 34%),
+    rgba(255, 255, 255, 0.06) !important;
+  box-shadow: 0 22px 50px rgba(3, 7, 18, 0.18);
+  transform: translateY(-2px);
+}
+
+.theme-light .process-benchmark-fill {
+  background-image: linear-gradient(90deg, #aab6cb 0%, #f7f3ed 100%);
+  box-shadow: 0 0 24px rgba(170, 182, 203, 0.24);
+}
+
+.theme-dark .experience-atlas-shell,
+.theme-dark .experience-selector-shell,
+.theme-dark .process-column-shell,
+.theme-dark .process-marquee-shell {
+  border-color: rgba(255, 215, 0, 0.16);
+  background: rgba(255, 215, 0, 0.03);
+}
+
+.theme-dark .experience-logo-capsule,
+.theme-dark .experience-stage-signal,
+.theme-dark .experience-stage-point,
+.theme-dark .experience-selector-card-button,
+.theme-dark .process-intent-panel,
+.theme-dark .process-step-shell,
+.theme-dark .process-step-card,
+.theme-dark .process-doctrine-row,
+.theme-dark .process-skill-chip,
+.theme-dark .process-benchmark-track {
+  border-color: rgba(255, 215, 0, 0.18);
+  background:
+    radial-gradient(circle at top left, rgba(205, 33, 42, 0.16), transparent 36%),
+    radial-gradient(circle at bottom right, rgba(255, 215, 0, 0.08), transparent 34%),
+    rgba(26, 34, 56, 0.36);
+}
+
+.theme-dark .experience-floating-badge,
+.theme-dark .experience-skill-chip,
+.theme-dark .experience-selector-badge,
+.theme-dark .experience-company-pill,
+.theme-dark .process-token-badge {
+  border-color: rgba(255, 215, 0, 0.22) !important;
+  background: rgba(26, 34, 56, 0.62) !important;
+  color: var(--puma-ivory) !important;
+}
+
+.theme-dark .experience-selector-card-button,
+.theme-dark .experience-company-pill,
+.theme-dark .process-step-shell,
+.theme-dark .process-skill-chip,
+.theme-dark .process-doctrine-row {
+  color: rgba(255, 250, 240, 0.92);
+}
+
+.theme-dark .experience-selector-card-button.is-active,
+.theme-dark .experience-company-pill.is-active,
+.theme-dark .experience-selector-card-button:hover,
+.theme-dark .process-step-shell:hover,
+.theme-dark .process-skill-chip:hover,
+.theme-dark .process-doctrine-row:hover {
+  border-color: rgba(205, 33, 42, 0.42) !important;
+  background:
+    radial-gradient(circle at top left, rgba(205, 33, 42, 0.2), transparent 36%),
+    radial-gradient(circle at bottom right, rgba(255, 215, 0, 0.12), transparent 34%),
+    rgba(30, 20, 36, 0.44) !important;
+  box-shadow: 0 26px 64px rgba(15, 10, 8, 0.3);
+  transform: translateY(-2px);
+}
+
+.theme-dark .process-benchmark-fill {
+  background-image: linear-gradient(90deg, #ffd700 0%, #cd212a 100%);
+  box-shadow: 0 0 28px rgba(205, 33, 42, 0.28);
+}
+
+#process .section-header-title,
+#process .section-header-description,
+#process .section-header-eyebrow,
+#process .process-story-card p,
+#process .process-story-card h3,
+#process .process-instruments-card p,
+#process .process-instruments-card h3,
+#process .process-doctrine-card p,
+#process .process-doctrine-card h3,
+#process .process-skill-chip p,
+#process .process-token-badge,
+#process .process-step-card p,
+#process .process-step-card h3,
+#process .process-doctrine-row p {
+  color: #ffffff !important;
+}
+
+#process .section-header-eyebrow,
+#process .process-marquee-shell [class*="uppercase"],
+#process .process-skill-chip .text-\[0\.58rem\],
+#process .process-token-badge {
+  color: rgba(255, 255, 255, 0.78) !important;
+}
+
+#process .process-benchmark-fill,
+.theme-light #process .process-benchmark-fill,
+.theme-dark #process .process-benchmark-fill {
+  background-image: linear-gradient(90deg, #7ea0e8 0%, #252b44 100%);
+  box-shadow: 0 0 24px rgba(74, 106, 175, 0.28);
+}
+
+.achievement-atlas {
+  align-items: start;
+}
+
+.achievement-stage-shell,
+.achievement-selector-shell {
+  position: relative;
+  overflow: hidden;
+  border: 1px solid rgba(207, 214, 227, 0.16);
+  background: rgba(255, 255, 255, 0.035);
+  box-shadow:
+    0 26px 70px rgba(15, 23, 42, 0.18),
+    inset 0 1px 0 rgba(255, 255, 255, 0.05);
+}
+
+.achievement-stage-card,
+.achievement-selector-card {
+  position: relative;
+  overflow: hidden;
+  background: transparent;
+}
+
+.achievement-stage-card::before,
+.achievement-selector-card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(circle at top left, rgba(150, 170, 210, 0.12), transparent 34%),
+    radial-gradient(circle at bottom right, rgba(120, 144, 186, 0.09), transparent 36%);
+}
+
+.achievement-stage-copy,
+.achievement-stage-side,
+.achievement-selector-row,
+.achievement-selector-pills {
+  position: relative;
+  z-index: 1;
+}
+
+.achievement-stage-icon,
+.achievement-signal-cell,
+.achievement-stage-note,
+.achievement-stage-point,
+.achievement-selector-row,
+.achievement-company-pill {
+  border: 1px solid rgba(207, 214, 227, 0.14);
+  background:
+    radial-gradient(circle at top left, rgba(145, 156, 182, 0.12), transparent 34%),
+    rgba(255, 255, 255, 0.04);
+  transition:
+    transform 320ms cubic-bezier(0.32, 0.72, 0, 1),
+    border-color 320ms cubic-bezier(0.32, 0.72, 0, 1),
+    background 320ms cubic-bezier(0.32, 0.72, 0, 1),
+    box-shadow 320ms cubic-bezier(0.32, 0.72, 0, 1),
+    color 320ms cubic-bezier(0.32, 0.72, 0, 1);
+}
+
+.achievement-stage-icon {
+  color: #ffffff;
+}
+
+.achievement-stage-index {
+  font-family: "Outfit", sans-serif;
+  font-size: clamp(5rem, 10vw, 7.25rem);
+  line-height: 0.9;
+  letter-spacing: -0.11em;
+  color: rgba(255, 255, 255, 0.08);
+  user-select: none;
+}
+
+.achievement-stage-point:hover,
+.achievement-selector-row:hover,
+.achievement-company-pill:hover,
+.achievement-selector-row.is-active,
+.achievement-company-pill.is-active {
+  transform: translateY(-2px);
+  border-color: rgba(255, 255, 255, 0.22) !important;
+  background:
+    radial-gradient(circle at top left, rgba(255, 255, 255, 0.13), transparent 34%),
+    rgba(255, 255, 255, 0.06) !important;
+  box-shadow: 0 18px 44px rgba(15, 23, 42, 0.16);
+}
+
+.achievement-floating-badge {
+  border-color: rgba(207, 214, 227, 0.16) !important;
+  background: rgba(255, 255, 255, 0.04) !important;
+  color: rgba(255, 255, 255, 0.92) !important;
+}
+
+.achievement-floating-badge-strong {
+  background: rgba(255, 255, 255, 0.08) !important;
+}
+
+.achievement-stage-note,
+.achievement-stage-point p,
+.achievement-signal-cell p,
+.achievement-selector-row,
+.achievement-company-pill {
+  color: #ffffff;
+}
+
+.achievement-selector-row {
+  width: 100%;
+  display: grid;
+  gap: 1rem;
+  padding: 1rem;
+  text-align: left;
+  border-radius: 1.5rem;
+}
+
+.achievement-selector-top,
+.achievement-selector-body {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+}
+
+.achievement-selector-body {
+  justify-content: flex-start;
+}
+
+.achievement-selector-icon {
+  flex: 0 0 auto;
+  border: 1px solid rgba(207, 214, 227, 0.14);
+  background: rgba(255, 255, 255, 0.04);
+  color: #ffffff;
+}
+
+.achievement-selector-badge {
+  border-color: rgba(207, 214, 227, 0.16) !important;
+  background: rgba(255, 255, 255, 0.04) !important;
+  color: rgba(255, 255, 255, 0.88) !important;
+}
+
+.achievement-company-pill {
+  min-width: 3.75rem;
+}
+
+#achievements .section-header-title,
+#achievements .section-header-description,
+#achievements .section-header-eyebrow,
+#achievements h3,
+#achievements p,
+#achievements button,
+#achievements [class*="uppercase"] {
+  color: #ffffff !important;
+}
+
+#achievements .section-header-eyebrow,
+#achievements .achievement-stage-mark span,
+#achievements .achievement-signal-cell .text-\[0\.58rem\],
+#achievements .achievement-stage-note .text-\[0\.58rem\],
+#achievements .achievement-selector-row .text-\[0\.62rem\] {
+  color: rgba(255, 255, 255, 0.7) !important;
+}
+
+.theme-light .achievement-stage-shell,
+.theme-light .achievement-selector-shell {
+  border-color: rgba(137, 127, 137, 0.16);
+  background:
+    radial-gradient(circle at top left, rgba(137, 127, 137, 0.08), transparent 32%),
+    radial-gradient(circle at bottom right, rgba(37, 43, 68, 0.06), transparent 34%),
+    linear-gradient(180deg, rgba(37, 43, 68, 0.84), rgba(28, 34, 57, 0.94));
+}
+
+.theme-light .achievement-stage-icon,
+.theme-light .achievement-signal-cell,
+.theme-light .achievement-stage-note,
+.theme-light .achievement-stage-point,
+.theme-light .achievement-selector-row,
+.theme-light .achievement-company-pill,
+.theme-light .achievement-selector-icon {
+  border-color: rgba(229, 227, 229, 0.12);
+  background:
+    radial-gradient(circle at top left, rgba(137, 127, 137, 0.12), transparent 32%),
+    rgba(255, 255, 255, 0.035);
+}
+
+.theme-dark .achievement-stage-shell,
+.theme-dark .achievement-selector-shell {
+  border-color: rgba(255, 215, 0, 0.16);
+  background:
+    radial-gradient(circle at top left, rgba(205, 33, 42, 0.14), transparent 34%),
+    radial-gradient(circle at bottom right, rgba(255, 215, 0, 0.08), transparent 34%),
+    rgba(26, 34, 56, 0.38);
+}
+
+.theme-dark .achievement-stage-icon,
+.theme-dark .achievement-signal-cell,
+.theme-dark .achievement-stage-note,
+.theme-dark .achievement-stage-point,
+.theme-dark .achievement-selector-row,
+.theme-dark .achievement-company-pill,
+.theme-dark .achievement-selector-icon {
+  border-color: rgba(255, 215, 0, 0.18);
+  background:
+    radial-gradient(circle at top left, rgba(205, 33, 42, 0.18), transparent 34%),
+    radial-gradient(circle at bottom right, rgba(255, 215, 0, 0.08), transparent 34%),
+    rgba(26, 34, 56, 0.46);
+}
+
+.achievement-overview-shell,
+.achievement-proof-shell {
+  position: relative;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(255, 255, 255, 0.03);
+  box-shadow:
+    0 28px 72px rgba(15, 23, 42, 0.18),
+    inset 0 1px 0 rgba(255, 255, 255, 0.04);
+}
+
+.achievement-overview-card,
+.achievement-proof-card {
+  position: relative;
+  overflow: hidden;
+  background: transparent !important;
+}
+
+.achievement-overview-card::before,
+.achievement-proof-card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(circle at top left, rgba(255, 255, 255, 0.09), transparent 30%),
+    radial-gradient(circle at bottom right, rgba(255, 255, 255, 0.06), transparent 32%);
+}
+
+.achievement-overview-doctrine,
+.achievement-overview-signal,
+.achievement-proof-icon,
+.achievement-proof-detail,
+.achievement-proof-badge {
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background:
+    radial-gradient(circle at top left, rgba(255, 255, 255, 0.08), transparent 30%),
+    rgba(255, 255, 255, 0.035);
+}
+
+.achievement-overview-doctrine,
+.achievement-overview-signal,
+.achievement-proof-detail,
+.achievement-proof-card,
+.achievement-proof-badge,
+.achievement-proof-icon {
+  transition:
+    transform 320ms cubic-bezier(0.32, 0.72, 0, 1),
+    background 320ms cubic-bezier(0.32, 0.72, 0, 1),
+    border-color 320ms cubic-bezier(0.32, 0.72, 0, 1),
+    box-shadow 320ms cubic-bezier(0.32, 0.72, 0, 1);
+}
+
+.achievement-proof-shell:hover .achievement-proof-card {
+  transform: translateY(-2px);
+}
+
+.achievement-proof-shell:hover .achievement-proof-detail,
+.achievement-proof-shell:hover .achievement-proof-icon {
+  border-color: rgba(255, 255, 255, 0.18);
+  background:
+    radial-gradient(circle at top left, rgba(255, 255, 255, 0.1), transparent 30%),
+    rgba(255, 255, 255, 0.05);
+}
+
+.achievement-proof-grid {
+  align-items: stretch;
+}
+
+.achievement-proof-card-primary .achievement-proof-card {
+  background:
+    radial-gradient(circle at 88% 12%, rgba(255, 255, 255, 0.08), transparent 24%),
+    radial-gradient(circle at 12% 88%, rgba(255, 255, 255, 0.05), transparent 28%) !important;
+}
+
+.achievement-proof-card-accent .achievement-proof-card {
+  background:
+    radial-gradient(circle at 86% 16%, rgba(255, 255, 255, 0.07), transparent 26%),
+    radial-gradient(circle at 0% 100%, rgba(255, 255, 255, 0.05), transparent 30%) !important;
+}
+
+.achievement-proof-metric {
+  text-wrap: balance;
+}
+
+#achievements .section-header-title,
+#achievements .section-header-description,
+#achievements .section-header-eyebrow,
+#achievements h3,
+#achievements p,
+#achievements span,
+#achievements button {
+  color: #ffffff !important;
+}
+
+#achievements .section-header-eyebrow,
+#achievements .achievement-proof-badge,
+#achievements .achievement-overview-badge,
+#achievements .achievement-proof-grid .font-mono,
+#achievements .achievement-overview-signal .text-\[0\.58rem\],
+#achievements .achievement-overview-doctrine .text-\[0\.58rem\] {
+  color: rgba(255, 255, 255, 0.68) !important;
+}
+
+.theme-light .achievement-overview-shell,
+.theme-light .achievement-proof-shell {
+  border-color: rgba(191, 200, 220, 0.12);
+  background:
+    radial-gradient(circle at top left, rgba(137, 127, 137, 0.08), transparent 30%),
+    radial-gradient(circle at bottom right, rgba(229, 227, 229, 0.05), transparent 34%),
+    linear-gradient(180deg, rgba(42, 50, 74, 0.98), rgba(24, 32, 54, 0.995));
+}
+
+.theme-light .achievement-overview-doctrine,
+.theme-light .achievement-overview-signal,
+.theme-light .achievement-proof-icon,
+.theme-light .achievement-proof-detail,
+.theme-light .achievement-proof-badge {
+  border-color: rgba(191, 200, 220, 0.12) !important;
+  background:
+    radial-gradient(circle at top left, rgba(137, 127, 137, 0.1), transparent 32%),
+    rgba(255, 255, 255, 0.04) !important;
+}
+
+.theme-dark .achievement-overview-shell,
+.theme-dark .achievement-proof-shell {
+  border-color: rgba(255, 215, 0, 0.14);
+  background:
+    radial-gradient(circle at top left, rgba(205, 33, 42, 0.16), transparent 32%),
+    radial-gradient(circle at bottom right, rgba(255, 215, 0, 0.08), transparent 34%),
+    linear-gradient(180deg, rgba(27, 35, 58, 0.98), rgba(15, 20, 34, 0.995));
+}
+
+.theme-dark .achievement-overview-doctrine,
+.theme-dark .achievement-overview-signal,
+.theme-dark .achievement-proof-icon,
+.theme-dark .achievement-proof-detail,
+.theme-dark .achievement-proof-badge {
+  border-color: rgba(255, 215, 0, 0.16) !important;
+  background:
+    radial-gradient(circle at top left, rgba(205, 33, 42, 0.16), transparent 34%),
+    radial-gradient(circle at bottom right, rgba(255, 215, 0, 0.06), transparent 34%),
+    rgba(255, 255, 255, 0.03) !important;
+}
+
+.achievement-carousel-shell {
+  position: relative;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(255, 255, 255, 0.03);
+  box-shadow:
+    0 30px 80px rgba(15, 23, 42, 0.18),
+    inset 0 1px 0 rgba(255, 255, 255, 0.04);
+}
+
+.achievement-carousel-card,
+.achievement-carousel-slide-core {
+  position: relative;
+  overflow: hidden;
+  background: transparent !important;
+}
+
+.achievement-carousel-card::before,
+.achievement-carousel-slide-core::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(circle at top left, rgba(255, 255, 255, 0.08), transparent 30%),
+    radial-gradient(circle at bottom right, rgba(255, 255, 255, 0.05), transparent 34%);
+}
+
+.achievement-carousel-track {
+  margin-left: -0.5rem;
+}
+
+.achievement-carousel-slide {
+  padding-left: 0.5rem;
+}
+
+.achievement-carousel-slide-shell {
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(255, 255, 255, 0.03);
+}
+
+.achievement-carousel-slide-core {
+  background:
+    radial-gradient(circle at 88% 12%, rgba(255, 255, 255, 0.08), transparent 24%),
+    radial-gradient(circle at 10% 90%, rgba(255, 255, 255, 0.05), transparent 28%) !important;
+}
+
+.achievement-slide-aside,
+.achievement-slide-detail,
+.achievement-slide-icon,
+.achievement-slide-badge,
+.achievement-carousel-button,
+.achievement-carousel-dot {
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background:
+    radial-gradient(circle at top left, rgba(255, 255, 255, 0.08), transparent 30%),
+    rgba(255, 255, 255, 0.035);
+  transition:
+    transform 320ms cubic-bezier(0.32, 0.72, 0, 1),
+    border-color 320ms cubic-bezier(0.32, 0.72, 0, 1),
+    background 320ms cubic-bezier(0.32, 0.72, 0, 1),
+    box-shadow 320ms cubic-bezier(0.32, 0.72, 0, 1),
+    color 320ms cubic-bezier(0.32, 0.72, 0, 1);
+}
+
+.achievement-carousel-button:hover,
+.achievement-carousel-dot:hover,
+.achievement-carousel-dot.is-active {
+  transform: translateY(-1px);
+  border-color: rgba(255, 255, 255, 0.18);
+  background:
+    radial-gradient(circle at top left, rgba(255, 255, 255, 0.1), transparent 30%),
+    rgba(255, 255, 255, 0.055);
+}
+
+.achievement-slide-icon {
+  color: #ffffff;
+}
+
+#achievements .achievement-carousel-button,
+#achievements .achievement-carousel-dot {
+  color: #ffffff !important;
+}
+
+.theme-light .achievement-carousel-shell,
+.theme-light .achievement-carousel-slide-shell {
+  border-color: rgba(191, 200, 220, 0.12);
+  background:
+    radial-gradient(circle at top left, rgba(137, 127, 137, 0.08), transparent 30%),
+    radial-gradient(circle at bottom right, rgba(229, 227, 229, 0.05), transparent 34%),
+    linear-gradient(180deg, rgba(42, 50, 74, 0.98), rgba(24, 32, 54, 0.995));
+}
+
+.theme-light .achievement-carousel-slide-core {
+  background:
+    radial-gradient(circle at 88% 12%, rgba(191, 200, 220, 0.08), transparent 24%),
+    radial-gradient(circle at 10% 90%, rgba(137, 127, 137, 0.06), transparent 28%) !important;
+}
+
+.theme-light .achievement-slide-aside,
+.theme-light .achievement-slide-detail,
+.theme-light .achievement-slide-icon,
+.theme-light .achievement-slide-badge,
+.theme-light .achievement-carousel-button,
+.theme-light .achievement-carousel-dot {
+  border-color: rgba(191, 200, 220, 0.12) !important;
+  background:
+    radial-gradient(circle at top left, rgba(137, 127, 137, 0.1), transparent 32%),
+    rgba(255, 255, 255, 0.04) !important;
+}
+
+.theme-dark .achievement-carousel-shell,
+.theme-dark .achievement-carousel-slide-shell {
+  border-color: rgba(255, 215, 0, 0.14);
+  background:
+    radial-gradient(circle at top left, rgba(205, 33, 42, 0.16), transparent 32%),
+    radial-gradient(circle at bottom right, rgba(255, 215, 0, 0.08), transparent 34%),
+    linear-gradient(180deg, rgba(27, 35, 58, 0.98), rgba(15, 20, 34, 0.995));
+}
+
+.theme-dark .achievement-carousel-slide-core {
+  background:
+    radial-gradient(circle at 88% 12%, rgba(255, 215, 0, 0.08), transparent 22%),
+    radial-gradient(circle at 10% 90%, rgba(205, 33, 42, 0.1), transparent 28%) !important;
+}
+
+.theme-dark .achievement-slide-aside,
+.theme-dark .achievement-slide-detail,
+.theme-dark .achievement-slide-icon,
+.theme-dark .achievement-slide-badge,
+.theme-dark .achievement-carousel-button,
+.theme-dark .achievement-carousel-dot {
+  border-color: rgba(255, 215, 0, 0.16) !important;
+  background:
+    radial-gradient(circle at top left, rgba(205, 33, 42, 0.16), transparent 34%),
+    radial-gradient(circle at bottom right, rgba(255, 215, 0, 0.06), transparent 34%),
+    rgba(255, 255, 255, 0.03) !important;
+}
+
+@media (max-width: 1279px) {
+  .experience-selector-column {
+    order: -1;
+  }
+}
+
+@media (max-width: 767px) {
+  .experience-stage-signals {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .achievement-stage-index {
+    font-size: 4.25rem;
+  }
+
+  .achievement-selector-row {
+    gap: 0.85rem;
+    padding: 0.9rem;
+  }
+
+  .achievement-selector-top {
+    align-items: flex-start;
+  }
+
+  .achievement-selector-body {
+    align-items: flex-start;
+  }
+
+  .achievement-overview-card > div,
+  .achievement-proof-card > div {
+    padding-left: 1.1rem;
+    padding-right: 1.1rem;
+  }
+
+  .achievement-carousel-card > div,
+  .achievement-carousel-slide-core {
+    padding-left: 1.05rem;
+    padding-right: 1.05rem;
+  }
+
+  .process-skill-chip {
+    min-width: 11.75rem;
+  }
+
+  .process-marquee-track {
+    gap: 0.7rem;
+    animation-duration: 28s;
+  }
+
+  .process-marquee-track.is-reverse {
+    animation-duration: 32s;
+  }
 }

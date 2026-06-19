@@ -92,7 +92,101 @@ export const featuredProjects = [
 
 export const experienceItems = EXPERIENCE.filter(
   (item) => !item.company.toLowerCase().includes("national service scheme"),
-);
+).sort((left, right) => {
+  if (left.company === "K-1000") return -1;
+  if (right.company === "K-1000") return 1;
+  return 0;
+});
+
+export type AchievementEntry = {
+  title: string;
+  category: string;
+  year: string;
+  metric?: string;
+  summary: string;
+  details: string[];
+  image?: string;
+  imageAlt?: string;
+};
+
+export const achievementItems: AchievementEntry[] = [
+  {
+    title: "Goldman Sachs India Hackathon",
+    category: "Competitive build signal",
+    year: "2026",
+    metric: "Rank 851 / 14,000",
+    summary:
+      "Placed in the top competitive bracket of the Goldman Sachs India Hackathon 2026, finishing 851st out of roughly 14,000 contestants.",
+    details: [
+      "Competed in a large-scale engineering setting where speed, reasoning quality, and implementation clarity mattered under pressure.",
+      "The result became a strong external signal for problem-solving depth and consistency in high-volume competitive environments.",
+    ],
+  },
+  {
+    title: "ScamBust Hackathon · IIT Kharagpur",
+    category: "Hackathon podium",
+    year: "2026",
+    metric: "Second place",
+    image: publicAsset("achievements/iit-kharagpur-scampbust.png"),
+    imageAlt: "Indian Institute of Technology Kharagpur building lit in pink at night",
+    summary:
+      "Finished second at ScamBust during Kshitij, IIT Kharagpur, after working through real-world scam scenarios that demanded alert thinking, teamwork, and quick decision-making.",
+    details: [
+      "The event stood out because it rewarded applied judgment rather than conventional demo theatrics.",
+      "It sharpened my interest in building products that respond to real behavioral risk, not just neat interface ideas.",
+    ],
+  },
+  {
+    title: "Smart India Hackathon Volunteer",
+    category: "Operational leadership",
+    year: "2025",
+    image: publicAsset("achievements/smart-india-hackathon-certificate.png"),
+    imageAlt: "Smart India Hackathon 2025 volunteer certificate for Rohan Chatterjee",
+    summary:
+      "Volunteered behind the scenes for Smart India Hackathon 2025, supporting event operations and helping the environment stay smooth for participating teams and organizers.",
+    details: [
+      "Contributed to the core functioning of the event by supporting processes, coordination, and execution discipline.",
+      "What stayed with me most was hearing teams explain their ideas firsthand and seeing innovation emerge through conversation and collaboration.",
+    ],
+  },
+  {
+    title: "Student Representative · K-1000",
+    category: "Community leadership",
+    year: "2026",
+    summary:
+      "Represented K-1000 at the Mega Blood Donation Camp at KIIT, contributing to a large student-led community initiative centered around responsibility and service.",
+    details: [
+      "The experience strengthened my confidence in people-facing organizational work, not just technical execution.",
+      "It reinforced the value of showing up for initiatives that create visible social impact beyond the screen.",
+    ],
+  },
+  {
+    title: "NSS Happiness Concert 2K26",
+    category: "Stage and culture",
+    year: "2026",
+    image: publicAsset("achievements/nss-happiness-concert.png"),
+    imageAlt: "Group photo from NSS Happiness Concert 2K26 at night",
+    summary:
+      "Performed at Happiness Concert 2K26 through the National Service Scheme, contributing to an event built around energy, atmosphere, and collective experience.",
+    details: [
+      "Being on stage added a different dimension to public-facing confidence, performance under attention, and collaborative event execution.",
+      "It remains one of the clearest reminders that creative presence and technical seriousness can coexist well.",
+    ],
+  },
+  {
+    title: "Directed NSS Awareness Short Film",
+    category: "Creative direction",
+    year: "2026",
+    image: publicAsset("achievements/nss-short-film.png"),
+    imageAlt: "Behind-the-scenes still from the NSS awareness short film shoot",
+    summary:
+      "Directed a short film on mental health and drug abuse awareness for an NSS event, guiding the project from concept to final edited narrative.",
+    details: [
+      "Worked closely with actors, editors, and seniors to turn an important subject into something emotionally coherent and publicly meaningful.",
+      "The project deepened my appreciation for storytelling, coordination, and the responsibility that comes with shaping public-facing messaging.",
+    ],
+  },
+];
 
 export const contactContent = {
   email: "chatterjeerohan0204@gmail.com",

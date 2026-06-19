@@ -48,7 +48,7 @@ export function ProofSection({
     <section ref={sectionRef} id="proof" className={`w-full ${isInView ? "proof-is-visible" : ""}`}>
       <div className="section-frame relative overflow-hidden px-5 py-8 sm:px-8 sm:py-10 lg:px-12 lg:py-12">
         <SectionHeader
-          eyebrow="05 / Proof"
+          eyebrow="06 / Proof"
           title="Public signal, writing, and collaboration credibility."
           description="This is the evidence layer: what the public graph says, what the writing is exploring, and how the work tends to show up in collaborative settings when the conversation gets serious."
         />

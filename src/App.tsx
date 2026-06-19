@@ -2,9 +2,10 @@
 
 import { useCallback, useEffect, useState } from "react";
 import Lenis from "lenis";
-import { contactContent, heroContent } from "@/features/portfolio/content";
+import { achievementItems, contactContent, experienceItems, heroContent } from "@/features/portfolio/content";
 import { HeroSection } from "@/components/portfolio/HeroSection";
 import { AboutSection } from "@/components/portfolio/AboutSection";
+import { AchievementsSection } from "@/components/portfolio/AchievementsSection";
 import { ExperienceSection } from "@/components/portfolio/ExperienceSection";
 import { WorkSection } from "@/components/portfolio/WorkSection";
 import { ProcessSection } from "@/components/portfolio/ProcessSection";
@@ -13,7 +14,6 @@ import { ContactSection } from "@/components/portfolio/ContactSection";
 import { CinematicBootScreen } from "@/components/portfolio/CinematicBootScreen";
 import { SpectralAuraBackground } from "@/components/portfolio/SpectralAuraBackground";
 import { usePortfolioData } from "@/components/portfolio/usePortfolioData";
-import { experienceItems } from "@/features/portfolio/content";
 
 type AppProps = {
   initialBooting?: boolean;
@@ -73,6 +73,7 @@ function App({ initialBooting = true, staticMode = false }: AppProps) {
         <HeroSection hero={heroContent} theme={theme} onToggleTheme={() => setTheme((current) => (current === "light" ? "dark" : "light"))} />
         <AboutSection />
         <ExperienceSection items={experienceItems} />
+        <AchievementsSection items={achievementItems} />
         <WorkSection projects={projectShowcase} />
         <ProcessSection skills={allSkills} benchmarks={performanceBenchmarks} />
         <ProofSection
