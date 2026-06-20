@@ -64,8 +64,8 @@ export function AchievementsSection({ items }: AchievementsSectionProps) {
         />
 
         <motion.div
-          initial={{ opacity: 0.72, y: 20, filter: "blur(8px)" }}
-          whileInView={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+          initial={{ opacity: 0.72, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, amount: 0.18 }}
           transition={riseTransition}
           className="achievement-overview-shell mt-12 rounded-[2rem] p-2"
@@ -79,7 +79,7 @@ export function AchievementsSection({ items }: AchievementsSectionProps) {
                 >
                   Proof dossier
                 </Badge>
-                <h3 className="font-['Outfit'] text-3xl font-semibold tracking-[-0.075em] text-white sm:text-4xl lg:text-[4rem]">
+                <h3 className="font-['Outfit'] text-3xl font-semibold leading-[1.08] tracking-[-0.075em] text-white sm:text-4xl sm:leading-[1.08] lg:text-[4rem] lg:leading-[1.1]">
                   Achievements that strengthen execution trust, not just the resume surface.
                 </h3>
                 <p className="max-w-3xl text-base leading-8 text-white/78">
@@ -89,7 +89,7 @@ export function AchievementsSection({ items }: AchievementsSectionProps) {
                 <div className="achievement-overview-doctrine rounded-[1.5rem] px-5 py-5">
                   <p className="text-[0.58rem] uppercase tracking-[0.32em] text-white/58">Current focus card</p>
                   <div className="mt-3 flex flex-wrap items-center gap-3">
-                    <p className="font-['Outfit'] text-2xl font-semibold tracking-[-0.06em] text-white">
+                    <p className="font-['Outfit'] text-2xl font-semibold leading-[1.08] tracking-[-0.06em] text-white">
                       {activeItem.title}
                     </p>
                     {activeItem.metric ? (
@@ -122,8 +122,8 @@ export function AchievementsSection({ items }: AchievementsSectionProps) {
         </motion.div>
 
         <motion.div
-          initial={{ opacity: 0.72, y: 20, filter: "blur(8px)" }}
-          whileInView={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+          initial={{ opacity: 0.72, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, amount: 0.18 }}
           transition={{ ...riseTransition, delay: 0.06 }}
           className="achievement-carousel-shell mt-8 rounded-[2rem] p-2"
@@ -194,7 +194,7 @@ export function AchievementsSection({ items }: AchievementsSectionProps) {
                                   <span className="font-mono text-[0.62rem] uppercase tracking-[0.34em] text-white/56">
                                     {String(index + 1).padStart(2, "0")} / proof signal
                                   </span>
-                                  <h3 className="font-['Outfit'] text-3xl font-semibold tracking-[-0.075em] text-white sm:text-4xl lg:text-[4rem]">
+                                  <h3 className="font-['Outfit'] text-3xl font-semibold leading-[1.08] tracking-[-0.075em] text-white sm:text-4xl sm:leading-[1.08] lg:text-[4rem] lg:leading-[1.1]">
                                     {item.title}
                                   </h3>
                                   <p className="max-w-3xl text-base leading-8 text-white/78">{item.summary}</p>

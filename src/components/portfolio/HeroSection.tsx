@@ -159,7 +159,6 @@ export function HeroSection({ hero, theme, onToggleTheme }: HeroSectionProps) {
           transition={{ duration: 0.72, ease: [0.22, 1, 0.36, 1] }}
           className="hero-mask-stage"
         >
-          <div className="hero-mask-aura" aria-hidden="true" />
           <div
             className="hero-mask-container"
           >

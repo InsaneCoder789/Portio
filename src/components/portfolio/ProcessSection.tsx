@@ -113,8 +113,8 @@ export function ProcessSection({ skills, benchmarks }: ProcessSectionProps) {
 
         <div className="mt-12 grid gap-5">
           <motion.div
-            initial={{ opacity: 0.72, y: 18, filter: "blur(8px)" }}
-            whileInView={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+            initial={{ opacity: 0.72, y: 18 }}
+            whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, amount: 0.18 }}
             transition={riseTransition}
             className="grid gap-4"
@@ -129,8 +129,8 @@ export function ProcessSection({ skills, benchmarks }: ProcessSectionProps) {
 
           <div className="grid gap-8 xl:grid-cols-[minmax(0,1.08fr)_minmax(22rem,0.92fr)]">
             <motion.div
-              initial={{ opacity: 0.72, y: 20, filter: "blur(8px)" }}
-              whileInView={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+              initial={{ opacity: 0.72, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, amount: 0.18 }}
               transition={{ ...riseTransition, delay: 0.05 }}
               className="process-column-shell rounded-[2rem] p-2"
@@ -201,8 +201,8 @@ export function ProcessSection({ skills, benchmarks }: ProcessSectionProps) {
 
             <div className="grid gap-6">
               <motion.div
-                initial={{ opacity: 0.72, y: 20, filter: "blur(8px)" }}
-                whileInView={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+                initial={{ opacity: 0.72, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true, amount: 0.18 }}
                 transition={{ ...riseTransition, delay: 0.08 }}
                 className="process-column-shell rounded-[2rem] p-2"
@@ -264,8 +264,8 @@ export function ProcessSection({ skills, benchmarks }: ProcessSectionProps) {
               </motion.div>
 
               <motion.div
-                initial={{ opacity: 0.72, y: 20, filter: "blur(8px)" }}
-                whileInView={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+                initial={{ opacity: 0.72, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true, amount: 0.18 }}
                 transition={{ ...riseTransition, delay: 0.11 }}
                 className="process-column-shell rounded-[2rem] p-2"

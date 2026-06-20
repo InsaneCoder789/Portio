@@ -162,34 +162,11 @@ html.lenis body {
     box-shadow 220ms ease;
 }
 
-.section-frame::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-  background:
-    linear-gradient(120deg, transparent 10%, rgba(255, 255, 255, 0.025) 18%, transparent 28%),
-    linear-gradient(180deg, rgba(255, 255, 255, 0.015), transparent 22%);
-}
-
-.section-frame::after {
-  display: none;
-}
-
+.section-frame::before,
+.section-frame::after,
 .theme-light .section-frame::after {
-  content: "";
-  position: absolute;
-  inset: -28%;
-  display: block;
-  pointer-events: none;
-  background:
-    radial-gradient(circle at 18% 22%, rgba(138, 127, 137, 0.18), transparent 22%),
-    radial-gradient(circle at 82% 18%, rgba(100, 109, 141, 0.15), transparent 24%),
-    radial-gradient(circle at 55% 88%, rgba(229, 227, 229, 0.1), transparent 28%);
-  filter: blur(18px);
-  opacity: 0.34;
-  mix-blend-mode: screen;
-  transform: translate3d(0, 0, 0);
+  display: none;
+  content: none;
 }
 
 .portfolio-card {
@@ -1990,20 +1967,6 @@ html.lenis body {
   z-index: 3;
 }
 
-.hero-mask-aura {
-  position: absolute;
-  inset: 50% auto auto 50%;
-  width: min(48vw, 38rem);
-  height: min(48vw, 38rem);
-  translate: -50% -27%;
-  border-radius: 999px;
-  background:
-    radial-gradient(circle, rgba(255, 255, 255, 0.75) 0%, rgba(172, 189, 214, 0.16) 45%, transparent 72%);
-  filter: blur(18px);
-  opacity: 0.74;
-  pointer-events: none;
-}
-
 .hero-mask-container {
   position: absolute;
   inset: 0;
@@ -2016,7 +1979,7 @@ html.lenis body {
   position: absolute;
   left: 50%;
   bottom: -7rem;
-  width: clamp(38rem, 56vw, 76rem);
+  width: clamp(40rem, 60vw, 80rem);
   aspect-ratio: 1 / 1.18;
   translate: -50% 0;
   overflow: visible;
@@ -2574,13 +2537,14 @@ html.lenis body {
     radial-gradient(circle at top left, rgba(125, 211, 252, 0.18), transparent 24%);
 }
 
-.liquid-blob {
-  position: absolute;
-  border-radius: 999px;
-  filter: blur(32px);
-  opacity: 0.24;
-  pointer-events: none;
-  transform: translate3d(0, 0, 0);
+.liquid-blob,
+.liquid-blob-soft,
+.liquid-blob-contact,
+.spectral-aura,
+.spectral-vignette,
+.deathstar-command-glow,
+.hero-scene-glow {
+  display: none;
 }
 
 .liquid-blob-a {
@@ -3264,7 +3228,7 @@ html.lenis body {
 
   .hero-mask-hitbox {
     bottom: -5.2rem;
-    width: clamp(34rem, 77vw, 52rem);
+    width: clamp(35rem, 80vw, 54rem);
   }
 
   .section-frame {
@@ -3290,14 +3254,8 @@ html.lenis body {
 
 @media (min-width: 1600px) {
   .hero-mask-hitbox {
-    bottom: -6.5rem;
-    width: clamp(56rem, 52vw, 82rem);
-  }
-
-  .hero-mask-aura {
-    width: min(56vw, 52rem);
-    height: min(56vw, 52rem);
-    translate: -50% -24%;
+    bottom: -6.8rem;
+    width: clamp(56rem, 54vw, 88rem);
   }
 }
 
@@ -4024,8 +3982,10 @@ html.lenis body {
 #process .process-benchmark-fill,
 .theme-light #process .process-benchmark-fill,
 .theme-dark #process .process-benchmark-fill {
-  background-image: linear-gradient(90deg, #7ea0e8 0%, #252b44 100%);
-  box-shadow: 0 0 24px rgba(74, 106, 175, 0.28);
+  background-image: linear-gradient(90deg, #a9c4ff 0%, #6f98ea 34%, #4472d8 68%, #252b44 100%);
+  box-shadow:
+    0 0 0 1px rgba(190, 216, 255, 0.12) inset,
+    0 0 28px rgba(77, 124, 230, 0.34);
 }
 
 .achievement-atlas {

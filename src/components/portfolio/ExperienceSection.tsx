@@ -53,8 +53,8 @@ export function ExperienceSection({ items }: ExperienceSectionProps) {
 
         <div className="experience-atlas mt-12 grid gap-8 xl:grid-cols-[minmax(0,1.16fr)_22rem]">
           <motion.div
-            initial={{ opacity: 0.72, y: 20, filter: "blur(8px)" }}
-            whileInView={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+            initial={{ opacity: 0.72, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, amount: 0.18 }}
             transition={riseTransition}
             className="experience-atlas-shell rounded-[2rem] p-2"
@@ -64,9 +64,9 @@ export function ExperienceSection({ items }: ExperienceSectionProps) {
                 <AnimatePresence mode="wait">
                   <motion.div
                     key={`${activeItem.company}-${activeItem.role}`}
-                    initial={{ opacity: 0, y: 20, filter: "blur(10px)" }}
-                    animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
-                    exit={{ opacity: 0, y: -16, filter: "blur(8px)" }}
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -16 }}
                     transition={riseTransition}
                     className="grid gap-8 px-6 py-6 lg:grid-cols-[18rem_minmax(0,1fr)] lg:px-8 lg:py-8"
                   >
@@ -138,7 +138,7 @@ export function ExperienceSection({ items }: ExperienceSectionProps) {
                       </div>
 
                       <div className="space-y-4">
-                        <h3 className="font-['Outfit'] text-3xl font-semibold tracking-[-0.07em] text-slate-950 dark:text-white sm:text-4xl lg:text-[3.35rem]">
+                        <h3 className="font-['Outfit'] text-3xl font-semibold leading-[1.08] tracking-[-0.07em] text-slate-950 dark:text-white sm:text-4xl sm:leading-[1.1] lg:text-[3.35rem] lg:leading-[1.12]">
                           {activeItem.role}
                         </h3>
                         <p className="max-w-3xl text-base leading-8 text-slate-700 dark:text-slate-300">
@@ -186,8 +186,8 @@ export function ExperienceSection({ items }: ExperienceSectionProps) {
           </motion.div>
 
           <motion.div
-            initial={{ opacity: 0.72, y: 20, filter: "blur(8px)" }}
-            whileInView={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+            initial={{ opacity: 0.72, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, amount: 0.18 }}
             transition={{ ...riseTransition, delay: 0.06 }}
             className="experience-selector-column flex flex-col gap-4"
