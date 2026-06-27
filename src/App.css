@@ -4483,8 +4483,68 @@ html.lenis body {
 }
 
 @media (max-width: 767px) {
+  .experience-atlas {
+    gap: 1rem;
+  }
+
+  .experience-selector-column {
+    order: 0;
+    gap: 0.75rem;
+  }
+
+  .experience-selector-shell {
+    display: none;
+  }
+
+  .experience-rail-actions {
+    gap: 0.6rem;
+    margin-top: 0;
+    padding-bottom: 0;
+  }
+
+  .experience-company-pill {
+    padding: 0.62rem 0.92rem;
+    font-size: 0.54rem;
+    letter-spacing: 0.22em;
+  }
+
+  .experience-stage-card > div {
+    gap: 1.25rem;
+    padding: 1.1rem;
+  }
+
+  .experience-brand-column,
+  .experience-stage-copy {
+    gap: 1rem;
+  }
+
+  .experience-logo-capsule {
+    height: 6.75rem;
+    padding: 1rem;
+    border-radius: 1.4rem;
+  }
+
   .experience-stage-signals {
     grid-template-columns: minmax(0, 1fr);
+  }
+
+  .experience-stage-signal,
+  .experience-stage-point {
+    padding: 0.9rem;
+    border-radius: 1rem;
+  }
+
+  #experience .experience-stage-copy h3 {
+    font-size: clamp(2.2rem, 10vw, 2.9rem);
+    line-height: 0.98;
+    letter-spacing: -0.07em;
+  }
+
+  #experience .experience-stage-copy > .space-y-4 p,
+  #experience .experience-stage-point p,
+  #experience .experience-stage-signal p:last-child {
+    font-size: 0.92rem;
+    line-height: 1.85;
   }
 
   .achievement-stage-index {
@@ -4508,6 +4568,7 @@ html.lenis body {
   .achievement-proof-card > div {
     padding-left: 1.1rem;
     padding-right: 1.1rem;
+    gap: 1.1rem;
   }
 
   .achievement-carousel-card > div,
@@ -4516,16 +4577,130 @@ html.lenis body {
     padding-right: 1.05rem;
   }
 
+  .achievement-carousel-slide-core {
+    padding-top: 1.1rem;
+    padding-bottom: 1.1rem;
+  }
+
+  #achievements .achievement-overview-card h3,
+  #achievements .achievement-carousel-slide-core h3 {
+    font-size: clamp(2.1rem, 10vw, 2.8rem);
+    line-height: 1.02;
+    letter-spacing: -0.065em;
+  }
+
+  #achievements .achievement-overview-card p,
+  #achievements .achievement-carousel-slide-core p {
+    line-height: 1.8;
+  }
+
+  .achievement-carousel-dots {
+    overflow-x: auto;
+    flex-wrap: nowrap;
+    padding-bottom: 0.25rem;
+  }
+
+  .achievement-carousel-dots::-webkit-scrollbar {
+    display: none;
+  }
+
+  .project-mobile-disclosure summary > div {
+    gap: 0.85rem;
+    padding: 1rem 1rem 1rem 1.05rem;
+  }
+
+  .project-mobile-disclosure summary h3 {
+    font-size: 1.5rem;
+    line-height: 1.05;
+  }
+
+  .project-mobile-disclosure > div {
+    padding: 1rem 1.05rem 1.1rem;
+  }
+
+  .project-mobile-disclosure p {
+    line-height: 1.8;
+  }
+
+  #work .section-header-title,
+  #process .section-header-title,
+  #achievements .section-header-title {
+    font-size: clamp(2.35rem, 11vw, 3.4rem);
+    line-height: 0.98;
+    letter-spacing: -0.075em;
+  }
+
+  #work .section-header-description,
+  #process .section-header-description,
+  #achievements .section-header-description {
+    font-size: 0.96rem;
+    line-height: 1.85;
+  }
+
   .process-skill-chip {
-    min-width: 11.75rem;
+    min-width: 9.5rem;
+    gap: 0.7rem;
+    padding: 0.82rem 0.85rem;
+    border-radius: 1rem;
   }
 
   .process-marquee-track {
-    gap: 0.7rem;
-    animation-duration: 28s;
+    gap: 0.62rem;
+    animation-duration: 30s;
   }
 
   .process-marquee-track.is-reverse {
-    animation-duration: 32s;
+    animation-duration: 34s;
+  }
+
+  .process-skill-icon {
+    width: 2.25rem;
+    height: 2.25rem;
+  }
+
+  .process-skill-icon img {
+    width: 1.25rem;
+    height: 1.25rem;
+  }
+
+  .process-column-shell {
+    padding: 0.35rem;
+  }
+
+  #process .process-story-card h3:first-of-type {
+    font-size: clamp(2.15rem, 10vw, 2.9rem);
+    line-height: 1.02;
+    letter-spacing: -0.065em;
+  }
+
+  #process .process-instruments-card h3,
+  #process .process-doctrine-card h3 {
+    font-size: clamp(1.95rem, 8.8vw, 2.5rem);
+    line-height: 1.04;
+    letter-spacing: -0.06em;
+  }
+
+  .process-step-shell {
+    padding: 0.25rem;
+    border-radius: 1.15rem;
+  }
+
+  .process-step-card,
+  .process-intent-panel,
+  .process-doctrine-row {
+    padding: 0.95rem;
+    border-radius: 1rem;
+  }
+
+  .process-benchmark-track {
+    height: 1rem;
+    border-radius: 999px;
+  }
+
+  #process .process-story-card p,
+  #process .process-instruments-card p,
+  #process .process-doctrine-card p,
+  #process .process-step-card p {
+    line-height: 1.8;
   }
 }
