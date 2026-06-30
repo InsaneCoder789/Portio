@@ -164,6 +164,30 @@ export function AchievementsSection({ items }: AchievementsSectionProps) {
                 </div>
               </div>
 
+              <div className="achievement-mobile-dropdown rounded-[1.4rem] p-2 sm:hidden">
+                <div className="achievement-mobile-dropdown-inner rounded-[calc(1.4rem-0.5rem)] px-4 py-4">
+                  <label
+                    htmlFor="achievement-mobile-select"
+                    className="mb-3 flex items-center gap-3 text-white/78"
+                  >
+                    <Sparkles className="h-4 w-4" />
+                    <span className="text-[0.62rem] uppercase tracking-[0.32em]">Achievement selector</span>
+                  </label>
+                  <select
+                    id="achievement-mobile-select"
+                    value={selectedIndex}
+                    onChange={(event) => scrollTo(Number(event.target.value))}
+                    className="experience-mobile-select w-full rounded-full px-4 py-3 text-[0.7rem] uppercase tracking-[0.24em] outline-none"
+                  >
+                    {items.map((item, index) => (
+                      <option key={`${item.title}-${item.year}`} value={index}>
+                        {item.title}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+              </div>
+
               <div className="overflow-hidden" ref={emblaRef}>
                 <div className="achievement-carousel-track flex">
                   {items.map((item, index) => {
@@ -274,7 +298,7 @@ export function AchievementsSection({ items }: AchievementsSectionProps) {
                 </div>
               </div>
 
-              <div className="achievement-carousel-dots flex flex-wrap gap-2">
+              <div className="achievement-carousel-dots hidden flex-wrap gap-2 sm:flex">
                 {items.map((item, index) => (
                   <button
                     key={`achievement-dot-${item.title}`}

@@ -6,12 +6,14 @@ type ProjectHeaderImageProps = {
   src: string;
   alt: string;
   position?: string;
+  tone?: "default" | "cool";
 };
 
 export function ProjectHeaderImage({
   src,
   alt,
   position = "center center",
+  tone = "default",
 }: ProjectHeaderImageProps) {
   const [available, setAvailable] = useState(true);
 
@@ -36,6 +38,9 @@ export function ProjectHeaderImage({
         className="block h-auto w-full object-contain transition-transform duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:scale-[1.008]"
         style={{ objectPosition: position }}
       />
+      {tone === "cool" ? (
+        <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(135deg,rgba(9,26,56,0.16),rgba(125,211,252,0.06)_42%,rgba(15,23,42,0.26))] mix-blend-multiply" />
+      ) : null}
       <div className="pointer-events-none absolute inset-0 ring-1 ring-inset ring-white/[0.06]" />
     </figure>
   );

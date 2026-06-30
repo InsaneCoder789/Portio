@@ -19,7 +19,7 @@ import type {
   SkillItem,
 } from "@/components/portfolio/types";
 
-const PINNED_REPOS = ["Rail", "K1000", "Lakshman-Rekha", "KYLR"];
+const PINNED_REPOS = ["Rail", "K1000", "Lakshman-Rekha", "ClassSync"];
 
 const githubLanguageLogoMap: Record<string, string> = {
   C: publicAsset("logos/c.svg"),
@@ -70,6 +70,8 @@ export function usePortfolioData(staticMode = false) {
       headerImage: project.headerImage,
       headerImageAlt: project.headerImageAlt,
       headerImagePosition: project.headerImagePosition,
+      headerImageTone: project.headerImageTone,
+      awardTagline: project.awardTagline,
       description: project.description,
       details: project.details,
       challenge: project.challenge,
@@ -178,6 +180,25 @@ export function usePortfolioData(staticMode = false) {
   useEffect(() => {
     let alive = true;
 
+    const mapProjectToCard = (project: ProjectCard): ProjectCard => ({
+      name: project.name,
+      headerImage: project.headerImage,
+      headerImageAlt: project.headerImageAlt,
+      headerImagePosition: project.headerImagePosition,
+      headerImageTone: project.headerImageTone,
+      awardTagline: project.awardTagline,
+      description: project.description,
+      details: project.details,
+      challenge: project.challenge,
+      outcome: project.outcome,
+      learning: project.learning,
+      stack: project.stack,
+      githubUrl: project.githubUrl,
+      homepage: project.homepage,
+      stars: project.stars,
+      language: project.language,
+    });
+
     const projectContentMap = new Map(
       featuredProjects.flatMap((project) => {
         const repoSlug = project.githubUrl.split("/").pop()?.toLowerCase();
@@ -198,6 +219,8 @@ export function usePortfolioData(staticMode = false) {
         headerImage: fallback?.headerImage,
         headerImageAlt: fallback?.headerImageAlt,
         headerImagePosition: fallback?.headerImagePosition,
+        headerImageTone: fallback?.headerImageTone,
+        awardTagline: fallback?.awardTagline,
         description:
           fallback?.description ||
           repo.description ||
@@ -244,32 +267,24 @@ export function usePortfolioData(staticMode = false) {
         const publicRepos = repos.filter((repo) => !repo.fork);
         const repoMap = new Map(publicRepos.map((repo) => [repo.name.toLowerCase(), repo]));
 
-        const pinned = PINNED_REPOS.map((name) => repoMap.get(name.toLowerCase()))
-          .filter(Boolean)
-          .map((repo) => normalizePinnedProject(repo as GithubRepo));
+        const pinned = featuredProjects.map((project) => {
+          const preferredRepoName = project.githubUrl.split("/").pop()?.toLowerCase();
+          const projectNameKey = project.name.toLowerCase();
+
+          const liveRepo =
+            (preferredRepoName ? repoMap.get(preferredRepoName) : undefined) ??
+            repoMap.get(projectNameKey) ??
+            (project.name === "K1000 Platform" ? repoMap.get("k1000") : undefined);
+
+          return liveRepo ? normalizePinnedProject(liveRepo) : mapProjectToCard(project);
+        });
 
         if (profile) setGithubProfile(profile);
         setGithubStats({
           publicRepos: profile?.public_repos ?? publicRepos.length,
           totalStars: publicRepos.reduce((sum, repo) => sum + repo.stargazers_count, 0),
         });
-        setProjectShowcase(
-          pinned.length
-            ? pinned
-            : featuredProjects.map((project) => ({
-                name: project.name,
-                headerImage: project.headerImage,
-                headerImageAlt: project.headerImageAlt,
-                headerImagePosition: project.headerImagePosition,
-                description: project.description,
-                details: project.details,
-                challenge: project.challenge,
-                outcome: project.outcome,
-                learning: project.learning,
-                stack: project.stack,
-                githubUrl: project.githubUrl,
-              })),
-        );
+        setProjectShowcase(pinned.length ? pinned : featuredProjects.map(mapProjectToCard));
         setGithubLanguages(
           Object.entries(
             publicRepos.reduce<Record<string, number>>((acc, repo) => {

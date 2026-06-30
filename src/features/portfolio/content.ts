@@ -1,5 +1,6 @@
 import { EXPERIENCE, PROFILE_PHOTO } from "@/data/linkedin";
 import { publicAsset } from "@/lib/utils";
+import type { ProjectCard } from "@/components/portfolio/types";
 
 export const heroContent = {
   name: "Rohan Chatterjee",
@@ -15,12 +16,13 @@ export const heroContent = {
   heroSecondary: publicAsset("transparent2.png"),
 };
 
-export const featuredProjects = [
+export const featuredProjects: ProjectCard[] = [
   {
     name: "Rail",
     headerImage: publicAsset("projects/rail-header.png"),
     headerImageAlt: "Rail offline payment orchestration architecture",
     headerImagePosition: "center top",
+    headerImageTone: "default",
     description:
       "Designed an offline-first payment orchestration service with deferred synchronization pipelines that maintain operational continuity during unstable network conditions.",
     details:
@@ -39,6 +41,8 @@ export const featuredProjects = [
     headerImage: publicAsset("projects/lakshman-rekha-header.png"),
     headerImageAlt: "Lakshman Rekha mobile scam protection product overview",
     headerImagePosition: "center center",
+    headerImageTone: "default",
+    awardTagline: "🥈 IITKGP Hackathon Winner",
     description:
       "Built an Android safety application focused on scam and phishing detection during calls and messaging workflows with contextual warning systems.",
     details:
@@ -57,6 +61,7 @@ export const featuredProjects = [
     headerImage: publicAsset("projects/k1000-platform-header.png"),
     headerImageAlt: "K-1000 student platform systems interface",
     headerImagePosition: "center center",
+    headerImageTone: "default",
     description:
       "Developed a React and Next.js platform with reusable component systems and responsive layouts for organizational operations, events, and content workflows.",
     details:
@@ -71,22 +76,23 @@ export const featuredProjects = [
     githubUrl: "https://github.com/InsaneCoder789/K1000",
   },
   {
-    name: "KYLR",
-    headerImage: publicAsset("projects/kylr-header.png"),
-    headerImageAlt: "KYLR UPI payments application product overview",
+    name: "ClassSync",
+    headerImage: publicAsset("projects/classsync-header.png"),
+    headerImageAlt: "ClassSync academic planner mobile product overview",
     headerImagePosition: "center center",
+    headerImageTone: "cool",
     description:
-      "Built a high-trust Android payments experience focused on clean money movement flows, sharp visual hierarchy, and confidence-first interaction design.",
+      "Built an Android academic planner focused on turning classes, tasks, study blocks, and exam prep into one calm, tightly structured daily system.",
     details:
-      "Structured the app around UPI-oriented transaction states, responsive dashboard surfaces, and production-minded mobile architecture that keeps the experience fast and readable.",
+      "Designed the experience around timetable-aware planning, progress visibility, reminder workflows, and a cleaner study dashboard that keeps academic planning readable under daily pressure.",
     challenge:
-      "Payments UX had to communicate trust instantly while keeping transactional states readable and interaction paths calm under pressure.",
+      "Student productivity tools often become cluttered very quickly, so the challenge was building something that stays focused, structured, and genuinely useful without overwhelming the user.",
     outcome:
-      "Created a Kotlin-based Android experience around clear transaction states, dashboard clarity, and confidence-first visual hierarchy for money movement flows.",
+      "Shaped ClassSync into an Android-first academic hub where schedules, tasks, progress, and study planning feel unified rather than fragmented across separate utility screens.",
     learning:
-      "In fintech interfaces, visual calm and structural clarity often matter as much as the underlying technical execution.",
-    stack: ["Android", "Kotlin", "Fintech UX"],
-    githubUrl: "https://github.com/InsaneCoder789/KYLR",
+      "Productivity UI only feels premium when information hierarchy removes stress instead of adding more panels, labels, and urgency than the user needs.",
+    stack: ["Android", "Kotlin", "Jetpack Compose"],
+    githubUrl: "https://github.com/InsaneCoder789/ClassSync",
   },
 ];
 
@@ -130,10 +136,10 @@ export const achievementItems: AchievementEntry[] = [
     image: publicAsset("achievements/iit-kharagpur-scampbust.png"),
     imageAlt: "Indian Institute of Technology Kharagpur building lit in pink at night",
     summary:
-      "Finished second at ScamBust during Kshitij, IIT Kharagpur, after working through real-world scam scenarios that demanded alert thinking, teamwork, and quick decision-making.",
+      "Finished second at ScamBust during Kshitij, IIT Kharagpur, where Lakshman Rekha emerged as a pressure-tested scam-safety concept shaped around real behavioral risk scenarios.",
     details: [
-      "The event stood out because it rewarded applied judgment rather than conventional demo theatrics.",
-      "It sharpened my interest in building products that respond to real behavioral risk, not just neat interface ideas.",
+      "Lakshman Rekha earned the silver finish by translating scam-detection thinking into a product direction that felt practical, preventive, and immediately relevant.",
+      "The event stood out because it rewarded applied judgment rather than conventional demo theatrics, which made it a strong validation point for the product idea itself.",
     ],
   },
   {

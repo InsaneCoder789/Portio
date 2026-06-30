@@ -103,15 +103,23 @@ export function WorkSection({ projects }: WorkSectionProps) {
                     src={project.headerImage}
                     alt={project.headerImageAlt || `${project.name} project overview`}
                     position={project.headerImagePosition}
+                    tone={project.headerImageTone}
                   />
                 ) : null}
                 <div className="flex items-center gap-4 px-5 py-5">
                   <span className="text-[0.68rem] uppercase tracking-[0.34em] text-slate-400">
                     {String(index + 1).padStart(2, "0")}
                   </span>
-                  <h3 className="min-w-0 flex-1 font-['Outfit'] text-2xl font-semibold tracking-[-0.05em] text-white">
-                    {project.name}
-                  </h3>
+                  <div className="min-w-0 flex-1 space-y-2">
+                    <h3 className="font-['Outfit'] text-2xl font-semibold tracking-[-0.05em] text-white">
+                      {project.name}
+                    </h3>
+                    {project.awardTagline ? (
+                      <p className="text-[0.62rem] uppercase tracking-[0.28em] text-amber-200/85">
+                        {project.awardTagline}
+                      </p>
+                    ) : null}
+                  </div>
                   <ChevronDown className="project-disclosure-icon h-5 w-5 shrink-0 text-slate-300 transition-transform duration-300" />
                 </div>
               </summary>
@@ -138,6 +146,7 @@ export function WorkSection({ projects }: WorkSectionProps) {
                     src={project.headerImage}
                     alt={project.headerImageAlt || `${project.name} project overview`}
                     position={project.headerImagePosition}
+                    tone={project.headerImageTone}
                   />
                 ) : null}
 
@@ -158,6 +167,11 @@ export function WorkSection({ projects }: WorkSectionProps) {
                     <h3 className="font-['Outfit'] text-3xl font-semibold tracking-[-0.06em] text-white sm:text-4xl">
                       {project.name}
                     </h3>
+                    {project.awardTagline ? (
+                      <p className="mt-2 text-[0.64rem] uppercase tracking-[0.32em] text-amber-200/85">
+                        {project.awardTagline}
+                      </p>
+                    ) : null}
                   </div>
 
                   <div className="relative mt-auto flex flex-1 flex-col gap-5">

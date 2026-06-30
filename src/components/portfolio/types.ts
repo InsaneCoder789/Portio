@@ -33,6 +33,8 @@ export type ProjectCard = {
   headerImage?: string;
   headerImageAlt?: string;
   headerImagePosition?: string;
+  headerImageTone?: "default" | "cool";
+  awardTagline?: string;
   description: string;
   details: string;
   challenge?: string;

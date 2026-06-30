@@ -192,7 +192,31 @@ export function ExperienceSection({ items }: ExperienceSectionProps) {
             transition={{ ...riseTransition, delay: 0.06 }}
             className="experience-selector-column flex flex-col gap-4"
           >
-            <div className="experience-selector-shell rounded-[2rem] p-2">
+            <div className="experience-mobile-dropdown rounded-[1.4rem] p-2 sm:hidden">
+              <div className="experience-mobile-dropdown-inner rounded-[calc(1.4rem-0.5rem)] px-4 py-4">
+                <label
+                  htmlFor="experience-mobile-select"
+                  className="mb-3 flex items-center gap-3 text-sky-600 dark:text-amber-200"
+                >
+                  <Sparkles className="h-4 w-4" />
+                  <span className="text-[0.62rem] uppercase tracking-[0.32em]">Role selector</span>
+                </label>
+                <select
+                  id="experience-mobile-select"
+                  value={selectedIndex}
+                  onChange={(event) => setSelectedIndex(Number(event.target.value))}
+                  className="experience-mobile-select w-full rounded-full px-4 py-3 text-[0.7rem] uppercase tracking-[0.24em] outline-none"
+                >
+                  {items.map((item, index) => (
+                    <option key={`${item.company}-${item.role}`} value={index}>
+                      {item.company} - {item.role}
+                    </option>
+                  ))}
+                </select>
+              </div>
+            </div>
+
+            <div className="experience-selector-shell hidden rounded-[2rem] p-2 sm:block">
               <Card className="experience-selector-card border-0">
                 <CardContent className="space-y-3 p-4 sm:p-5">
                   <div className="flex items-center gap-3 text-sky-600 dark:text-amber-200">
@@ -242,7 +266,7 @@ export function ExperienceSection({ items }: ExperienceSectionProps) {
               </Card>
             </div>
 
-            <div className="experience-rail-actions flex items-center gap-3 overflow-x-auto pb-1">
+            <div className="experience-rail-actions hidden items-center gap-3 overflow-x-auto pb-1 sm:flex">
               {items.map((item, index) => {
                 const active = index === selectedIndex;
 
