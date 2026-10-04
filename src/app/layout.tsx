@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import type { ReactNode } from "react";
+import { Analytics } from "@vercel/analytics/next";
 import { reloadScrollScript } from "../lib/reload-scroll";
 import "../index.css";
 import "../App.css";
@@ -59,7 +60,10 @@ export default function RootLayout({ children }: { children: ReactNode }) {
       <head>
         <script dangerouslySetInnerHTML={{ __html: reloadScrollScript }} />
       </head>
-      <body data-theme="light">{children}</body>
+      <body data-theme="light">
+        {children}
+        <Analytics />
+      </body>
     </html>
   );
 }
