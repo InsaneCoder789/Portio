@@ -4,8 +4,6 @@ import { contactContent } from "../features/portfolio/content";
 export function MobileConnectCard() {
   return (
     <div className="mobile-connect-card section-shell contact-shell">
-      <div className="contact-surface contact-surface-single">
-        <div className="contact-card contact-card-single">
           <div className="contact-panel-grid">
             <div className="contact-panel-left">
               <p className="section-label">07 / Contact</p>
@@ -25,8 +23,6 @@ export function MobileConnectCard() {
               </div>
             </div>
           </div>
-        </div>
-      </div>
     </div>
   );
 }

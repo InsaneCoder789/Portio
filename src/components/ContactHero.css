@@ -84,14 +84,14 @@
 .mobile-connect-card { display: none; }
 @media(max-width:768px) {
   .contact-portrait .contact-desktop-portrait { display: none; }
-  .contact-portrait .mobile-connect-card { display: block; min-height: 0; padding: 1rem; }
-  .mobile-connect-card .contact-card-single { padding: 1rem .25rem; border: 0; border-radius: 0; background: transparent; box-shadow: none; }
-  .mobile-connect-card .contact-panel-grid { grid-template-columns: minmax(0,1fr); height: auto; gap: 1.5rem; }
-  .mobile-connect-card .contact-panel-left { gap: .7rem; padding: 0; }
-  .mobile-connect-card .contact-panel-left h2 { font: 800 clamp(2.8rem,14vw,4.5rem)/.95 Outfit,sans-serif; margin: .3rem 0; color: var(--text); }
-  .mobile-connect-card .contact-card-single p { max-width: none; color: var(--text); font-family: "Space Grotesk",sans-serif; font-size: 1rem; line-height: 1.65; }
-  .mobile-connect-card .contact-card-single .section-label { font-family: "JetBrains Mono",monospace; font-size: .65rem; color: var(--accent); }
-  .mobile-connect-card .contact-panel-right { justify-self: stretch; max-width: none; padding: 1rem; gap: 1rem; border: 1px solid var(--line-strong); background: var(--panel); border-radius: 1.1rem; box-shadow: none; }
+  .contact-portrait .mobile-connect-card { display: block; min-height: 0; padding: 1.25rem; }
+  .contact-portrait .mobile-connect-card::after { content: none; }
+  .mobile-connect-card .contact-panel-grid { grid-template-columns: minmax(0,1fr); height: auto; min-height: 0; gap: 1.1rem; }
+  .mobile-connect-card .contact-panel-left { justify-content: flex-start; gap: .75rem; padding: 0; }
+  .mobile-connect-card .contact-panel-left h2 { font: 800 clamp(2.75rem,12vw,3.6rem)/.95 Outfit,sans-serif; text-transform: uppercase; letter-spacing: -.06em; margin: 0 0 .25rem; color: var(--text); }
+  .mobile-connect-card p { margin: 0; max-width: none; color: var(--text); font-family: "Space Grotesk",sans-serif; font-size: .94rem; line-height: 1.55; }
+  .mobile-connect-card p.section-label { font-family: "JetBrains Mono",monospace; font-size: .65rem; color: var(--accent); }
+  .mobile-connect-card .contact-panel-right { justify-content: flex-start; justify-self: stretch; max-width: none; padding: 0; gap: .75rem; border: 0; background: transparent; border-radius: 0; box-shadow: none; }
   .mobile-connect-card .contact-status { color: var(--muted); font-size: .7rem; line-height: 1.5; }
   .mobile-connect-card .contact-status-dot { animation: none; background: var(--accent); flex-shrink: 0; }
   .mobile-connect-card .contact-cta,.mobile-connect-card .contact-resume-link { display: flex; align-items: center; justify-content: center; width: 100%; min-height: 48px; padding: .8rem; border-radius: .7rem; font-size: .75rem; text-align: center; }
