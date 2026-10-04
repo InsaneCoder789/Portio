@@ -19,6 +19,7 @@ import KaliBootScreen from "@/components/KaliBootScreen";
 import { publicAsset } from "@/lib/utils";
 import { ContactHero } from "@/components/ContactHero";
 import { ThemeLogoToggle } from "@/components/ThemeLogoToggle";
+import { MobileNavigation } from "@/components/MobileNavigation";
 import { EmphasisText } from "@/components/EmphasisText";
 import { ProjectCarousel, type ProjectCard } from "@/components/ProjectCarousel";
 import { SystemsSculpture } from "@/components/SystemsSculpture";
@@ -153,8 +154,10 @@ function App({ initialBooting = true, staticMode = false }: AppProps) {
   const [bootAssetsReady, setBootAssetsReady] = useState(false);
   const markBootAssetsReady = useCallback(() => setBootAssetsReady(true), []);
   const markSystemsPrepared = useCallback(() => setSystemsPrepared(true), []);
-  const [theme, setTheme] = useState<"dark" | "light">("dark");
+  const [theme, setTheme] = useState<"dark" | "light">("light");
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [instantNavigation, setInstantNavigation] = useState(false);
+  const closeMobileNavigation = useCallback(() => setMobileMenuOpen(false), []);
   const [showScene, setShowScene] = useState(false);
   const menuToggleRef = useRef<HTMLButtonElement>(null);
   const completeBoot = useCallback(() => {
@@ -310,38 +313,9 @@ function App({ initialBooting = true, staticMode = false }: AppProps) {
   );
 
   useEffect(() => {
-    if (typeof window === "undefined" || staticMode) return;
-    let storedTheme: string | null = null;
-    try { storedTheme = window.localStorage.getItem("portfolio-theme"); } catch { /* Private browsing can deny storage. */ }
-    if (storedTheme === "light" || storedTheme === "dark") {
-      setTheme(storedTheme);
-    }
-  }, [staticMode]);
-
-  useEffect(() => {
     if (typeof document === "undefined") return;
     document.body.dataset.theme = theme;
-    if (!staticMode && typeof window !== "undefined") {
-      try { window.localStorage.setItem("portfolio-theme", theme); } catch { /* Theme still works without storage. */ }
-    }
-  }, [staticMode, theme]);
-
-  useEffect(() => {
-    if (!mobileMenuOpen) return;
-    const close = (event: KeyboardEvent) => {
-      if (event.key === "Escape") { setMobileMenuOpen(false); menuToggleRef.current?.focus(); }
-    };
-    const outside = (event: PointerEvent) => {
-      const target = event.target as Element;
-      if (!target.closest(".nav-shell,.mobile-nav-control")) setMobileMenuOpen(false);
-    };
-    const desktop = window.matchMedia("(min-width: 1081px)");
-    const resized = () => { if (desktop.matches) setMobileMenuOpen(false); };
-    window.addEventListener("keydown", close);
-    window.addEventListener("pointerdown", outside);
-    desktop.addEventListener("change", resized);
-    return () => { window.removeEventListener("keydown", close); window.removeEventListener("pointerdown", outside); desktop.removeEventListener("change", resized); };
-  }, [mobileMenuOpen]);
+  }, [theme]);
 
   useEffect(() => {
     if (staticMode) return;
@@ -518,14 +492,15 @@ function App({ initialBooting = true, staticMode = false }: AppProps) {
       {booting && !staticMode ? <KaliBootScreen onComplete={completeBoot} scenesReady={systemsPrepared} onAssetsReady={markBootAssetsReady} /> : null}
       <div className="background-stage" aria-hidden="true" />
       <div className={`mobile-nav-control ${mobileMenuOpen ? "is-open" : ""}`.trim()}>
+        <ThemeLogoToggle theme={theme} onToggle={() => setTheme((current) => current === "dark" ? "light" : "dark")} />
         <button
           ref={menuToggleRef}
           type="button"
           className={`nav-menu-toggle ${mobileMenuOpen ? "is-open" : ""}`.trim()}
           aria-label={mobileMenuOpen ? "Close navigation menu" : "Open navigation menu"}
           aria-expanded={mobileMenuOpen}
-          aria-controls="primary-navigation"
-          onClick={() => setMobileMenuOpen((current) => !current)}
+          aria-controls="mobile-navigation"
+          onClick={(event) => { setInstantNavigation(event.detail === 0); setMobileMenuOpen((current) => !current); }}
         >
           <span className="nav-menu-glyph" aria-hidden="true">
             {mobileMenuOpen ? <X size={22} /> : <Menu size={22} />}
@@ -555,6 +530,8 @@ function App({ initialBooting = true, staticMode = false }: AppProps) {
           </div>
         </div>
       </nav>
+
+      <MobileNavigation open={mobileMenuOpen} instant={instantNavigation} items={navItems} onClose={closeMobileNavigation} />
 
       <main className="page-stack">
         <section id="home" className="chapter section-shell hero-shell">

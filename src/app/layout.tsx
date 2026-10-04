@@ -59,7 +59,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
       <head>
         <script dangerouslySetInnerHTML={{ __html: reloadScrollScript }} />
       </head>
-      <body>{children}</body>
+      <body data-theme="light">{children}</body>
     </html>
   );
 }
