@@ -24,7 +24,7 @@ import { EmphasisText } from "@/components/EmphasisText";
 import { ProjectCarousel, type ProjectCard } from "@/components/ProjectCarousel";
 import { SystemsSculpture } from "@/components/SystemsSculpture";
 import { ServerCog, Layers3, Network, PanelsTopLeft, Menu, X } from "lucide-react";
-import { readTelemetry, profileSchema, reposSchema, contributionsSchema, contributionYears, calendarDate } from "@/lib/github-telemetry";
+import { readCachedTelemetry, savedTelemetry, initialProfile, initialContributions, savedRepositorySummary, profileSchema, reposSchema, contributionsSchema, contributionYears, calendarDate } from "@/lib/github-telemetry";
 import Image from "next/image";
 import dynamic from "next/dynamic";
 
@@ -168,14 +168,10 @@ function App({ initialBooting = true, staticMode = false }: AppProps) {
     }
     setBooting(false);
   }, []);
-  const [githubProfile, setGithubProfile] = useState<GithubProfile | null>(null);
+  const [githubProfile, setGithubProfile] = useState<GithubProfile | null>(initialProfile);
   const [telemetryStatus, setTelemetryStatus] = useState({ profile: "loading", repos: "loading", contributions: "loading" });
-  const [telemetryAttempt, setTelemetryAttempt] = useState(0);
-  const [githubStats, setGithubStats] = useState({
-    publicRepos: 0,
-    totalStars: 0,
-  });
-  const [githubContributions, setGithubContributions] = useState<GithubContributionDay[]>([]);
+  const [githubStats, setGithubStats] = useState(savedRepositorySummary);
+  const [githubContributions, setGithubContributions] = useState<GithubContributionDay[]>(initialContributions);
   const [projectShowcase, setProjectShowcase] = useState<ProjectCard[]>(
     featuredProjects.map((project) => ({
       name: project.name,
@@ -363,6 +359,13 @@ function App({ initialBooting = true, staticMode = false }: AppProps) {
       if (alive) setTelemetryStatus(current => ({ ...current, [source]: value }));
     };
     setTelemetryStatus({ profile: "loading", repos: "loading", contributions: "loading" });
+    // Paint the last known readings immediately; refresh quietly in the background.
+    const cachedProfile = savedTelemetry(`https://api.github.com/users/${githubUsername}`, profileSchema);
+    if (cachedProfile) setGithubProfile(cachedProfile.data);
+    const cachedYears = contributionYears().map(year => savedTelemetry(`https://github-contributions-api.jogruber.de/v4/${githubUsername}?y=${year}`, contributionsSchema));
+    if (cachedYears.every(Boolean)) setGithubContributions(cachedYears.flatMap(year => year?.data.contributions ?? []));
+    const cachedRepos = savedTelemetry(`https://api.github.com/users/${githubUsername}/repos?per_page=100&sort=updated`, reposSchema);
+    if (cachedRepos) setGithubStats({ publicRepos: cachedRepos.data.length, totalStars: cachedRepos.data.filter(repo => !repo.fork).reduce((sum, repo) => sum + repo.stargazers_count, 0) });
 
     const projectContentMap = new Map(
       featuredProjects.flatMap((project) => {
@@ -413,19 +416,20 @@ function App({ initialBooting = true, staticMode = false }: AppProps) {
       try {
         const signal = controller.signal;
         // Independent sources: a contribution outage cannot blank repository metrics.
-        void readTelemetry(`https://api.github.com/users/${githubUsername}`, profileSchema, signal).then(profile => {
+        void readCachedTelemetry(`https://api.github.com/users/${githubUsername}`, profileSchema, signal).then(snapshot => {
           if (!alive) return;
-          setGithubProfile(profile);
-          status("profile", "ready");
+          setGithubProfile(snapshot.data);
+          status("profile", snapshot.source === "live" ? "ready" : "saved");
         }).catch(() => status("profile", "error"));
         void Promise.all(contributionYears().map(year =>
-          readTelemetry(`https://github-contributions-api.jogruber.de/v4/${githubUsername}?y=${year}`, contributionsSchema, signal),
+          readCachedTelemetry(`https://github-contributions-api.jogruber.de/v4/${githubUsername}?y=${year}`, contributionsSchema, signal),
         )).then(years => {
           if (!alive) return;
-          setGithubContributions(years.flatMap(year => year.contributions));
-          status("contributions", "ready");
+          setGithubContributions(years.flatMap(year => year.data.contributions));
+          status("contributions", years.every(year => year.source === "live") ? "ready" : "saved");
         }).catch(() => status("contributions", "error"));
-        const repos = await readTelemetry(`https://api.github.com/users/${githubUsername}/repos?per_page=100&sort=updated`, reposSchema, signal);
+        const repositorySnapshot = await readCachedTelemetry(`https://api.github.com/users/${githubUsername}/repos?per_page=100&sort=updated`, reposSchema, signal);
+        const repos = repositorySnapshot.data;
         if (!alive) return;
 
         const publicRepos = repos.filter((repo) => !repo.fork);
@@ -471,7 +475,7 @@ function App({ initialBooting = true, staticMode = false }: AppProps) {
             .slice(0, 8)
             .map(([name, count]) => ({ name, count })),
         );
-        status("repos", "ready");
+        status("repos", repositorySnapshot.source === "live" ? "ready" : "saved");
       } catch {
         status("repos", "error");
       }
@@ -484,7 +488,7 @@ function App({ initialBooting = true, staticMode = false }: AppProps) {
       window.clearTimeout(timeout);
       controller.abort();
     };
-  }, [telemetryAttempt]);
+  }, []);
 
   return (
     <div className={`portfolio-root theme-${theme}`}>
@@ -839,7 +843,7 @@ function App({ initialBooting = true, staticMode = false }: AppProps) {
             <div className="github-stats reveal">
               <article>
                 <span>Public repos</span>
-                <strong>{githubProfile?.public_repos ?? (telemetryStatus.repos === "ready" ? githubStats.publicRepos : "—")}</strong>
+                <strong>{githubProfile?.public_repos ?? githubStats.publicRepos}</strong>
               </article>
               <article>
                 <span>Followers</span>
@@ -847,18 +851,15 @@ function App({ initialBooting = true, staticMode = false }: AppProps) {
               </article>
               <article>
                 <span>Total stars</span>
-                <strong>{telemetryStatus.repos === "ready" ? githubStats.totalStars : "—"}</strong>
+                <strong>{githubStats.totalStars}</strong>
               </article>
               <article>
                 <span>Past year contributions</span>
-                <strong>{telemetryStatus.contributions === "ready" ? pastYearContributionTotal : "—"}</strong>
+                <strong>{pastYearContributionTotal}</strong>
               </article>
             </div>
 
-            <div className="telemetry-status" aria-live="polite">
-              <span>{Object.values(telemetryStatus).includes("loading") ? "Loading live GitHub readings…" : Object.values(telemetryStatus).includes("error") ? "Some live sources are unavailable. Missing readings are shown as —, not zero." : "Live public GitHub snapshot"}</span>
-              {Object.values(telemetryStatus).includes("error") && <button type="button" onClick={() => setTelemetryAttempt(value => value + 1)}>Retry readings</button>}
-            </div>
+            <p className="telemetry-snapshot-note">{Object.values(telemetryStatus).every(value => value === "ready") ? "Live public GitHub snapshot" : "Last saved GitHub snapshot · refreshed when connected"}</p>
 
             <div className="graph-panel reveal">
               <div className="graph-panel-head">
@@ -869,8 +870,7 @@ function App({ initialBooting = true, staticMode = false }: AppProps) {
                 <span>{contributionRangeLabel}</span>
               </div>
 
-              {telemetryStatus.contributions !== "ready" && <p>{telemetryStatus.contributions === "loading" ? "Loading contribution activity…" : "Contribution activity is temporarily unavailable."}</p>}
-              <div className="graph-scroll" hidden={telemetryStatus.contributions !== "ready"}>
+              <div className="graph-scroll">
                 <div className="graph-months">
                   {contributionGrid.monthLabels.map((month) => (
                     <span key={month.index} style={{ gridColumnStart: month.index + 2 }}>
@@ -937,7 +937,7 @@ function App({ initialBooting = true, staticMode = false }: AppProps) {
                 <p className="section-label">Current snapshot</p>
                 <p>
                   {githubProfile?.public_repos ?? "—"} public
-                  repositories, {telemetryStatus.repos === "ready" ? githubStats.totalStars : "—"} total stars, and {telemetryStatus.contributions === "ready" ? pastYearContributionTotal : "—"} tracked
+                  repositories, {githubStats.totalStars} total stars, and {pastYearContributionTotal} tracked
                   contributions across the last twelve months.
                 </p>
               </article>

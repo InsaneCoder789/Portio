@@ -4,6 +4,7 @@ import { useEffect, useRef, useState, type CSSProperties, type MouseEvent } from
 import Image from "next/image";
 import "./ContactHero.css";
 import { contactContent } from "@/features/portfolio/content";
+import { MobileConnectCard } from "./MobileConnectCard";
 
 type ContactHeroProps = {
   hero: {
@@ -98,10 +99,11 @@ export function ContactHero({ hero, theme, staticMode = false }: ContactHeroProp
   };
 
   return (
-    <section id="contact" className="chapter contact-portrait" aria-labelledby="contact-portrait-title" data-theme={theme}>
+    <section id="contact" className="chapter contact-portrait" aria-label={`Contact ${hero.name ?? "Rohan Chatterjee"}`} data-theme={theme}>
+      <MobileConnectCard />
       <div
         ref={shellRef}
-        className="hero-framer-shell"
+        className="hero-framer-shell contact-desktop-portrait"
         style={
           {
             ["--mx" as string]: "50%",

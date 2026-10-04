@@ -14,10 +14,18 @@ describe("boot visual readiness", () => {
     expect(images.some(image => image.src.includes("mib-mark"))).toBe(true);
   });
   it("preloads full-resolution masks only for desktop hover interactions", () => {
-    vi.stubGlobal("matchMedia", () => ({ matches: true }));
+    vi.stubGlobal("matchMedia", (query: string) => ({ matches: query.includes("min-width") }));
     const images = collectBootImages();
     expect(images.filter(image => image.src.includes("fill-mask"))).toHaveLength(2);
     expect(images.filter(image => image.src.includes("transparent")).every(image => !image.srcSet)).toBe(true);
+  });
+  it("omits hidden desktop Contact portraits and masks on phones", () => {
+    vi.stubGlobal("matchMedia", (query: string) => ({ matches: query.includes("max-width") }));
+    document.body.innerHTML = '<div class="contact-desktop-portrait"><img src="/transparent1.png"></div><img src="/projects/test.webp">';
+    const images = collectBootImages();
+    expect(images.some(image => image.src.includes("transparent"))).toBe(false);
+    expect(images.some(image => image.src.includes("/projects/test.webp"))).toBe(true);
+    expect(images.some(image => image.src.includes("mib-mark"))).toBe(true);
   });
   it("does not publish progress after cancellation", async () => {
     vi.stubGlobal("matchMedia", () => ({ matches: false }));

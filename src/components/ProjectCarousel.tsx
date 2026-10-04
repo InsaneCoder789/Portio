@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useRef, useState, type CSSProperties, type KeyboardEvent } from "react";
+import { useCallback, useRef, useState, type CSSProperties, type KeyboardEvent } from "react";
 import { Pause, Play } from "lucide-react";
 import { useCarouselAutoplay } from "@/hooks/useCarouselAutoplay";
 import Image from "next/image";
@@ -32,7 +32,6 @@ export function ProjectCarousel({ projects }: { projects: ProjectCard[] }) {
   const stageRef = useRef<HTMLDivElement>(null);
   const gesture = useRef<{ x: number; y: number } | null>(null);
   const swiped = useRef(false);
-  const indexRef = useRef<HTMLElement>(null);
   const selected = projects[active % projects.length];
   const advance = useCallback(() => {
     setInstant(false);
@@ -40,14 +39,6 @@ export function ProjectCarousel({ projects }: { projects: ProjectCard[] }) {
     setActivity(value => value + 1);
   }, [projects.length]);
   const { running, reducedMotion } = useCarouselAutoplay(stageRef, !paused && !keyboardFocus && projects.length > 1, activity, advance);
-  useEffect(() => {
-    const nav = indexRef.current;
-    const button = nav?.querySelector<HTMLButtonElement>('button[aria-current="true"]');
-    if (!nav || !button || nav.scrollWidth <= nav.clientWidth) return;
-    const navRect = nav.getBoundingClientRect();
-    const buttonRect = button.getBoundingClientRect();
-    nav.scrollTo({ left: nav.scrollLeft + buttonRect.left - navRect.left - (nav.clientWidth - buttonRect.width) / 2 });
-  }, [active]);
   if (!selected) return null;
 
   const select = (index: number, keyboard = false) => {
@@ -107,8 +98,8 @@ export function ProjectCarousel({ projects }: { projects: ProjectCard[] }) {
           );
         })}
       </div>
-      <nav ref={indexRef} className="project-carousel-index" aria-label="Choose a project">
-        {projects.map((project, index) => <button key={project.githubUrl} type="button" aria-label={`Select ${project.name}`} aria-current={index === active ? "true" : undefined} onClick={(e) => select(index, e.detail === 0)}><span>{String(index + 1).padStart(2, "0")}</span>{project.name}</button>)}
+      <nav className="project-carousel-index project-carousel-dots" aria-label="Choose a project">
+        {projects.map((project, index) => <button key={project.githubUrl} type="button" title={project.name} aria-label={`Select ${project.name}`} aria-current={index === active ? "true" : undefined} onClick={(e) => select(index, e.detail === 0)}><span aria-hidden="true" /></button>)}
       </nav>
       <article className="project-card project-selected-detail" aria-label={`${selected.name} case study`}>
         <div className="project-selected-summary">

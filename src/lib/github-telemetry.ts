@@ -1,4 +1,41 @@
 import { z } from "zod";
+import bundledSnapshots from "../features/portfolio/github-snapshot.json";
+
+const snapshots: Record<string, { capturedAt: string; data: unknown }> = bundledSnapshots;
+export const savedRepositorySummary = bundledSnapshots.repositorySummary.data;
+
+export function savedTelemetry<T>(url: string, schema: z.ZodType<T>) {
+  const candidates: unknown[] = [];
+  try {
+    const stored = typeof window !== "undefined" ? window.localStorage.getItem(`portfolio-telemetry-v1:${url}`) : null;
+    if (stored) candidates.push(JSON.parse(stored));
+  } catch { /* Denied storage or a corrupt entry must not block the bundled fallback. */ }
+  candidates.push(snapshots[url]);
+  for (const candidate of candidates) {
+    const envelope = z.object({ capturedAt: z.string().datetime(), data: schema }).safeParse(candidate);
+    if (envelope.success) return envelope.data;
+  }
+  return null;
+}
+
+export async function readCachedTelemetry<T>(url: string, schema: z.ZodType<T>, signal: AbortSignal) {
+  try {
+    const data = await readTelemetry(url, schema, signal);
+    const snapshot = { data, capturedAt: new Date().toISOString() };
+    try { window.localStorage.setItem(`portfolio-telemetry-v1:${url}`, JSON.stringify(snapshot)); } catch { /* Quota/private-mode failures are nonfatal. */ }
+    return { ...snapshot, source: "live" as const };
+  } catch (error) {
+    const saved = savedTelemetry(url, schema);
+    if (saved) return { ...saved, source: "saved" as const };
+    throw error;
+  }
+}
+
+const profileUrl = "https://api.github.com/users/InsaneCoder789";
+export const initialProfile = bundledSnapshots[profileUrl].data;
+export const initialContributions = Object.entries(bundledSnapshots)
+  .filter(([url]) => url.startsWith("https://github-contributions-api"))
+  .flatMap(([, snapshot]) => (snapshot.data as { contributions: { date: string; count: number; level?: number }[] }).contributions);
 
 export const profileSchema = z.object({ public_repos: z.number(), followers: z.number(), following: z.number(), bio: z.string().nullable() });
 export const reposSchema = z.array(z.object({ name: z.string(), description: z.string().nullable(), html_url: z.string(), homepage: z.string().nullable(), language: z.string().nullable(), stargazers_count: z.number(), fork: z.boolean() }));

@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, afterEach } from "vitest";
-import { contributionYears, readTelemetry, profileSchema, reposSchema } from "./github-telemetry";
+import { contributionYears, readTelemetry, readCachedTelemetry, savedTelemetry, profileSchema, reposSchema } from "./github-telemetry";
 
 afterEach(() => vi.unstubAllGlobals());
 describe("GitHub readings", () => {
@@ -22,5 +22,29 @@ describe("GitHub readings", () => {
     const signal = new AbortController().signal;
     expect(await readTelemetry("/profile", profileSchema, signal)).toEqual(profile);
     expect(fetcher).toHaveBeenCalledWith("/profile", { signal });
+  });
+  it("uses the verified bundled profile during a first-visit outage", async () => {
+    vi.stubGlobal("fetch", vi.fn().mockResolvedValue({ ok: false, status: 403 }));
+    const snapshot = await readCachedTelemetry("https://api.github.com/users/InsaneCoder789", profileSchema, new AbortController().signal);
+    expect(snapshot.source).toBe("saved");
+    expect(snapshot.data.public_repos).toBe(33);
+    expect(snapshot.data.followers).toBe(5);
+  });
+  it("prefers a newer successful browser snapshot and retains it when requests fail", async () => {
+    const cache = new Map<string, string>();
+    vi.stubGlobal("window", { localStorage: { getItem: (key: string) => cache.get(key), setItem: (key: string, value: string) => cache.set(key, value) } });
+    const data = { public_repos: 40, followers: 7, following: 6, bio: "Updated profile" };
+    const fetcher = vi.fn().mockResolvedValueOnce({ ok: true, json: async () => data }).mockResolvedValueOnce({ ok: false, status: 503 });
+    vi.stubGlobal("fetch", fetcher);
+    const url = "https://api.github.com/users/InsaneCoder789";
+    expect((await readCachedTelemetry(url, profileSchema, new AbortController().signal)).source).toBe("live");
+    expect((await readCachedTelemetry(url, profileSchema, new AbortController().signal)).data).toEqual(data);
+  });
+  it("ignores corrupt cache and safely tolerates inaccessible browser storage", () => {
+    vi.stubGlobal("window", { localStorage: { getItem: () => "invalid json" } });
+    expect(savedTelemetry("https://api.github.com/users/InsaneCoder789", profileSchema)?.data.followers).toBe(5);
+    vi.stubGlobal("window", { localStorage: { getItem: () => { throw new Error("Denied"); } } });
+    expect(savedTelemetry("https://api.github.com/users/InsaneCoder789", profileSchema)?.data.followers).toBe(5);
+    expect(savedTelemetry("/unknown", profileSchema)).toBeNull();
   });
 });

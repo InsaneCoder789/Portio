@@ -21,9 +21,10 @@ export function resolveBootImageUrl(source: ImageSource, viewport = window.inner
 }
 
 export function collectBootImages() {
-  const images: ImageSource[] = Array.from(document.images).map(image => ({ src: image.src, currentSrc: image.currentSrc || undefined, srcSet: image.srcset || undefined, sizes: image.sizes || undefined }));
+  const mobileContact = matchMedia("(max-width: 768px)").matches;
+  const images: ImageSource[] = Array.from(document.images).filter(image => !mobileContact || !image.closest(".contact-desktop-portrait")).map(image => ({ src: image.src, currentSrc: image.currentSrc || undefined, srcSet: image.srcset || undefined, sizes: image.sizes || undefined }));
   const desktopMask = matchMedia("(min-width: 769px) and (hover: hover) and (pointer: fine)").matches;
-  for (const src of ["/transparent1.png", "/transparent2.png"]) {
+  for (const src of mobileContact ? [] : ["/transparent1.png", "/transparent2.png"]) {
     const { props } = getImageProps({ src, alt: "", width: 1536, height: 1536, sizes: "(max-width: 768px) 100vw, 65vw", unoptimized: desktopMask });
     images.push({ src: props.src, srcSet: props.srcSet, sizes: props.sizes });
     if (desktopMask) images.push({ src: src.replace(".png", "-fill-mask.png") });
