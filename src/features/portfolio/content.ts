@@ -11,6 +11,8 @@ export const heroContent = {
   summary:
     "Across frontend, backend, and Android domains, I work with Next.js, Express.js, React, Kotlin, Jetpack Compose, Android SDK tools, MySQL, and PostgreSQL to build fast, maintainable platforms with clear technical architecture.",
   profilePhoto: PROFILE_PHOTO,
+  heroPrimary: publicAsset("transparent1.png"),
+  heroSecondary: publicAsset("transparent2.png"),
 };
 
 export const aboutContent = {
@@ -40,6 +42,8 @@ export const aboutContent = {
 export const featuredProjects = [
   {
     name: "Rail",
+    analysis: "Authorization-first execution separates permission to spend from the actual transfer. PostgreSQL stores reservations, token headroom, idempotency records, and ledger events; both immediate execution and reconnect-time replay use the same pipeline. The architectural value is consistency across retries—not replacing a bank or claiming production payment readiness.",
+    preview: publicAsset("projects/rail-header.png"),
     description:
       "Designed an offline-first payment orchestration service with deferred synchronization pipelines that maintain operational continuity during unstable network conditions.",
     details:
@@ -55,6 +59,8 @@ export const featuredProjects = [
   },
   {
     name: "Lakshman-Rekha",
+    analysis: "The app treats scams as a sequence of pressure and actions rather than an isolated suspicious message. Call context, notifications, and on-screen signals feed deterministic risk scoring alongside on-device ML. User-selected protection modes change the response, while the model supplies signals instead of directly blocking people. Permission handling and false-positive behavior remain important validation areas.",
+    preview: publicAsset("projects/lakshman-rekha-header.png"),
     description:
       "Built an Android safety application focused on scam and phishing detection during calls and messaging workflows with contextual warning systems.",
     details:
@@ -70,8 +76,10 @@ export const featuredProjects = [
   },
   {
     name: "K1000",
+    analysis: "The README describes an immersive research-program interface: a neural boot sequence, six domain panels, leadership, event galleries, and application pathways. Typed content and reusable navigation connect the cinematic layer to useful information. Simulated telemetry is presentation, not live organizational data; the engineering challenge is keeping the 3D experience readable and responsive.",
+    preview: publicAsset("projects/k1000-platform-header.png"),
     description:
-      "Developed a React and Next.js platform with reusable component systems and responsive layouts for organizational operations, events, and content workflows.",
+      "Developed an immersive React and Next.js research-program website connecting domains, leadership, events, and student application pathways through a reusable interface system.",
     details:
       "Improved maintainability through modular UI structuring, deployment optimization, and standardized rendering patterns across high-frequency internal pages.",
     challenge:
@@ -85,6 +93,8 @@ export const featuredProjects = [
   },
   {
     name: "KYLR",
+    analysis: "Jetpack Compose and StateFlow connect onboarding, bank discovery, contact search, and amount entry to explicit payment state. The documented KylrVault pipeline isolates balance and ledger updates from screen composition. This creates a useful separation between interface confidence and transaction logic; the README's compliance ambitions are not independent certification or proof of live banking integration.",
+    preview: publicAsset("projects/kylr-header.png"),
     description:
       "Built a high-trust Android payments experience focused on clean money movement flows, sharp visual hierarchy, and confidence-first interaction design.",
     details:
@@ -97,6 +107,66 @@ export const featuredProjects = [
       "In fintech interfaces, visual calm and structural clarity often matter as much as the underlying technical execution.",
     stack: ["Android", "Kotlin", "Fintech UX"],
     githubUrl: "https://github.com/InsaneCoder789/KYLR",
+  },
+  {
+    name: "IncidentLens",
+    analysis: "An investigation follows evidence intake, normalization, retrieval, agent reasoning, and operator review. Stable citations let engineers inspect the basis of a recommendation; durable jobs expose progress, retries, and cancellation. Persisted traces track tool calls, latency, and cost. Human approval separates investigation from production mutation, and synthetic evaluation still needs real-incident validation.",
+    preview: publicAsset("projects/incidentlens-cover.webp"),
+    description: "An incident intelligence workspace that turns fragmented operational evidence into citation-grounded investigations for SRE teams.",
+    details: "Multimodal ingestion, hybrid retrieval, specialized investigation agents, durable jobs, and evaluation traces share one approval-aware workflow.",
+    challenge: "Make logs, screenshots, documents, metrics, and runbooks useful together without letting unsupported model claims become production actions.",
+    outcome: "The repository implements evidence processing, persisted reports and traces, a PostgreSQL job ledger, Redis workers, and human approval boundaries for production-changing recommendations.",
+    learning: "Design takeaway: a trustworthy AI interface needs inspectable evidence, visible failures, and explicit action boundaries—not just an answer box.",
+    stack: ["Next.js", "FastAPI", "pgvector", "Redis"],
+    githubUrl: "https://github.com/InsaneCoder789/IncidentLens",
+  },
+  {
+    name: "StayPilot",
+    analysis: "A room is shared operational state, not just a dashboard tile. Checkout ends the stay, expires credentials, marks the room dirty, and creates turnover work in one transaction. Property-scoped APIs and role checks protect the same records across teams; serializable financial operations keep payments and invoices aligned. Physical NFC integration requires compatible hardware and a configured connector.",
+    preview: publicAsset("projects/staypilot-cover.webp"),
+    description: "A multi-property hotel operating system connecting reservations, front desk, room readiness, housekeeping, billing, payments, and guest access.",
+    details: "Property-scoped APIs and PostgreSQL-backed workflows keep departments aligned around the same guest, room, and financial records.",
+    challenge: "Keep check-in, checkout, payment, access credentials, and room turnover consistent instead of letting each department operate a disconnected dashboard.",
+    outcome: "The implementation coordinates checkout, credential expiry, and housekeeping work transactionally, with serializable payment operations, role boundaries, and audit history.",
+    learning: "Design takeaway: operational UX gets simpler when the underlying state transitions agree across departments.",
+    stack: ["Next.js", "TypeScript", "Prisma", "PostgreSQL"],
+    githubUrl: "https://github.com/InsaneCoder789/StayPilot",
+  },
+  {
+    name: "ClassSync",
+    analysis: "Google Classroom, optional Gmail, and manual input converge into locally stored events and tasks. Hard rules protect trusted deadlines and exam signals, while confidence policy decides when TensorFlow Lite can assist. Room and DataStore feed Compose views, reminders, and the widget without a custom backend. The documented Android release is closed testing, not evidence of broad adoption.",
+    preview: publicAsset("projects/classsync-header.png"),
+    description: "A local-first Android academic workspace bringing Google Classroom, optional Gmail updates, manual tasks, study planning, and reminders together.",
+    details: "Jetpack Compose sits above Room and DataStore. A hybrid rules-and-TensorFlow-Lite pipeline classifies academic updates, with safe rule-based fallback when inference is unavailable.",
+    challenge: "Turn mixed academic signals into useful tasks without losing trusted deadlines or making the student workflow depend on a custom backend.",
+    outcome: "The app provides planner and exam views, local reminders, a homescreen widget, and confidence-aware classification. The repository links an Android closed-testing release.",
+    learning: "Design takeaway: on-device intelligence is most useful when deterministic rules protect critical academic signals and local state remains the foundation.",
+    stack: ["Kotlin", "Jetpack Compose", "Room", "TensorFlow Lite"],
+    githubUrl: "https://github.com/InsaneCoder789/ClassSync",
+  },
+  {
+    name: "MGHSIS",
+    analysis: "Wearable, CCTV, and gate observations pass through validated ingestion into shared live state and durable history. Zone feature fusion produces advisory risk, contributing reasons, and operator actions; the Digital Twin lets people compare simulated interventions. Synthetic model scores do not establish field safety accuracy. Sensor calibration, independent safety review, and human authorization remain essential.",
+    preview: publicAsset("projects/mghsis-cover.webp"),
+    description: "An SIH2026 mass-gathering safety prototype combining wearable telemetry, CCTV observations, and gate events in a stadium Digital Twin.",
+    details: "FastAPI ingestion, Redis live state, PostgreSQL history, explainable risk engines, and a crowd-risk model support human-authorized intervention simulation.",
+    challenge: "Help operators understand crowd accumulation, potential distress, and population inconsistencies across fragmented sensor streams.",
+    outcome: "The prototype includes live and simulated twin views, alert triage, replay, and before-and-after intervention scoring. Synthetic evaluation is not evidence of field safety performance.",
+    learning: "Design takeaway: safety interfaces must expose reasons and uncertainty while keeping decisions with people. Hardware integration and field calibration remain deployment boundaries.",
+    stack: ["Next.js", "FastAPI", "Redis", "scikit-learn"],
+    githubUrl: "https://github.com/InsaneCoder789/SIH2026-MGHSIS",
+  },
+  {
+    name: "OfflineQR Attendance",
+    analysis: "A rotating signed classroom challenge becomes a device-signed proof stored atomically in a local outbox. On reconnection, the server rechecks signatures, enrollment, device status, timing, and duplicate rules before updating the roster. ICT governance handles controlled device replacement. This supports delayed verification, not a guarantee against physical collusion; institution-specific identity and device rollout checks remain required.",
+    preview: publicAsset("projects/offlineqr-header.png"),
+    description: "An offline-first attendance ecosystem connecting a Flutter student app, a faculty portal, device governance, and centrally verified attendance proofs.",
+    details: "Rotating signed QR challenges, device-bound Ed25519 proofs, a durable SQLite outbox, and idempotent synchronization preserve valid scans through connectivity loss.",
+    challenge: "Capture attendance without Internet access while keeping device identity, replay rules, and delayed reconciliation verifiable across mobile and server implementations.",
+    outcome: "The repository implements offline proof capture, backend re-verification, faculty roster updates, and controlled device replacement. Institutional identity, integrity attestation, and physical-device rollout checks remain required.",
+    learning: "Design takeaway: offline-first UX works when local capture is durable and the server independently verifies evidence after reconnecting—not when offline state is treated as unquestioned truth.",
+    stack: ["Flutter", "Next.js", "FastAPI", "Ed25519"],
+    githubUrl: "https://github.com/InsaneCoder789/offlineqr-attendance",
   },
 ];
 

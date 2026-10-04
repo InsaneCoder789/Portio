@@ -1,8 +1,7 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { gsap } from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
 import {
   aboutContent,
   credibilitySignals,
@@ -16,11 +15,19 @@ import {
   skillsMatrix,
   writingNotes,
 } from "@/features/portfolio/content";
-import DeathStarScene from "@/components/DeathStarScene";
 import KaliBootScreen from "@/components/KaliBootScreen";
 import { publicAsset } from "@/lib/utils";
+import { ContactHero } from "@/components/ContactHero";
+import { ThemeLogoToggle } from "@/components/ThemeLogoToggle";
+import { EmphasisText } from "@/components/EmphasisText";
+import { ProjectCarousel, type ProjectCard } from "@/components/ProjectCarousel";
+import { SystemsSculpture } from "@/components/SystemsSculpture";
+import { ServerCog, Layers3, Network, PanelsTopLeft, Menu, X } from "lucide-react";
+import { readTelemetry, profileSchema, reposSchema, contributionsSchema, contributionYears, calendarDate } from "@/lib/github-telemetry";
+import Image from "next/image";
+import dynamic from "next/dynamic";
 
-gsap.registerPlugin(ScrollTrigger);
+const DeathStarScene = dynamic(() => import("@/components/DeathStarScene"), { ssr: false });
 
 type GithubProfile = {
   public_repos: number;
@@ -45,27 +52,11 @@ type GithubContributionDay = {
   level?: number;
 };
 
-type ProjectCard = {
-  name: string;
-  description: string;
-  details: string;
-  challenge?: string;
-  outcome?: string;
-  learning?: string;
-  stack: string[];
-  githubUrl: string;
-  homepage?: string | null;
-  stars?: number;
-  language?: string | null;
-};
-
 type SkillItem = {
   label: string;
   logo?: string;
   count?: number;
 };
-
-const PINNED_REPOS = ["Rail", "K1000", "Lakshman-Rekha", "KYLR"];
 
 const githubLanguageLogoMap: Record<string, string> = {
   React: publicAsset("logos/react.svg"),
@@ -158,9 +149,25 @@ type AppProps = {
 
 function App({ initialBooting = true, staticMode = false }: AppProps) {
   const [booting, setBooting] = useState(initialBooting);
+  const [systemsPrepared, setSystemsPrepared] = useState(false);
+  const [bootAssetsReady, setBootAssetsReady] = useState(false);
+  const markBootAssetsReady = useCallback(() => setBootAssetsReady(true), []);
+  const markSystemsPrepared = useCallback(() => setSystemsPrepared(true), []);
   const [theme, setTheme] = useState<"dark" | "light">("dark");
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [showScene, setShowScene] = useState(false);
+  const menuToggleRef = useRef<HTMLButtonElement>(null);
+  const completeBoot = useCallback(() => {
+    // Async scene/layout preparation can shift browser anchoring during boot.
+    // Reset once more under the overlay, never during the visitor's scrolling.
+    if ((performance.getEntriesByType("navigation")[0] as PerformanceNavigationTiming | undefined)?.type === "reload") {
+      window.scrollTo({ top: 0, left: 0, behavior: "instant" });
+    }
+    setBooting(false);
+  }, []);
   const [githubProfile, setGithubProfile] = useState<GithubProfile | null>(null);
+  const [telemetryStatus, setTelemetryStatus] = useState({ profile: "loading", repos: "loading", contributions: "loading" });
+  const [telemetryAttempt, setTelemetryAttempt] = useState(0);
   const [githubStats, setGithubStats] = useState({
     publicRepos: 0,
     totalStars: 0,
@@ -169,8 +176,10 @@ function App({ initialBooting = true, staticMode = false }: AppProps) {
   const [projectShowcase, setProjectShowcase] = useState<ProjectCard[]>(
     featuredProjects.map((project) => ({
       name: project.name,
+      preview: project.preview,
       description: project.description,
       details: project.details,
+      analysis: project.analysis,
       challenge: project.challenge,
       outcome: project.outcome,
       learning: project.learning,
@@ -183,7 +192,7 @@ function App({ initialBooting = true, staticMode = false }: AppProps) {
   const contributionStartDate = useMemo(() => {
     const date = new Date();
     date.setDate(date.getDate() - 364);
-    return date.toISOString().slice(0, 10);
+    return calendarDate(date);
   }, []);
 
   const contributionRangeLabel = useMemo(() => formatRangeLabel(contributionStartDate), [contributionStartDate]);
@@ -201,7 +210,7 @@ function App({ initialBooting = true, staticMode = false }: AppProps) {
   const pastYearContributionTotal = useMemo(
     () =>
       githubContributions
-        .filter((day) => day.date >= contributionStartDate)
+        .filter((day) => day.date >= contributionStartDate && day.date <= calendarDate(new Date()))
         .reduce((sum, day) => sum + day.count, 0),
     [githubContributions, contributionStartDate],
   );
@@ -215,13 +224,13 @@ function App({ initialBooting = true, staticMode = false }: AppProps) {
 
     const contributionMap = new Map(
       githubContributions
-        .filter((day) => day.date >= contributionStartDate && day.date <= today.toISOString().slice(0, 10))
+        .filter((day) => day.date >= contributionStartDate && day.date <= calendarDate(today))
         .map((day) => [day.date, day]),
     );
 
     const weeks: GithubContributionDay[][] = [];
     const monthLabels: Array<{ index: number; label: string }> = [];
-    let cursor = new Date(startDate);
+    const cursor = new Date(startDate);
     let weekIndex = -1;
 
     while (cursor <= today) {
@@ -230,7 +239,7 @@ function App({ initialBooting = true, staticMode = false }: AppProps) {
         weekIndex += 1;
       }
 
-      const iso = cursor.toISOString().slice(0, 10);
+      const iso = calendarDate(cursor);
       const contribution = contributionMap.get(iso) ?? { date: iso, count: 0, level: 0 };
 
       weeks[weekIndex].push({
@@ -285,6 +294,16 @@ function App({ initialBooting = true, staticMode = false }: AppProps) {
     });
   }, [githubLanguages]);
 
+  useEffect(() => {
+    const desktop = window.matchMedia("(min-width: 1081px)");
+    const reduced = window.matchMedia("(prefers-reduced-motion: reduce)");
+    const sync = () => setShowScene(!staticMode && desktop.matches && !reduced.matches);
+    sync();
+    desktop.addEventListener("change", sync);
+    reduced.addEventListener("change", sync);
+    return () => { desktop.removeEventListener("change", sync); reduced.removeEventListener("change", sync); };
+  }, [staticMode]);
+
   const logoSkills = useMemo(
     () => skillsMatrix.filter((skill) => Boolean(skill.logo)),
     [],
@@ -292,7 +311,8 @@ function App({ initialBooting = true, staticMode = false }: AppProps) {
 
   useEffect(() => {
     if (typeof window === "undefined" || staticMode) return;
-    const storedTheme = window.localStorage.getItem("portfolio-theme");
+    let storedTheme: string | null = null;
+    try { storedTheme = window.localStorage.getItem("portfolio-theme"); } catch { /* Private browsing can deny storage. */ }
     if (storedTheme === "light" || storedTheme === "dark") {
       setTheme(storedTheme);
     }
@@ -302,11 +322,29 @@ function App({ initialBooting = true, staticMode = false }: AppProps) {
     if (typeof document === "undefined") return;
     document.body.dataset.theme = theme;
     if (!staticMode && typeof window !== "undefined") {
-      window.localStorage.setItem("portfolio-theme", theme);
+      try { window.localStorage.setItem("portfolio-theme", theme); } catch { /* Theme still works without storage. */ }
     }
   }, [staticMode, theme]);
 
   useEffect(() => {
+    if (!mobileMenuOpen) return;
+    const close = (event: KeyboardEvent) => {
+      if (event.key === "Escape") { setMobileMenuOpen(false); menuToggleRef.current?.focus(); }
+    };
+    const outside = (event: PointerEvent) => {
+      const target = event.target as Element;
+      if (!target.closest(".nav-shell,.mobile-nav-control")) setMobileMenuOpen(false);
+    };
+    const desktop = window.matchMedia("(min-width: 1081px)");
+    const resized = () => { if (desktop.matches) setMobileMenuOpen(false); };
+    window.addEventListener("keydown", close);
+    window.addEventListener("pointerdown", outside);
+    desktop.addEventListener("change", resized);
+    return () => { window.removeEventListener("keydown", close); window.removeEventListener("pointerdown", outside); desktop.removeEventListener("change", resized); };
+  }, [mobileMenuOpen]);
+
+  useEffect(() => {
+    if (staticMode) return;
     const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     if (reduceMotion) return;
 
@@ -324,59 +362,33 @@ function App({ initialBooting = true, staticMode = false }: AppProps) {
         { y: 0, opacity: 1, duration: 0.75, stagger: 0.08, ease: "power3.out", delay: 0.1 },
       );
 
-      if (document.querySelector(".portrait-card")) {
-        gsap.to(".portrait-card", {
-          y: -10,
-          rotate: 0.8,
-          duration: 4.2,
-          repeat: -1,
-          yoyo: true,
-          ease: "sine.inOut",
-        });
-      }
-
-      gsap.utils.toArray<HTMLElement>(".section-shell").forEach((shell) => {
-        gsap.fromTo(
-          shell,
-          { opacity: 0.86 },
-          {
-            opacity: 1,
-            duration: 0.42,
-            ease: "power2.out",
-            scrollTrigger: {
-              trigger: shell,
-              start: "top 84%",
-              once: true,
-            },
-          },
-        );
-
-        const items = shell.querySelectorAll(".reveal");
-        if (!items.length) return;
-
-        gsap.fromTo(items, {
-          y: 12,
-          opacity: 0,
-        }, {
-          y: 0,
-          opacity: 1,
-          duration: 0.52,
-          ease: "power2.out",
-          stagger: 0.045,
-          scrollTrigger: {
-            trigger: shell,
-            start: "top 92%",
-            once: true,
-          },
-        });
-      });
+      // Chapters stay readable in native document flow. No global scroll refresh,
+      // position restoration or hidden heading at the Hero → About boundary.
     });
 
     return () => ctx.revert();
+  }, [staticMode]);
+
+  useEffect(() => {
+    const shells = document.querySelectorAll<HTMLElement>(".section-shell");
+    const observer = new IntersectionObserver(entries => {
+      entries.forEach(entry => entry.target.toggleAttribute("data-motion-visible", entry.isIntersecting));
+    }, { threshold: 0 });
+    shells.forEach(shell => observer.observe(shell));
+    const sync = () => document.documentElement.toggleAttribute("data-motion-hidden", document.hidden);
+    document.addEventListener("visibilitychange", sync);
+    sync();
+    return () => { observer.disconnect(); document.removeEventListener("visibilitychange", sync); document.documentElement.removeAttribute("data-motion-hidden"); };
   }, []);
 
   useEffect(() => {
     let alive = true;
+    const controller = new AbortController();
+    const timeout = window.setTimeout(() => controller.abort(), 15000);
+    const status = (source: "profile" | "repos" | "contributions", value: string) => {
+      if (alive) setTelemetryStatus(current => ({ ...current, [source]: value }));
+    };
+    setTelemetryStatus({ profile: "loading", repos: "loading", contributions: "loading" });
 
     const projectContentMap = new Map(
       featuredProjects.flatMap((project) => {
@@ -394,7 +406,7 @@ function App({ initialBooting = true, staticMode = false }: AppProps) {
       const deliveryLabel = repo.homepage ? "a published live build" : "an open-source delivery flow";
 
       return {
-        name: repo.name === "K1000" ? "K1000 Platform" : repo.name,
+        name: fallback?.name ?? repo.name,
         description:
           fallback?.description ||
           repo.description ||
@@ -403,9 +415,11 @@ function App({ initialBooting = true, staticMode = false }: AppProps) {
           fallback?.details ||
           `Built with ${languageLabel} and ${deliveryLabel}, with an emphasis on maintainable structure, dependable execution, and clean interface delivery.`,
         challenge: fallback?.challenge,
+        analysis: fallback?.analysis,
         outcome: fallback?.outcome,
         learning: fallback?.learning,
-        stack: Array.from(
+        preview: fallback?.preview,
+        stack: fallback?.stack ?? Array.from(
           new Set(
             [
               repo.language,
@@ -423,32 +437,36 @@ function App({ initialBooting = true, staticMode = false }: AppProps) {
 
     async function loadGithubData() {
       try {
-        const [profileRes, reposRes, contrib2025Res, contrib2026Res] = await Promise.all([
-          fetch(`https://api.github.com/users/${githubUsername}`),
-          fetch(`https://api.github.com/users/${githubUsername}/repos?per_page=100&sort=updated`),
-          fetch(`https://github-contributions-api.jogruber.de/v4/${githubUsername}?y=2025`),
-          fetch(`https://github-contributions-api.jogruber.de/v4/${githubUsername}?y=2026`),
-        ]);
-
-        const [profile, repos, contrib2025, contrib2026] = await Promise.all([
-          profileRes.json() as Promise<GithubProfile>,
-          reposRes.json() as Promise<GithubRepo[]>,
-          contrib2025Res.json() as Promise<{ contributions?: GithubContributionDay[] }>,
-          contrib2026Res.json() as Promise<{ contributions?: GithubContributionDay[] }>,
-        ]);
-
+        const signal = controller.signal;
+        // Independent sources: a contribution outage cannot blank repository metrics.
+        void readTelemetry(`https://api.github.com/users/${githubUsername}`, profileSchema, signal).then(profile => {
+          if (!alive) return;
+          setGithubProfile(profile);
+          status("profile", "ready");
+        }).catch(() => status("profile", "error"));
+        void Promise.all(contributionYears().map(year =>
+          readTelemetry(`https://github-contributions-api.jogruber.de/v4/${githubUsername}?y=${year}`, contributionsSchema, signal),
+        )).then(years => {
+          if (!alive) return;
+          setGithubContributions(years.flatMap(year => year.contributions));
+          status("contributions", "ready");
+        }).catch(() => status("contributions", "error"));
+        const repos = await readTelemetry(`https://api.github.com/users/${githubUsername}/repos?per_page=100&sort=updated`, reposSchema, signal);
         if (!alive) return;
 
         const publicRepos = repos.filter((repo) => !repo.fork);
         const repoMap = new Map(publicRepos.map((repo) => [repo.name.toLowerCase(), repo]));
 
-        const pinned = PINNED_REPOS.map((name) => repoMap.get(name.toLowerCase()))
-          .filter(Boolean)
-          .map((repo) => normalizePinnedProject(repo as GithubRepo));
+        // Live metadata enriches the curated set; a missing API entry must not
+        // drop a project from the portfolio or replace its researched stack.
+        const pinned = featuredProjects.map((project) => {
+          const slug = project.githubUrl.split("/").pop()?.toLowerCase() ?? "";
+          const repo = repoMap.get(slug);
+          return repo ? normalizePinnedProject(repo) : { ...project };
+        });
 
-        setGithubProfile(profile);
         setGithubStats({
-          publicRepos: profile.public_repos,
+          publicRepos: repos.length,
           totalStars: publicRepos.reduce((sum, repo) => sum + repo.stargazers_count, 0),
         });
         setProjectShowcase(
@@ -456,8 +474,10 @@ function App({ initialBooting = true, staticMode = false }: AppProps) {
             ? pinned
             : featuredProjects.map((project) => ({
                 name: project.name,
+                preview: project.preview,
                 description: project.description,
                 details: project.details,
+                analysis: project.analysis,
                 challenge: project.challenge,
                 outcome: project.outcome,
                 learning: project.learning,
@@ -477,12 +497,9 @@ function App({ initialBooting = true, staticMode = false }: AppProps) {
             .slice(0, 8)
             .map(([name, count]) => ({ name, count })),
         );
-        setGithubContributions([
-          ...(contrib2025.contributions ?? []),
-          ...(contrib2026.contributions ?? []),
-        ]);
+        status("repos", "ready");
       } catch {
-        if (!alive) return;
+        status("repos", "error");
       }
     }
 
@@ -490,15 +507,19 @@ function App({ initialBooting = true, staticMode = false }: AppProps) {
 
     return () => {
       alive = false;
+      window.clearTimeout(timeout);
+      controller.abort();
     };
-  }, []);
+  }, [telemetryAttempt]);
 
   return (
-    <div className="portfolio-root">
-      {booting ? <KaliBootScreen onComplete={() => setBooting(false)} /> : null}
+    <div className={`portfolio-root theme-${theme}`}>
+      <a className="skip-to-content" href="#home">Skip to content</a>
+      {booting && !staticMode ? <KaliBootScreen onComplete={completeBoot} scenesReady={systemsPrepared} onAssetsReady={markBootAssetsReady} /> : null}
       <div className="background-stage" aria-hidden="true" />
       <div className={`mobile-nav-control ${mobileMenuOpen ? "is-open" : ""}`.trim()}>
         <button
+          ref={menuToggleRef}
           type="button"
           className={`nav-menu-toggle ${mobileMenuOpen ? "is-open" : ""}`.trim()}
           aria-label={mobileMenuOpen ? "Close navigation menu" : "Open navigation menu"}
@@ -507,12 +528,12 @@ function App({ initialBooting = true, staticMode = false }: AppProps) {
           onClick={() => setMobileMenuOpen((current) => !current)}
         >
           <span className="nav-menu-glyph" aria-hidden="true">
-            {mobileMenuOpen ? "×" : "☰"}
+            {mobileMenuOpen ? <X size={22} /> : <Menu size={22} />}
           </span>
         </button>
       </div>
 
-      <nav className={`nav-shell ${mobileMenuOpen ? "is-menu-open" : ""}`.trim()}>
+      <nav aria-label="Primary navigation" className={`nav-shell ${mobileMenuOpen ? "is-menu-open" : ""}`.trim()}>
         <div className="nav-inner">
           <a href="#home" className="brand-shell">
             <img src={heroContent.profilePhoto} alt={heroContent.name} className="brand-avatar" />
@@ -529,6 +550,7 @@ function App({ initialBooting = true, staticMode = false }: AppProps) {
                   {label}
                 </a>
               ))}
+              <ThemeLogoToggle theme={theme} onToggle={() => setTheme((current) => current === "dark" ? "light" : "dark")} />
             </div>
           </div>
         </div>
@@ -551,8 +573,8 @@ function App({ initialBooting = true, staticMode = false }: AppProps) {
               </div>
             </div>
 
-            <div className="deathstar-panel reveal">
-              <DeathStarScene className="deathstar-panel-inner" />
+            <div className="deathstar-panel">
+              {showScene ? <DeathStarScene className="deathstar-panel-inner" theme={theme} /> : null}
             </div>
           </div>
 
@@ -565,18 +587,8 @@ function App({ initialBooting = true, staticMode = false }: AppProps) {
             <div className="manifesto-card reveal">
               <p className="manifesto-kicker">A portfolio with a point of view</p>
               <p className="hero-current-line">{heroContent.current}</p>
-              <p>{heroContent.intro}</p>
-              <p>{heroContent.summary}</p>
-            </div>
-            <div className="signal-grid reveal">
-              <article>
-                <span>Operating mode</span>
-                <strong>Builder with systems taste</strong>
-              </article>
-              <article>
-                <span>Current focus</span>
-                <strong>Web platforms, product interfaces, resilient backends</strong>
-              </article>
+              <p><EmphasisText>{heroContent.intro}</EmphasisText></p>
+              <p><EmphasisText>{heroContent.summary}</EmphasisText></p>
             </div>
           </div>
 
@@ -586,18 +598,18 @@ function App({ initialBooting = true, staticMode = false }: AppProps) {
           <div className="section-shell about-shell">
             <div className="section-heading reveal">
               <p className="section-label">{aboutContent.eyebrow}</p>
-              <p className="section-command">{aboutContent.command}</p>
               <h2>{aboutContent.title}</h2>
               <p className="section-intro">
-                {aboutContent.lead} {aboutContent.body}
+                <EmphasisText>{`${aboutContent.lead} ${aboutContent.body}`}</EmphasisText>
               </p>
             </div>
 
             <div className="about-layout">
               <article className="about-primary reveal">
                 <p className="about-kicker">About Me</p>
-                <p>{aboutContent.lead}</p>
-                <p>{aboutContent.body}</p>
+                <p><EmphasisText phrases={["Software Developer"]}>{aboutContent.lead}</EmphasisText></p>
+                <p><EmphasisText phrases={["UI/UX engineering"]}>{aboutContent.body}</EmphasisText></p>
+                <SystemsSculpture prewarm={bootAssetsReady && booting && !staticMode} onPrepared={markSystemsPrepared} />
                 <div className="about-quote">
                   <span>Philosophy</span>
                   <strong>{aboutContent.philosophy}</strong>
@@ -611,7 +623,7 @@ function App({ initialBooting = true, staticMode = false }: AppProps) {
                     {aboutContent.points.map((point) => (
                       <div key={point} className="about-point">
                         <span className="about-point-dot" />
-                        <p>{point}</p>
+                        <p><EmphasisText phrases={["system design"]}>{point}</EmphasisText></p>
                       </div>
                     ))}
                   </div>
@@ -620,11 +632,14 @@ function App({ initialBooting = true, staticMode = false }: AppProps) {
                 <article className="about-focus-card reveal">
                   <p className="about-kicker">What I&apos;m Focused On</p>
                   <div className="about-focus-grid">
-                    {aboutContent.focus.map((item) => (
+                    {aboutContent.focus.map((item, index) => {
+                      const FocusIcon = [ServerCog, Layers3, Network, PanelsTopLeft][index % 4];
+                      return (
                       <div key={item} className="about-focus-pill">
+                        <span className="focus-emblem" aria-hidden="true"><FocusIcon size={28} strokeWidth={1.5} /></span>
                         <span>{item}</span>
                       </div>
-                    ))}
+                    ); })}
                   </div>
                 </article>
               </div>
@@ -636,7 +651,6 @@ function App({ initialBooting = true, staticMode = false }: AppProps) {
           <div className="section-shell experience-shell">
             <div className="section-heading reveal">
               <p className="section-label">02 / Journey</p>
-              <p className="section-command">~ /experience --timeline</p>
               <h2>Experience</h2>
               <p className="section-intro">
                 A structured record of the roles, systems, and teams that shaped how I build, ship, and scale product work.
@@ -692,7 +706,7 @@ function App({ initialBooting = true, staticMode = false }: AppProps) {
 
                     <div className="experience-body">
                       {exp.points?.map((point) => (
-                        <p key={point}>{point}</p>
+                        <p key={point}><EmphasisText>{point}</EmphasisText></p>
                       ))}
                     </div>
 
@@ -712,7 +726,6 @@ function App({ initialBooting = true, staticMode = false }: AppProps) {
           <div className="section-shell projects-shell">
             <div className="section-heading reveal">
               <p className="section-label">03 / Portfolio</p>
-              <p className="section-command">~ /projects --curated --case-studies</p>
               <h2>Selected Works</h2>
               <p className="section-intro">
                 A curated selection of systems, product builds, and technical experiments shaped into
@@ -720,64 +733,7 @@ function App({ initialBooting = true, staticMode = false }: AppProps) {
               </p>
             </div>
 
-            <div className="project-mosaic">
-              {projectShowcase.map((project, index) => (
-                <article
-                  key={project.name}
-                  className={`project-card reveal ${index === 0 || index === 2 ? "project-card-rise" : "project-card-fall"}`}
-                >
-                  <div className="project-top">
-                    <span className="project-number">{String(index + 1).padStart(2, "0")}</span>
-                    <span className="project-badge">Pinned repository</span>
-                  </div>
-                  <h3>{project.name}</h3>
-                  <p className="project-description">{project.description}</p>
-                  <p className="project-details">{project.details}</p>
-                  <div className="project-system-row">
-                    <span>Structure</span>
-                    <strong>{project.language ?? project.stack[0] ?? "System build"}</strong>
-                    <span className="project-divider" />
-                    <span>Signal</span>
-                    <strong>{project.homepage ? "Live deployment" : "Open-source release"}</strong>
-                  </div>
-                  <div className="project-case-study">
-                    {project.challenge ? (
-                      <div>
-                        <span>Challenge</span>
-                        <p>{project.challenge}</p>
-                      </div>
-                    ) : null}
-                    {project.outcome ? (
-                      <div>
-                        <span>Outcome</span>
-                        <p>{project.outcome}</p>
-                      </div>
-                    ) : null}
-                    {project.learning ? (
-                      <div>
-                        <span>Learning</span>
-                        <p>{project.learning}</p>
-                      </div>
-                    ) : null}
-                  </div>
-                  <div className="project-tags">
-                    {project.stack.map((tag) => (
-                      <span key={tag}>{tag}</span>
-                    ))}
-                  </div>
-                  <div className="project-links">
-                    <a href={project.githubUrl} target="_blank" rel="noreferrer">
-                      GitHub ↗
-                    </a>
-                    {project.homepage ? (
-                      <a href={project.homepage} target="_blank" rel="noreferrer">
-                        Live ↗
-                      </a>
-                    ) : null}
-                  </div>
-                </article>
-              ))}
-            </div>
+            <ProjectCarousel projects={projectShowcase} />
           </div>
         </section>
 
@@ -785,7 +741,6 @@ function App({ initialBooting = true, staticMode = false }: AppProps) {
           <div className="section-shell skills-shell">
             <div className="section-heading reveal">
               <p className="section-label">04 / Stack</p>
-              <p className="section-command">~ /stack --atlas --core-tools</p>
               <h2>Capability Atlas</h2>
               <p className="section-intro">
                 The tools I lean on most, plus the language mix surfaced from my public GitHub repositories.
@@ -837,7 +792,6 @@ function App({ initialBooting = true, staticMode = false }: AppProps) {
           <div className="section-shell signals-shell">
             <div className="section-heading reveal">
               <p className="section-label">05 / Signals</p>
-              <p className="section-command">~ /signals --metrics --writing --proof</p>
               <h2>Signals</h2>
               <p className="section-intro">
                 The numbers, notes, and credibility markers that make the work easier to evaluate beyond visuals alone.
@@ -854,7 +808,7 @@ function App({ initialBooting = true, staticMode = false }: AppProps) {
                   {portfolioSignals.map((item) => (
                     <div key={item.title} className="portfolio-signal-card">
                       <strong>{item.title}</strong>
-                      <span>{item.description}</span>
+                      <span><EmphasisText>{item.description}</EmphasisText></span>
                     </div>
                   ))}
                 </div>
@@ -870,7 +824,7 @@ function App({ initialBooting = true, staticMode = false }: AppProps) {
                     <div key={note.title} className="writing-card">
                       <span>{note.status}</span>
                       <h3>{note.title}</h3>
-                      <p>{note.summary}</p>
+                      <p><EmphasisText>{note.summary}</EmphasisText></p>
                     </div>
                   ))}
                 </div>
@@ -885,7 +839,7 @@ function App({ initialBooting = true, staticMode = false }: AppProps) {
                   {credibilitySignals.map((signal) => (
                     <div key={signal.title} className="credibility-card">
                       <h3>{signal.title}</h3>
-                      <p>{signal.description}</p>
+                      <p><EmphasisText>{signal.description}</EmphasisText></p>
                     </div>
                   ))}
                 </div>
@@ -898,7 +852,6 @@ function App({ initialBooting = true, staticMode = false }: AppProps) {
           <div className="section-shell github-shell">
             <div className="section-heading reveal">
               <p className="section-label">06 / GitHub</p>
-              <p className="section-command">~ /github --telemetry --public-signal</p>
               <h2>Telemetry</h2>
               <p className="section-intro">
                 A professional snapshot of public repository activity, contribution consistency, and open-source
@@ -909,20 +862,25 @@ function App({ initialBooting = true, staticMode = false }: AppProps) {
             <div className="github-stats reveal">
               <article>
                 <span>Public repos</span>
-                <strong>{githubStats.publicRepos || githubProfile?.public_repos || projectShowcase.length}</strong>
+                <strong>{githubProfile?.public_repos ?? (telemetryStatus.repos === "ready" ? githubStats.publicRepos : "—")}</strong>
               </article>
               <article>
                 <span>Followers</span>
-                <strong>{githubProfile?.followers ?? 0}</strong>
+                <strong>{githubProfile?.followers ?? "—"}</strong>
               </article>
               <article>
                 <span>Total stars</span>
-                <strong>{githubStats.totalStars}</strong>
+                <strong>{telemetryStatus.repos === "ready" ? githubStats.totalStars : "—"}</strong>
               </article>
               <article>
                 <span>Past year contributions</span>
-                <strong>{pastYearContributionTotal}</strong>
+                <strong>{telemetryStatus.contributions === "ready" ? pastYearContributionTotal : "—"}</strong>
               </article>
+            </div>
+
+            <div className="telemetry-status" aria-live="polite">
+              <span>{Object.values(telemetryStatus).includes("loading") ? "Loading live GitHub readings…" : Object.values(telemetryStatus).includes("error") ? "Some live sources are unavailable. Missing readings are shown as —, not zero." : "Live public GitHub snapshot"}</span>
+              {Object.values(telemetryStatus).includes("error") && <button type="button" onClick={() => setTelemetryAttempt(value => value + 1)}>Retry readings</button>}
             </div>
 
             <div className="graph-panel reveal">
@@ -934,7 +892,8 @@ function App({ initialBooting = true, staticMode = false }: AppProps) {
                 <span>{contributionRangeLabel}</span>
               </div>
 
-              <div className="graph-scroll">
+              {telemetryStatus.contributions !== "ready" && <p>{telemetryStatus.contributions === "loading" ? "Loading contribution activity…" : "Contribution activity is temporarily unavailable."}</p>}
+              <div className="graph-scroll" hidden={telemetryStatus.contributions !== "ready"}>
                 <div className="graph-months">
                   {contributionGrid.monthLabels.map((month) => (
                     <span key={month.index} style={{ gridColumnStart: month.index + 2 }}>
@@ -1000,8 +959,8 @@ function App({ initialBooting = true, staticMode = false }: AppProps) {
               <article className="github-lower-card">
                 <p className="section-label">Current snapshot</p>
                 <p>
-                  {githubStats.publicRepos || githubProfile?.public_repos || projectShowcase.length} public
-                  repositories, {githubStats.totalStars} total stars, and {pastYearContributionTotal} tracked
+                  {githubProfile?.public_repos ?? "—"} public
+                  repositories, {telemetryStatus.repos === "ready" ? githubStats.totalStars : "—"} total stars, and {telemetryStatus.contributions === "ready" ? pastYearContributionTotal : "—"} tracked
                   contributions across the last twelve months.
                 </p>
               </article>
@@ -1009,62 +968,7 @@ function App({ initialBooting = true, staticMode = false }: AppProps) {
           </div>
         </section>
 
-        <section id="contact" className="chapter">
-          <div className="section-shell contact-shell reveal">
-            <div className="contact-surface contact-surface-single">
-              <div className="contact-card contact-card-single">
-                <div className="contact-panel-grid">
-                  <div className="contact-panel-left">
-                    <p className="section-label">07 / Contact</p>
-                    <p className="section-command">~ /contact --open-channel</p>
-                    <h2>Connect</h2>
-                    <p className="contact-lead">
-                      Code • Create • Collaborate. If the work feels right, let’s turn the next idea into a
-                      serious build.
-                    </p>
-                    <p className="contact-subcopy">
-                      Open to product work, engineering partnerships, and ambitious interface builds that
-                      need a strong point of view.
-                    </p>
-                  </div>
-
-                  <div className="contact-panel-right">
-                    <div className="contact-status">
-                      <span className="contact-status-dot" />
-                      Available for selected collaborations
-                    </div>
-                    <p className="contact-right-copy">
-                      Product-minded engineering, frontend systems, and high-conviction interfaces built with
-                      technical clarity.
-                    </p>
-                    <a href={`mailto:${contactContent.email}`} className="contact-cta">
-                      Start Conversation
-                    </a>
-                    <a
-                      href={publicAsset("Rohan_Chatterjee_Resume.pdf")}
-                      className="contact-resume-link"
-                      target="_blank"
-                      rel="noreferrer"
-                    >
-                      Download Resume
-                    </a>
-                    <div className="contact-links">
-                      <a href={contactContent.instagram} target="_blank" rel="noreferrer">
-                        Instagram
-                      </a>
-                      <a href={contactContent.linkedin} target="_blank" rel="noreferrer">
-                        LinkedIn
-                      </a>
-                      <a href={contactContent.github} target="_blank" rel="noreferrer">
-                        GitHub
-                      </a>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </section>
+        <ContactHero hero={heroContent} theme={theme} staticMode={staticMode} />
       </main>
 
       <footer className="footer">

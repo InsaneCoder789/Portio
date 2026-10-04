@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import { preloadBootAssets, type BootProgress } from "../lib/boot-preload";
 
 const BOOT_LINES = [
   { text: "[    0.000000] WARP-OS v4.5.0-production (rohan@warpspace.io)", delay: 0 },
@@ -52,21 +53,47 @@ const BOOT_LINES = [
 
 const BOOT_TIMING_MULTIPLIER = 1.0;
 const BOOT_DONE_DELAY = 4500;
-const BOOT_EXIT_DELAY = 5200;
-
-const KaliBootScreen = ({ onComplete }: { onComplete: () => void }) => {
+const KaliBootScreen = ({ onComplete, scenesReady = true, onAssetsReady }: { onComplete: () => void; scenesReady?: boolean; onAssetsReady?: () => void }) => {
   const [visibleLines, setVisibleLines] = useState<number>(0);
   const [done, setDone] = useState(false);
+  const [logReady, setLogReady] = useState(false);
+  const [attempt, setAttempt] = useState(0);
+  const [slow, setSlow] = useState(false);
+  const [preload, setPreload] = useState<BootProgress>({ completed: 0, total: 1, failed: 0, finished: false });
+
+  useEffect(() => {
+    const controller = new AbortController();
+    setPreload({ completed: 0, total: 1, failed: 0, finished: false });
+    setSlow(false);
+    const slowTimer = setTimeout(() => setSlow(true), 12000);
+    void preloadBootAssets(controller.signal, setPreload);
+    const previous = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    const background = [...document.querySelectorAll<HTMLElement>(".nav-shell,.mobile-nav-control,.page-stack,.footer,.skip-to-content")];
+    const inertStates = background.map(element => element.inert);
+    background.forEach(element => { element.inert = true; });
+    return () => { clearTimeout(slowTimer); controller.abort(); document.body.style.overflow = previous; background.forEach((element, index) => { element.inert = inertStates[index]; }); };
+  }, [attempt]);
 
   useEffect(() => {
     const timers: NodeJS.Timeout[] = [];
     BOOT_LINES.forEach((line, i) => {
       timers.push(setTimeout(() => setVisibleLines(i + 1), Math.round(line.delay * BOOT_TIMING_MULTIPLIER)));
     });
-    timers.push(setTimeout(() => setDone(true), BOOT_DONE_DELAY));
-    timers.push(setTimeout(() => onComplete(), BOOT_EXIT_DELAY));
+    timers.push(setTimeout(() => setLogReady(true), BOOT_DONE_DELAY));
     return () => timers.forEach(clearTimeout);
-  }, [onComplete]);
+  }, []);
+
+  useEffect(() => {
+    if (preload.finished && !preload.failed) onAssetsReady?.();
+  }, [preload.finished, preload.failed, onAssetsReady]);
+
+  useEffect(() => {
+    if (!logReady || !preload.finished || preload.failed || !scenesReady) return;
+    setDone(true);
+    const timer = setTimeout(onComplete, 500);
+    return () => clearTimeout(timer);
+  }, [logReady, preload.finished, preload.failed, scenesReady, onComplete]);
 
   return (
     <AnimatePresence>
@@ -75,6 +102,9 @@ const KaliBootScreen = ({ onComplete }: { onComplete: () => void }) => {
           className="fixed inset-0 z-50 bg-[#020617] flex items-start justify-start p-6 md:p-12 overflow-y-auto"
           exit={{ opacity: 0 }}
           transition={{ duration: 0.5 }}
+          role="dialog"
+          aria-modal="true"
+          aria-label="Preparing portfolio"
         >
           <div className="absolute inset-0 z-[-1] overflow-hidden opacity-40">
             <div className="absolute top-[-10%] left-[50%] -translate-x-1/2 w-full h-[60%] bg-primary/10 blur-[120px] rounded-full" />
@@ -82,7 +112,7 @@ const KaliBootScreen = ({ onComplete }: { onComplete: () => void }) => {
             <div className="absolute inset-0 bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-[size:40px_40px]" />
           </div>
 
-          <div className="relative font-mono text-[10px] md:text-xs leading-relaxed max-w-4xl pb-12 w-full">
+          <div className="relative font-mono text-[10px] md:text-xs leading-relaxed max-w-4xl pb-40 w-full">
             {BOOT_LINES.slice(0, visibleLines).map((line, i) => (
               <div key={i} className="whitespace-pre-wrap break-all md:whitespace-pre">
                 {line.ok ? (
@@ -102,6 +132,15 @@ const KaliBootScreen = ({ onComplete }: { onComplete: () => void }) => {
               </div>
             ))}
             <span className="animate-blink text-terminal-success">█</span>
+          </div>
+          <div className="boot-readiness" aria-live="polite">
+            <span>Preparing visuals · {preload.completed}/{preload.total}{preload.finished && !preload.failed && !scenesReady ? " · GPU shader warm-up" : ""}</span>
+            <progress aria-label="Portfolio assets loaded" value={preload.completed} max={preload.total} />
+            {((preload.finished && preload.failed > 0) || slow) && <>
+              <p>{preload.failed > 0 ? `${preload.failed} visual resource(s) could not load.` : "Preparing visuals is taking longer than expected."} Retry when connected, or continue with available visuals.</p>
+              <button type="button" onClick={() => setAttempt(value => value + 1)}>Retry loading</button>
+              <button type="button" onClick={onComplete}>Continue with available visuals</button>
+            </>}
           </div>
         </motion.div>
       ) : null}

@@ -1,13 +1,42 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { subscribeScrollActivity } from "@/lib/scroll-activity";
 import * as THREE from "three";
 import { gsap } from "gsap";
+import { beamPalette } from "@/lib/beam-palette";
 
 type FiringState = "ready" | "charging" | "firing";
+type BeamMesh = THREE.Mesh<THREE.BufferGeometry, THREE.MeshBasicMaterial>;
+type SceneRefs = {
+  renderer: THREE.WebGLRenderer | null;
+  scene: THREE.Scene | null;
+  camera: THREE.PerspectiveCamera | null;
+  stationGroup: THREE.Group | null;
+  tributaryBeams: BeamMesh[];
+  mainBeam: BeamMesh | null;
+  mainBeamGlow: BeamMesh | null;
+  mainBeamCorona: BeamMesh | null;
+  focalBlast: BeamMesh | null;
+  shockwave: BeamMesh | null;
+  dishGlow: BeamMesh | null;
+  dishLocalLight: THREE.PointLight | null;
+  hullClipPlane: THREE.Plane | null;
+  sceneVisible: boolean;
+  pageVisible: boolean;
+  starTweens: gsap.core.Tween[];
+  isPointerDown: boolean;
+  pointerId: number | null;
+  lastPointerX: number;
+  lastPointerY: number;
+  shakeStrength: number;
+  frameId: number | null;
+  isAnimatingRotation: boolean;
+};
 
 type DeathStarSceneProps = {
   className?: string;
+  theme?: "dark" | "light";
 };
 
 const playSound = (type: "charge" | "fire") => {
@@ -166,7 +195,7 @@ const generateDetailedDeathStarTexture = () => {
   return canvas;
 };
 
-export default function DeathStarScene({ className = "" }: DeathStarSceneProps) {
+export default function DeathStarScene({ className = "", theme = "dark" }: DeathStarSceneProps) {
   const mountRef = useRef<HTMLDivElement>(null);
   const starfieldRef = useRef<HTMLDivElement>(null);
 
@@ -175,9 +204,10 @@ export default function DeathStarScene({ className = "" }: DeathStarSceneProps) 
   const [isLoaded, setIsLoaded] = useState(false);
   const [coreIntegrity, setCoreIntegrity] = useState(100);
   const firingStateRef = useRef<FiringState>("ready");
+  const shotTimeline = useRef<gsap.core.Timeline | null>(null);
   const coreIntegrityRef = useRef(100);
 
-  const threeRefs = useRef<any>({
+  const threeRefs = useRef<SceneRefs>({
     renderer: null,
     scene: null,
     camera: null,
@@ -213,9 +243,15 @@ export default function DeathStarScene({ className = "" }: DeathStarSceneProps) 
 
   useEffect(() => {
     let active = true;
+    const mountedNode = mountRef.current;
+    const starsNode = starfieldRef.current;
+    const engineRefs = threeRefs.current;
     let cleanupCanvasEvents: (() => void) | null = null;
     let visibilityObserver: IntersectionObserver | null = null;
     let cleanupVisibility: (() => void) | null = null;
+    let wakeScene = () => {};
+    let scrolling = false;
+    const stopScroll = subscribeScrollActivity(value => { scrolling = value; if (!value) wakeScene(); });
 
     const setupGraphicsEngine = () => {
       const container = mountRef.current;
@@ -229,6 +265,7 @@ export default function DeathStarScene({ className = "" }: DeathStarSceneProps) 
 
       const camera = new THREE.PerspectiveCamera(40, width / height, 0.1, 100);
       camera.position.set(0, 0, 9);
+      const restingCameraPosition = camera.position.clone();
       threeRefs.current.camera = camera;
 
       const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true, powerPreference: "high-performance" });
@@ -256,7 +293,7 @@ export default function DeathStarScene({ className = "" }: DeathStarSceneProps) 
       threeRefs.current.dishLocalLight = dishLocalLight;
 
       const stationGroup = new THREE.Group();
-      stationGroup.position.set(2.2, 0, 0);
+      stationGroup.position.set(2.2, -0.3, 0);
       stationGroup.rotation.y = -0.55;
       stationGroup.scale.setScalar(0.85);
       scene.add(stationGroup);
@@ -400,7 +437,7 @@ export default function DeathStarScene({ className = "" }: DeathStarSceneProps) 
         blending: THREE.AdditiveBlending,
         depthWrite: false,
       });
-      const tributaryBeams: THREE.Mesh[] = [];
+      const tributaryBeams: BeamMesh[] = [];
       const focalZ = 1.5;
       const emitterR = 0.8;
       const emitterZ = -craterDepth + (emitterR / rimRadius) * craterDepth;
@@ -558,6 +595,9 @@ export default function DeathStarScene({ className = "" }: DeathStarSceneProps) 
       const syncSceneActivity = () => {
         const refs = threeRefs.current;
         const shouldRun = refs.sceneVisible && refs.pageVisible;
+        shotTimeline.current?.paused(!shouldRun);
+        if (shouldRun) wakeScene();
+        else if (refs.frameId !== null) { cancelAnimationFrame(refs.frameId); refs.frameId = null; }
         (refs.starTweens as gsap.core.Tween[]).forEach((tween) => {
           tween.paused(!shouldRun);
         });
@@ -574,6 +614,7 @@ export default function DeathStarScene({ className = "" }: DeathStarSceneProps) 
       renderer.domElement.addEventListener("pointerup", handlePointerUp);
       renderer.domElement.addEventListener("pointercancel", handlePointerUp);
       cleanupCanvasEvents = () => {
+        window.removeEventListener("resize", resizeViewport);
         renderer.domElement.removeEventListener("pointerdown", handlePointerDown);
         renderer.domElement.removeEventListener("pointermove", handlePointerMove);
         renderer.domElement.removeEventListener("pointerup", handlePointerUp);
@@ -584,7 +625,8 @@ export default function DeathStarScene({ className = "" }: DeathStarSceneProps) 
           threeRefs.current.sceneVisible = Boolean(entry?.isIntersecting);
           syncSceneActivity();
         },
-        { threshold: 0.08 },
+        // Wake before the viewport reaches the Hero, not at the section seam.
+        { threshold: 0, rootMargin: "240px 0px" },
       );
       visibilityObserver.observe(container);
       document.addEventListener("visibilitychange", handleVisibilityChange);
@@ -594,12 +636,20 @@ export default function DeathStarScene({ className = "" }: DeathStarSceneProps) 
       };
       resizeViewport();
 
-      const clock = new THREE.Clock();
+      let previousTime = performance.now();
+      const worldNormal = new THREE.Vector3();
+      const cutCenterWorld = new THREE.Vector3();
 
       const tick = () => {
+        if (scrolling && firingStateRef.current === "ready" && !threeRefs.current.isPointerDown) { threeRefs.current.frameId = null; return; }
+        if (!active || !threeRefs.current.sceneVisible || !threeRefs.current.pageVisible) { threeRefs.current.frameId = null; return; }
         threeRefs.current.frameId = requestAnimationFrame(tick);
-
-        const delta = clock.getDelta();
+        const now = performance.now();
+        // Reserve 60 Hz for direct interaction and firing; idle orbit needs 30 Hz.
+        const frameInterval = firingStateRef.current === "ready" && !threeRefs.current.isPointerDown ? 1000 / 30 : 1000 / 60;
+        if (now - previousTime < frameInterval - 1) return;
+        const delta = Math.min((now - previousTime) / 1000, .05);
+        previousTime = now;
 
         if (stationGroup && !threeRefs.current.isAnimatingRotation) {
           stationGroup.rotation.y += delta * 0.022;
@@ -614,6 +664,8 @@ export default function DeathStarScene({ className = "" }: DeathStarSceneProps) 
           dishGlow.scale.setScalar(0.7);
         }
 
+        // Shake around the resting position, so repeated shots cannot drift the framing.
+        camera.position.copy(restingCameraPosition);
         if (threeRefs.current.shakeStrength > 0.001) {
           const shake = threeRefs.current.shakeStrength;
           camera.position.x += (Math.random() - 0.5) * shake;
@@ -623,11 +675,10 @@ export default function DeathStarScene({ className = "" }: DeathStarSceneProps) 
         }
 
         if (hullClipPlane && dishGroup) {
-          const worldNormal = new THREE.Vector3();
           dishGroup.getWorldDirection(worldNormal);
           worldNormal.negate();
 
-          const cutCenterWorld = new THREE.Vector3();
+          cutCenterWorld.set(0, 0, 0);
           dishGroup.localToWorld(cutCenterWorld);
           const constant = -cutCenterWorld.dot(worldNormal);
 
@@ -635,10 +686,15 @@ export default function DeathStarScene({ className = "" }: DeathStarSceneProps) 
           hullClipPlane.constant = constant;
         }
 
+        // Transparent beams still submit huge cylinders unless explicitly culled.
+        [threeRefs.current.mainBeam, threeRefs.current.mainBeamGlow, threeRefs.current.mainBeamCorona].forEach(beam => {
+          if (beam) beam.visible = beam.material.opacity > .001;
+        });
         renderer.render(scene, camera);
       };
 
-      tick();
+      wakeScene = () => { if (threeRefs.current.frameId === null) { previousTime = performance.now(); tick(); } };
+      wakeScene();
     };
 
     const spawnGSAPMilkyWay = () => {
@@ -646,7 +702,7 @@ export default function DeathStarScene({ className = "" }: DeathStarSceneProps) 
       if (!panel) return;
 
       panel.innerHTML = "";
-      const starTotal = 180;
+      const starTotal = 96;
 
       for (let i = 0; i < starTotal; i += 1) {
         const dot = document.createElement("div");
@@ -668,26 +724,6 @@ export default function DeathStarScene({ className = "" }: DeathStarSceneProps) 
 
         panel.appendChild(dot);
 
-        const opacityTween = gsap.to(dot, {
-          paused: !threeRefs.current.sceneVisible || !threeRefs.current.pageVisible,
-          opacity: Math.random() * 0.95 + 0.05,
-          duration: Math.random() * 2.5 + 0.8,
-          repeat: -1,
-          yoyo: true,
-          ease: "power2.inOut",
-        });
-
-        const driftTween = gsap.to(dot, {
-          paused: !threeRefs.current.sceneVisible || !threeRefs.current.pageVisible,
-          x: `+=${Math.random() * 40 - 20}`,
-          y: `+=${Math.random() * 40 - 20}`,
-          duration: Math.random() * 40 + 40,
-          repeat: -1,
-          yoyo: true,
-          ease: "sine.inOut",
-        });
-
-        threeRefs.current.starTweens.push(opacityTween, driftTween);
       }
     };
 
@@ -706,26 +742,60 @@ export default function DeathStarScene({ className = "" }: DeathStarSceneProps) 
 
     return () => {
       active = false;
-      const refs = threeRefs.current;
+      stopScroll();
+      const refs = engineRefs;
+      shotTimeline.current?.kill();
+      shotTimeline.current = null;
       if (refs.frameId) cancelAnimationFrame(refs.frameId);
+      refs.frameId = null;
       cleanupCanvasEvents?.();
       cleanupVisibility?.();
       (refs.starTweens as gsap.core.Tween[]).forEach((tween) => tween.kill());
       refs.starTweens = [];
       if (refs.renderer) {
+        const geometries = new Set<THREE.BufferGeometry>();
+        const materials = new Set<THREE.Material>();
+        const textures = new Set<THREE.Texture>();
+        refs.scene?.traverse(object => {
+          if (!(object instanceof THREE.Mesh)) return;
+          geometries.add(object.geometry);
+          const meshMaterials = Array.isArray(object.material) ? object.material : [object.material];
+          meshMaterials.forEach(material => {
+            materials.add(material);
+            Object.values(material).forEach(value => { if (value instanceof THREE.Texture) textures.add(value); });
+          });
+        });
+        geometries.forEach(geometry => geometry.dispose());
+        materials.forEach(material => material.dispose());
+        textures.forEach(texture => texture.dispose());
         refs.renderer.dispose();
-        if (mountRef.current && refs.renderer.domElement.parentElement === mountRef.current) {
-          mountRef.current.removeChild(refs.renderer.domElement);
+        if (mountedNode && refs.renderer.domElement.parentElement === mountedNode) {
+          mountedNode.removeChild(refs.renderer.domElement);
         }
       }
-      if (starfieldRef.current) {
-        starfieldRef.current.innerHTML = "";
+      if (starsNode) {
+        starsNode.innerHTML = "";
       }
     };
   }, []);
 
+  useEffect(() => {
+    const refs = threeRefs.current;
+    const palette = beamPalette(theme);
+    const tint = (mesh: THREE.Mesh<THREE.BufferGeometry, THREE.MeshBasicMaterial> | null, color: string) => mesh?.material.color.set(color);
+    tint(refs.mainBeam, palette.core);
+    tint(refs.mainBeamGlow, palette.glow);
+    tint(refs.mainBeamCorona, palette.corona);
+    tint(refs.dishGlow, palette.charge);
+    tint(refs.focalBlast, palette.flash);
+    tint(refs.shockwave, palette.corona);
+    refs.tributaryBeams.forEach((mesh: THREE.Mesh<THREE.BufferGeometry, THREE.MeshBasicMaterial>) => tint(mesh, palette.corona));
+    refs.dishLocalLight?.color.set(palette.charge);
+  }, [theme]);
+
   const runSuperlaserSequence = () => {
-    if (firingState !== "ready") return;
+    if (firingStateRef.current !== "ready" || window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    firingStateRef.current = "charging";
 
     setFiringState("charging");
     playSound("charge");
@@ -733,7 +803,10 @@ export default function DeathStarScene({ className = "" }: DeathStarSceneProps) 
     const refs = threeRefs.current;
     refs.isAnimatingRotation = true;
 
-    gsap.to({ val: 0 }, {
+    shotTimeline.current?.kill();
+    const timeline = gsap.timeline();
+    shotTimeline.current = timeline;
+    timeline.to({ val: 0 }, {
       val: 1,
       duration: 4.0,
       ease: "power2.in",
@@ -749,29 +822,31 @@ export default function DeathStarScene({ className = "" }: DeathStarSceneProps) 
           refs.dishLocalLight.intensity = prog * 3.5;
         }
 
-        refs.tributaryBeams.forEach((beam: THREE.Mesh) => {
-          (beam.material as THREE.MeshBasicMaterial).opacity = prog * 1.0;
-          beam.scale.z = prog;
-          beam.scale.x = 0.6 + Math.random() * 0.8;
-          beam.scale.y = 0.6 + Math.random() * 0.8;
+        refs.tributaryBeams.forEach((beam: THREE.Mesh, index: number) => {
+          const convergence = Math.max(0, Math.min(1, prog * 1.7 - index * .08));
+          (beam.material as THREE.MeshBasicMaterial).opacity = convergence * .8;
+          beam.scale.z = convergence;
+          beam.scale.x = beam.scale.y = .75 + convergence * .25;
         });
       },
       onComplete: () => {
         setFiringState("firing");
+        firingStateRef.current = "firing";
         playSound("fire");
 
-        refs.shakeStrength = 0.45;
+        refs.shakeStrength = 0.09;
 
         if (refs.shockwave) {
           refs.shockwave.scale.setScalar(1);
           refs.shockwave.material.opacity = 1.0;
-          gsap.to(refs.shockwave.scale, { x: 25, y: 25, z: 25, duration: 0.8, ease: "power3.out" });
-          gsap.to(refs.shockwave.material, { opacity: 0, duration: 0.8, ease: "power2.out" });
+          timeline.to(refs.shockwave.scale, { x: 18, y: 18, z: 18, duration: 1.1, ease: "power3.out" }, 4);
+          timeline.to(refs.shockwave.material, { opacity: 0, duration: 1.1, ease: "power2.out" }, 4);
         }
 
         if (refs.focalBlast) {
           refs.focalBlast.material.opacity = 1.0;
-          flashAlphaPulse(refs.focalBlast);
+          refs.focalBlast.scale.setScalar(.6);
+          timeline.to(refs.focalBlast.scale, { x: 3, y: 3, z: 3, duration: .55, ease: "power3.out" }, 4);
         }
 
         if (refs.mainBeam && refs.mainBeamGlow && refs.mainBeamCorona) {
@@ -779,23 +854,18 @@ export default function DeathStarScene({ className = "" }: DeathStarSceneProps) 
           refs.mainBeamGlow.material.opacity = 1.0;
           refs.mainBeamCorona.material.opacity = 0.65;
 
-          gsap.to(refs.mainBeam.scale, { x: 1.8, z: 1.8, duration: 0.04, yoyo: true, repeat: 36, ease: "rough" as any });
-          gsap.to(refs.mainBeamGlow.scale, { x: 1.4, z: 1.4, duration: 0.05, yoyo: true, repeat: 30, ease: "rough" as any });
-          gsap.to(refs.mainBeamCorona.scale, { x: 1.6, z: 1.6, duration: 0.07, yoyo: true, repeat: 20 });
+          [refs.mainBeam, refs.mainBeamGlow, refs.mainBeamCorona].forEach((beam, index) => {
+            beam.scale.set(.8, .8, .001);
+            timeline.to(beam.scale, { x: 1 + index * .15, y: 1 + index * .15, z: 1, duration: .5, ease: "power3.out" }, 4 + index * .04);
+          });
         }
 
         if (refs.dishLocalLight) {
           refs.dishLocalLight.intensity = 12.0;
         }
 
-        const heatInterval = setInterval(() => {
-          setCoreIntegrity((prev) => Math.max(30, prev - Math.floor(Math.random() * 10 + 4)));
-        }, 100);
-
-        setTimeout(() => {
-          clearInterval(heatInterval);
-
-          gsap.to({ decay: 1.0 }, {
+        timeline.to({ integrity: 100 }, { integrity: 38, duration: 2, ease: "power1.out", onUpdate() { setCoreIntegrity(Math.round(this.targets()[0].integrity)); } }, 4);
+        timeline.to({ decay: 1.0 }, {
             decay: 0.0,
             duration: 1.5,
             ease: "power2.out",
@@ -827,32 +897,20 @@ export default function DeathStarScene({ className = "" }: DeathStarSceneProps) 
             },
             onComplete: () => {
               setFiringState("ready");
+              firingStateRef.current = "ready";
               refs.isAnimatingRotation = false;
 
-              gsap.to({ restored: coreIntegrityRef.current }, {
+              timeline.to({ restored: coreIntegrityRef.current }, {
                 restored: 100,
                 duration: 2.5,
                 ease: "power1.out",
                 onUpdate() {
                   setCoreIntegrity(Math.floor(this.targets()[0].restored));
                 },
-              });
+              }, 7.5);
             },
-          });
-        }, 2000);
+          }, 6);
       },
-    });
-  };
-
-  const flashAlphaPulse = (mesh: THREE.Mesh) => {
-    gsap.to(mesh.scale, {
-      x: 1.5,
-      y: 1.5,
-      z: 1.5,
-      duration: 0.04,
-      repeat: 35,
-      yoyo: true,
-      ease: "sine.inOut",
     });
   };
 

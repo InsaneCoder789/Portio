@@ -1,7 +1,9 @@
 import type { Metadata } from "next";
 import type { ReactNode } from "react";
+import { reloadScrollScript } from "../lib/reload-scroll";
 import "../index.css";
 import "../App.css";
+import "../portfolio-polish.css";
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://rochiee24.vercel.app"),
@@ -54,6 +56,9 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: { children: ReactNode }) {
   return (
     <html lang="en">
+      <head>
+        <script dangerouslySetInnerHTML={{ __html: reloadScrollScript }} />
+      </head>
       <body>{children}</body>
     </html>
   );

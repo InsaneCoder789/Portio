@@ -10,3 +10,4 @@ coverage/
 .env*
 !.env.example
 .n8n_basic_auth_password
+*.tsbuildinfo
