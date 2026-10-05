@@ -4,6 +4,7 @@ import { reloadScrollScript } from "../lib/reload-scroll";
 import "../index.css";
 import "../App.css";
 import "../portfolio-polish.css";
+import "../editorial-refinements.css";
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://rochiee24.vercel.app"),

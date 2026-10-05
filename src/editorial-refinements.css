@@ -1,0 +1,111 @@
+/* Scoped editorial pass. Selected Works and the scroll/rendering systems stay intact. */
+/* Prefer a cinematic 16:9 opening, but let actual copy determine its minimum height. */
+@media(min-width:1081px) {
+  .hero-shell { aspect-ratio: auto; grid-template-rows: auto; min-height: min(calc((100vw - 2rem) * 9 / 16),900px); padding-block: 1.5rem; }
+  .hero-copy { --hero-copy-width: 36rem; }
+  .hero-copy .manifesto-card { width: 100%; }
+}
+body .page-stack .editorial-about .about-primary,
+body .page-stack .editorial-about .about-list-card,
+body .page-stack .editorial-about .about-focus-card,
+body .page-stack .editorial-experience .experience-note,
+body .page-stack .editorial-signals .signal-panel,
+body .page-stack .editorial-telemetry :is(.github-stats article,.graph-panel,.github-lower-card) {
+  background: transparent; border: 0; border-radius: 0; box-shadow: none;
+}
+.editorial-about .about-layout { grid-template-columns: 1.1fr .9fr; align-items: center; gap: clamp(2rem,5vw,5rem); }
+.editorial-about .about-primary { padding: 0; }
+.editorial-about .about-primary>p { max-width: 62ch; }
+.editorial-about .about-quote { margin-top: 1.8rem; border: 0; border-left: 2px solid var(--accent); border-radius: 0; padding: .4rem 0 .4rem 1.2rem; background: transparent; }
+.editorial-about .about-quote strong { font-size: clamp(1.4rem,2.1vw,2rem); line-height: 1.15; }
+.about-core-stage { display: grid; justify-items: center; }
+.editorial-about .systems-product { width: min(100%,370px); }
+.core-anatomy { display: grid; grid-template-columns: repeat(3,minmax(0,1fr)); width: 100%; gap: 1rem; margin: 1.4rem 0 0; }
+.core-anatomy div { border-top: 1px solid var(--line-strong); padding-top: .7rem; }
+.core-anatomy dt { font: 600 .85rem Outfit,sans-serif; color: var(--accent); }
+.core-anatomy dd { margin: .5rem 0 0; font-size: .8rem; line-height: 1.5; color: var(--muted); }
+.about-principles-layout { display: grid; grid-template-columns: 1.1fr .9fr; gap: clamp(2rem,5vw,5rem); margin-top: 2.5rem; padding-top: 1.5rem; border-top: 1px solid var(--line-strong); }
+.editorial-about :is(.about-list-card,.about-focus-card) { padding: 0; }
+.editorial-about .about-focus-pill { min-height: 0; flex-direction: row; justify-content: flex-start; align-items: center; padding: .7rem 0; border: 0; background: transparent; border-radius: 0; box-shadow: none; font-size: .8rem; }
+.editorial-about .about-focus-grid { grid-template-columns: 1fr; gap: .5rem; }
+.editorial-about .focus-emblem { flex-shrink: 0; }
+.editorial-experience .experience-layout { grid-template-columns: .65fr 1.35fr; gap: clamp(1.5rem,4vw,4rem); }
+.editorial-experience .experience-note { padding: .5rem 0; }
+.editorial-experience .experience-note .note-pills { display: none; }
+.editorial-experience .experience-list { gap: 0; padding-left: 1.5rem; border-left: 1px solid var(--line-strong); }
+body .page-stack .editorial-experience .experience-card { position: relative; margin: 0; padding: 1.5rem 0; border: 0; border-bottom: 1px solid var(--line); border-radius: 0; background: transparent; box-shadow: none; }
+.editorial-experience .experience-card::before { content: ""; position: absolute; left: -1.85rem; top: 1.8rem; width: .65rem; height: .65rem; border-radius: 50%; background: var(--accent); border: 2px solid var(--panel-strong); }
+body .page-stack .editorial-experience .experience-featured { padding: 1.5rem; margin: 0 0 .5rem; border: 1px solid var(--line-strong); border-radius: 1rem; background: var(--accent-soft); }
+.timeline-date { display: flex; flex-wrap: wrap; gap: .5rem 1rem; justify-content: space-between; margin: 0 0 1rem; font: .65rem/1.5 "JetBrains Mono",monospace; color: var(--accent); }
+.timeline-date span { color: var(--muted); }
+.editorial-experience .experience-card:not(.experience-featured) .experience-body { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: .8rem; }
+.editorial-experience .experience-body p { font-size: .9rem; line-height: 1.65; }
+.capability-evidence-layout { display: grid; grid-template-columns: 1.15fr .85fr; gap: clamp(2rem,5vw,5rem); }
+.capability-group { padding: 1.2rem 0; border-top: 1px solid var(--line); }
+.capability-group h3 { margin: 0; font: 600 1.4rem Outfit,sans-serif; letter-spacing: -.03em; }
+.capability-group p { margin: .4rem 0 1rem; font-size: .9rem; line-height: 1.6; color: var(--muted); }
+.capability-tools { display: flex; flex-wrap: wrap; gap: .65rem 1.3rem; padding: 0; margin: 0; list-style: none; }
+.capability-tools li { display: flex; align-items: center; gap: .5rem; min-height: 36px; font-size: .9rem; }
+.capability-tools img { object-fit: contain; }
+.capability-tool-mark { display: grid; place-items: center; width: 22px; height: 22px; border: 1px solid var(--line-strong); border-radius: .3rem; color: var(--accent); font: .55rem "JetBrains Mono",monospace; text-transform: uppercase; }
+.capability-receipts { align-self: start; padding: 1.5rem; border: 1px solid var(--line-strong); border-radius: 1rem; background: var(--accent-soft); }
+.capability-receipts h3 { margin: .8rem 0 1.4rem; font: 500 clamp(1.5rem,2.3vw,2.1rem)/1.15 Outfit,sans-serif; letter-spacing: -.04em; }
+.capability-receipts details { border-top: 1px solid var(--line-strong); padding: .4rem 0; }
+.capability-receipts summary { cursor: pointer; min-height: 48px; padding: .75rem 0; font-size: .95rem; }
+.capability-receipts summary span { float: right; color: var(--accent); }
+.capability-receipts details p { font-size: .85rem; line-height: 1.65; color: var(--muted); margin: .2rem 0 .5rem; }
+.capability-repository-links { display: flex; flex-wrap: wrap; gap: .3rem 1rem; }
+.capability-repository-links a { display: inline-flex; align-items: center; min-height: 44px; font-size: .8rem; text-underline-offset: .3em; }
+/* The old area shape had no data source: remove it rather than implying a metric. */
+.evidence-skills::after { content: none; }
+.evidence-skills { padding-bottom: 1.5rem; }
+.capability-evidence-layout { font-family: "Space Grotesk",sans-serif; }
+.capability-receipts .section-label { font-family: "JetBrains Mono",monospace; }
+.capability-additional { border-top: 1px solid var(--line); padding-top: .5rem; }
+.capability-additional summary { cursor: pointer; min-height: 44px; padding: .75rem 0; font-size: .9rem; }
+.capability-additional p { font-size: .85rem; color: var(--muted); }
+.editorial-signals .signals-layout { grid-template-columns: 1.4fr 1fr; gap: 1rem 3rem; }
+.editorial-signals .signal-writing { grid-column: 1; grid-row: 1 / 3; padding: 0; }
+.editorial-signals .signal-fit { grid-column: 2; grid-row: 1; padding: 0; }
+.editorial-signals .signal-proof { grid-column: 2; grid-row: 2; padding: 1rem 0 0; border-top: 1px solid var(--line); }
+.editorial-signals .writing-card { padding: 1rem 0; border-bottom: 1px solid var(--line); }
+.editorial-signals .writing-featured { padding: 1.5rem; border: 1px solid var(--line-strong); border-radius: 1rem; background: var(--accent-soft); }
+.editorial-signals .writing-featured h3 { font: 600 clamp(1.5rem,2.4vw,2.3rem)/1.15 Outfit,sans-serif; letter-spacing: -.04em; margin: .8rem 0; }
+.writing-evidence-link { display: inline-flex; align-items: center; min-height: 44px; font-size: .8rem; text-underline-offset: .3em; margin-top: .6rem; }
+.editorial-signals .portfolio-signal-grid { gap: .8rem 1.2rem; }
+.editorial-telemetry .github-stats { gap: 0; padding: 1rem 0 1.5rem; border-bottom: 1px solid var(--line-strong); }
+.editorial-telemetry .github-stats article { padding: .5rem 1.5rem; border-right: 1px solid var(--line); }
+.editorial-telemetry .github-stats article:first-child { padding-left: 0; }
+.editorial-telemetry .github-stats article:last-child { border-right: 0; }
+.editorial-telemetry .github-stats strong { font-size: clamp(2.4rem,4vw,4rem); font-variant-numeric: tabular-nums; }
+.editorial-telemetry .graph-panel { padding: 1.5rem 0; }
+.telemetry-context { color: var(--muted); font-size: .8rem; line-height: 1.6; max-width: 75ch; }
+.editorial-telemetry .github-lower { border-top: 1px solid var(--line); padding-top: 1rem; }
+.editorial-telemetry .github-lower-card { padding: .5rem 0; }
+@media(max-width:1080px) {
+  .editorial-about .about-layout,.about-principles-layout,.editorial-experience .experience-layout { grid-template-columns: 1fr; gap: 2rem; }
+  .editorial-about .about-secondary { width: 100%; }
+  .editorial-experience .experience-note .note-meta { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+}
+@media(max-width:720px) {
+  .capability-evidence-layout,.editorial-signals .signals-layout { grid-template-columns: minmax(0,1fr); gap: 1.8rem; }
+  .editorial-signals :is(.signal-writing,.signal-fit,.signal-proof) { grid-column: auto; grid-row: auto; }
+  .editorial-signals .signal-writing { order: -1; }
+  .editorial-experience .experience-card:not(.experience-featured) .experience-body { grid-template-columns: 1fr; }
+  .editorial-experience .experience-list { padding-left: 1rem; }
+  .editorial-experience .experience-card::before { left: -1.35rem; }
+  .editorial-experience .experience-featured { padding: 1rem; }
+  .core-anatomy { gap: .65rem; }
+  .core-anatomy dd { font-size: .75rem; }
+  .editorial-telemetry .github-stats { grid-template-columns: repeat(2,minmax(0,1fr)); gap: 1rem 0; }
+  .editorial-telemetry .github-stats article { padding: .5rem .8rem; }
+  .editorial-telemetry .github-stats article:nth-child(odd) { padding-left: 0; }
+  .editorial-telemetry .github-stats article:nth-child(even) { border-right: 0; }
+  .capability-receipts { padding: 1.1rem; }
+  .contact-email-address { overflow-wrap: anywhere; }
+}
+@media(min-width:721px) and (max-width:900px) {
+  .capability-evidence-layout,.editorial-signals .signals-layout { grid-template-columns: minmax(0,1fr); gap: 1.8rem; }
+  .editorial-signals :is(.signal-writing,.signal-fit,.signal-proof) { grid-column: auto; grid-row: auto; }
+  .editorial-signals .signal-writing { order: -1; }
+}

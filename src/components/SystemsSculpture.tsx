@@ -71,7 +71,7 @@ export function SystemsSculpture({ prewarm = false, onPrepared }: { prewarm?: bo
       let previousY = 0;
       const render = (now: number) => {
         frame = null;
-        if (disposed || !compiled || !visible || document.hidden || (scrolling && !dragging)) return;
+        if (disposed || !compiled || !visible || document.hidden) return;
         const interval = dragging ? 1000 / 60 : 1000 / 30;
         if (now - last >= interval - 1 || reduced.matches) {
           const delta = Math.min((now - last) / 1000, .05);
@@ -81,7 +81,15 @@ export function SystemsSculpture({ prewarm = false, onPrepared }: { prewarm?: bo
         }
         if (!reduced.matches || dragging) frame = requestAnimationFrame(render);
       };
-      wake = () => { if (frame === null && visible && !document.hidden) { last = performance.now() - 40; frame = requestAnimationFrame(render); } };
+      wake = () => {
+        host.dataset.motion = compiled && visible && !document.hidden && !reduced.matches ? "running" : "idle";
+        if (!visible || document.hidden) {
+          if (frame !== null) cancelAnimationFrame(frame);
+          frame = null;
+          return;
+        }
+        if (compiled && frame === null) { last = performance.now() - 40; frame = requestAnimationFrame(render); }
+      };
       const resize = () => {
         const { width, height } = host.getBoundingClientRect();
         renderer.setSize(Math.max(1, width), Math.max(1, height), false);
@@ -167,7 +175,8 @@ export function SystemsSculpture({ prewarm = false, onPrepared }: { prewarm?: bo
       }
       wake();
     });
-    observer.observe(host);
+    // Prepare resources during boot, but play only when the About chapter enters view.
+    observer.observe(host.closest("#about") ?? host);
     prepareRef.current = () => {
       if (started || disposed) return;
       started = true;
@@ -183,9 +192,9 @@ export function SystemsSculpture({ prewarm = false, onPrepared }: { prewarm?: bo
     <div className="systems-product">
       <div className="systems-product-plinth" />
       {!ready && <Image src="/objects/systems-core.webp" width={640} height={640} sizes="(max-width: 720px) 70vw, 320px" alt="Machined metallic systems core" />}
-      <div ref={hostRef} className="systems-model" tabIndex={0} role="img" aria-label="Interactive systems core. Drag or use arrow keys to rotate; Home resets the view." />
+      <div ref={hostRef} className="systems-model" data-motion="idle" tabIndex={0} role="img" aria-label="Interactive systems core. Drag or use arrow keys to rotate; Home resets the view." />
     </div>
-    <figcaption><span>THE SYSTEMS CORE</span><strong>Built from the inside out.</strong><small>Architecture · Product · Interface</small></figcaption>
+    <figcaption><span>THE SYSTEMS CORE</span><strong>Clear interfaces. Reliable foundations.</strong><small>A visual metaphor for how I build—not a technical simulation.</small></figcaption>
     {ready && <p className="systems-interaction-hint">Drag to rotate · Arrow keys to explore</p>}
   </figure>;
 }

@@ -11,6 +11,7 @@ describe("carousel autoplay lifecycle", () => {
   let visibility: DocumentVisibilityState;
   const disconnect = vi.fn();
   const removeMotion = vi.fn();
+  const observe = vi.fn();
   const stage = { current: document.createElement("div") };
   beforeEach(() => {
     vi.useFakeTimers();
@@ -18,7 +19,7 @@ describe("carousel autoplay lifecycle", () => {
     visibility = "visible";
     vi.stubGlobal("IntersectionObserver", class {
       constructor(callback: typeof intersect) { intersect = callback; }
-      observe() {}
+      observe = observe;
       disconnect = disconnect;
     });
     vi.stubGlobal("matchMedia", () => ({
@@ -49,6 +50,29 @@ describe("carousel autoplay lifecycle", () => {
     enter();
     rerender({ enabled: false });
     expect(vi.getTimerCount()).toBe(0);
+  });
+  it("watches the whole project section and runs even when only a small part is visible", () => {
+    const section = document.createElement("section");
+    section.id = "projects";
+    const deck = document.createElement("div");
+    section.append(deck);
+    const advance = vi.fn();
+    renderHook(() => useCarouselAutoplay({ current: deck }, true, 0, advance));
+    expect(observe).toHaveBeenCalledWith(section);
+    act(() => intersect([{ isIntersecting: true, intersectionRatio: .05 }]));
+    act(() => vi.advanceTimersByTime(CAROUSEL_DELAY));
+    expect(advance).toHaveBeenCalledOnce();
+  });
+  it("keeps advancing across timer cycles while the section remains visible", () => {
+    const advance = vi.fn();
+    const { rerender } = renderHook(({ activity }) => useCarouselAutoplay(stage, true, activity, advance), { initialProps: { activity: 0 } });
+    enter();
+    for (let activity = 1; activity <= 3; activity++) {
+      act(() => vi.advanceTimersByTime(CAROUSEL_DELAY));
+      rerender({ activity });
+    }
+    expect(advance).toHaveBeenCalledTimes(3);
+    expect(vi.getTimerCount()).toBe(1);
   });
   it("suspends hidden tabs and starts a fresh countdown on return", () => {
     const advance = vi.fn();

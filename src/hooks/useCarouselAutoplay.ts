@@ -2,7 +2,7 @@ import { useEffect, useState, type RefObject } from "react";
 
 export const CAROUSEL_DELAY = 3200;
 
-/** One cancellable timer, never a frame loop. Observe the deck, not the long dossier. */
+/** One cancellable timer, active only while the project section is on screen. */
 export function useCarouselAutoplay(
   stage: RefObject<HTMLDivElement>,
   enabled: boolean,
@@ -22,9 +22,9 @@ export function useCarouselAutoplay(
     media.addEventListener("change", syncMotion);
     document.addEventListener("visibilitychange", syncVisibility);
     const observer = typeof IntersectionObserver !== "undefined"
-      ? new IntersectionObserver(([entry]) => setInView(entry.isIntersecting && entry.intersectionRatio >= .25), { threshold: [0, .25] })
+      ? new IntersectionObserver(([entry]) => setInView(entry.isIntersecting), { threshold: 0 })
       : null;
-    if (stage.current) observer?.observe(stage.current);
+    if (stage.current) observer?.observe(stage.current.closest("#projects") ?? stage.current);
     return () => {
       observer?.disconnect();
       media.removeEventListener("change", syncMotion);

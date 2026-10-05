@@ -20,7 +20,8 @@ describe("mobile Connect card", () => {
     render(<MobileConnectCard />);
     expect(screen.getByText("Available for selected collaborations")).toBeTruthy();
     expect(screen.getAllByRole("link")).toHaveLength(5);
-    expect(screen.getByRole("link", { name: /Start Conversation/ }).getAttribute("href")).toBe("mailto:hello@example.com");
+    expect(screen.getByRole("link", { name: /Email Rohan/ }).getAttribute("href")).toBe("mailto:hello@example.com");
+    expect(screen.getByText("hello@example.com")).toBeTruthy();
     expect(screen.getByRole("link", { name: /Download Resume/ }).getAttribute("href")).toBe("/Rohan_Chatterjee_Resume.pdf");
   });
 });

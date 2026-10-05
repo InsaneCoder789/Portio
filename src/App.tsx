@@ -10,7 +10,6 @@ import {
   featuredProjects,
   githubUsername,
   heroContent,
-  performanceBenchmarks,
   portfolioSignals,
   skillsMatrix,
   writingNotes,
@@ -23,6 +22,7 @@ import { MobileNavigation } from "@/components/MobileNavigation";
 import { EmphasisText } from "@/components/EmphasisText";
 import { ProjectCarousel, type ProjectCard } from "@/components/ProjectCarousel";
 import { SystemsSculpture } from "@/components/SystemsSculpture";
+import { CapabilityEvidence } from "@/components/CapabilityEvidence";
 import { ServerCog, Layers3, Network, PanelsTopLeft, Menu, X } from "lucide-react";
 import { readCachedTelemetry, savedTelemetry, initialProfile, initialContributions, savedRepositorySummary, profileSchema, reposSchema, contributionsSchema, contributionYears, calendarDate } from "@/lib/github-telemetry";
 import Image from "next/image";
@@ -77,6 +77,9 @@ const githubLanguageLogoMap: Record<string, string> = {
 };
 
 const contributionTone = ["", "is-soft", "is-mid", "is-strong", "is-bright"];
+const experienceTimeline = [...experienceItems].sort((a, b) =>
+  new Date(b.duration.split(" — ")[0]).getTime() - new Date(a.duration.split(" — ")[0]).getTime(),
+);
 
 const skillBadgeTextMap: Record<string, string> = {
   C: "C",
@@ -302,11 +305,6 @@ function App({ initialBooting = true, staticMode = false }: AppProps) {
     reduced.addEventListener("change", sync);
     return () => { desktop.removeEventListener("change", sync); reduced.removeEventListener("change", sync); };
   }, [staticMode]);
-
-  const logoSkills = useMemo(
-    () => skillsMatrix.filter((skill) => Boolean(skill.logo)),
-    [],
-  );
 
   useEffect(() => {
     if (typeof document === "undefined") return;
@@ -576,12 +574,12 @@ function App({ initialBooting = true, staticMode = false }: AppProps) {
         </section>
 
         <section id="about" className="chapter">
-          <div className="section-shell about-shell">
+          <div className="section-shell about-shell editorial-about">
             <div className="section-heading reveal">
               <p className="section-label">{aboutContent.eyebrow}</p>
               <h2>{aboutContent.title}</h2>
               <p className="section-intro">
-                <EmphasisText>{`${aboutContent.lead} ${aboutContent.body}`}</EmphasisText>
+                I build across web, backend, and Android. What connects the work is a concern for how software behaves beyond the demo.
               </p>
             </div>
 
@@ -590,7 +588,6 @@ function App({ initialBooting = true, staticMode = false }: AppProps) {
                 <p className="about-kicker">About Me</p>
                 <p><EmphasisText phrases={["Software Developer"]}>{aboutContent.lead}</EmphasisText></p>
                 <p><EmphasisText phrases={["UI/UX engineering"]}>{aboutContent.body}</EmphasisText></p>
-                <SystemsSculpture prewarm={bootAssetsReady && booting && !staticMode} onPrepared={markSystemsPrepared} />
                 <div className="about-quote">
                   <span>Philosophy</span>
                   <strong>{aboutContent.philosophy}</strong>
@@ -598,8 +595,19 @@ function App({ initialBooting = true, staticMode = false }: AppProps) {
               </article>
 
               <div className="about-secondary">
+                <div className="about-core-stage reveal">
+                  <SystemsSculpture prewarm={bootAssetsReady && booting && !staticMode} onPrepared={markSystemsPrepared} />
+                  <dl className="core-anatomy">
+                    <div><dt>Core</dt><dd>Application logic that holds together.</dd></div>
+                    <div><dt>Structure</dt><dd>Architecture with explicit constraints.</dd></div>
+                    <div><dt>Connections</dt><dd>Clear interfaces between systems.</dd></div>
+                  </dl>
+                </div>
+              </div>
+            </div>
+            <div className="about-principles-layout">
                 <article className="about-list-card reveal">
-                  <p className="about-kicker">How I Work</p>
+                  <p className="about-kicker">Principles behind the work</p>
                   <div className="about-point-list">
                     {aboutContent.points.map((point) => (
                       <div key={point} className="about-point">
@@ -623,13 +631,12 @@ function App({ initialBooting = true, staticMode = false }: AppProps) {
                     ); })}
                   </div>
                 </article>
-              </div>
             </div>
           </div>
         </section>
 
         <section id="experience" className="chapter">
-          <div className="section-shell experience-shell">
+          <div className="section-shell experience-shell editorial-experience">
             <div className="section-heading reveal">
               <p className="section-label">02 / Journey</p>
               <h2>Experience</h2>
@@ -668,9 +675,10 @@ function App({ initialBooting = true, staticMode = false }: AppProps) {
                 </div>
               </aside>
 
-              <div className="experience-list">
-                {experienceItems.map((exp, index) => (
-                  <article key={`${exp.company}-${exp.role}`} className="experience-card reveal">
+              <div className="experience-list" aria-label="Roles ordered by start date, newest first">
+                {experienceTimeline.map((exp, index) => (
+                  <article key={`${exp.company}-${exp.role}`} className={`experience-card reveal ${index === 0 ? "experience-featured" : ""}`}>
+                    <p className="timeline-date">{exp.duration}<span>{index === 0 ? "Latest chapter" : exp.company}</span></p>
                     <div className="experience-top">
                       <img src={exp.logo} alt={`${exp.company} logo`} className="experience-logo" />
                       <div className="experience-copy">
@@ -719,58 +727,21 @@ function App({ initialBooting = true, staticMode = false }: AppProps) {
         </section>
 
         <section id="skills" className="chapter">
-          <div className="section-shell skills-shell">
+          <div className="section-shell skills-shell evidence-skills">
             <div className="section-heading reveal">
               <p className="section-label">04 / Stack</p>
               <h2>Capability Atlas</h2>
               <p className="section-intro">
-                The tools I lean on most, plus the language mix surfaced from my public GitHub repositories.
+                Tools connected to actual work. No proficiency scores—follow the implementation instead.
               </p>
             </div>
 
-            <div className="skills-layout">
-              <div className="skills-grid reveal">
-                {logoSkills.map((skill, index) => (
-                  <article
-                    key={skill.label}
-                    className={`skill-tile ${index === 0 || index === 4 ? "skill-tile-wide" : ""}`}
-                  >
-                    <div className="skill-icon">
-                      <img src={skill.logo} alt={skill.label} />
-                    </div>
-                    <div className="skill-copy">
-                      <strong>{skill.label}</strong>
-                    </div>
-                  </article>
-                ))}
-              </div>
-
-              <div className="benchmark-panel reveal">
-                <div className="benchmark-head">
-                  <p>Performance benchmarks</p>
-                  <span>Core depth</span>
-                </div>
-
-                <div className="benchmark-list">
-                  {performanceBenchmarks.map((item) => (
-                    <div key={item.name} className="benchmark-item">
-                      <div className="benchmark-row">
-                        <span>{item.name}</span>
-                        <strong>{item.value}%</strong>
-                      </div>
-                      <div className="benchmark-track">
-                        <div className="benchmark-fill" style={{ width: `${item.value}%` }} />
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </div>
+            <CapabilityEvidence />
           </div>
         </section>
 
         <section id="signals" className="chapter">
-          <div className="section-shell signals-shell">
+          <div className="section-shell signals-shell editorial-signals">
             <div className="section-heading reveal">
               <p className="section-label">05 / Signals</p>
               <h2>Signals</h2>
@@ -780,7 +751,7 @@ function App({ initialBooting = true, staticMode = false }: AppProps) {
             </div>
 
             <div className="signals-layout">
-              <article className="signal-panel reveal">
+              <article className="signal-panel signal-fit reveal">
                 <div className="signal-panel-head">
                   <p className="section-label">Fit</p>
                   <span>Working signal</span>
@@ -795,23 +766,24 @@ function App({ initialBooting = true, staticMode = false }: AppProps) {
                 </div>
               </article>
 
-              <article className="signal-panel reveal">
+              <article className="signal-panel signal-writing reveal">
                 <div className="signal-panel-head">
                   <p className="section-label">Writing</p>
                   <span>Field notes in progress</span>
                 </div>
                 <div className="writing-stack">
-                  {writingNotes.map((note) => (
-                    <div key={note.title} className="writing-card">
+                  {writingNotes.map((note, index) => (
+                    <div key={note.title} className={`writing-card ${index === 0 ? "writing-featured" : ""}`}>
                       <span>{note.status}</span>
                       <h3>{note.title}</h3>
                       <p><EmphasisText>{note.summary}</EmphasisText></p>
+                      {index === 0 ? <a className="writing-evidence-link" href={featuredProjects[0].githubUrl} target="_blank" rel="noreferrer">Explore the implementation behind these notes ↗</a> : null}
                     </div>
                   ))}
                 </div>
               </article>
 
-              <article className="signal-panel reveal">
+              <article className="signal-panel signal-proof reveal">
                 <div className="signal-panel-head">
                   <p className="section-label">Proof</p>
                   <span>Collaboration signal</span>
@@ -830,7 +802,7 @@ function App({ initialBooting = true, staticMode = false }: AppProps) {
         </section>
 
         <section id="github" className="chapter">
-          <div className="section-shell github-shell">
+          <div className="section-shell github-shell editorial-telemetry">
             <div className="section-heading reveal">
               <p className="section-label">06 / GitHub</p>
               <h2>Telemetry</h2>
@@ -860,6 +832,7 @@ function App({ initialBooting = true, staticMode = false }: AppProps) {
             </div>
 
             <p className="telemetry-snapshot-note">{Object.values(telemetryStatus).every(value => value === "ready") ? "Live public GitHub snapshot" : "Last saved GitHub snapshot · refreshed when connected"}</p>
+            <p className="telemetry-context">Activity is a trace of the work, not a quality score. Repository languages count public repositories—not lines of code or proficiency.</p>
 
             <div className="graph-panel reveal">
               <div className="graph-panel-head">
