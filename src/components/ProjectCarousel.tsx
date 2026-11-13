@@ -1,120 +1,139 @@
 "use client";
 
-import { useCallback, useRef, useState, type CSSProperties, type KeyboardEvent } from "react";
-import { Pause, Play } from "lucide-react";
-import { useCarouselAutoplay } from "@/hooks/useCarouselAutoplay";
+import { useCallback, useEffect, useRef, useState, type CSSProperties, type KeyboardEvent, type PointerEvent } from "react";
 import Image from "next/image";
-import { EmphasisText } from "@/components/EmphasisText";
-import { carouselOffset } from "@/lib/carousel";
+import Link from "next/link";
+import { featuredProjects } from "@/features/portfolio/content";
+import { coverSize, reel } from "@/features/portfolio/story";
+import { projectSlug } from "@/lib/projects";
 
-export type ProjectCard = {
-  name: string;
-  description: string;
-  details: string;
-  analysis?: string;
-  challenge?: string;
-  outcome?: string;
-  learning?: string;
-  preview?: string;
-  stack: string[];
-  githubUrl: string;
-  homepage?: string | null;
-  stars?: number;
-  language?: string | null;
-};
+const items = reel.map((item) => ({ ...item, data: featuredProjects.find((project) => project.name === item.project)! }));
+const count = items.length;
+const TURN_MS = 2200;
 
-export function ProjectCarousel({ projects }: { projects: ProjectCard[] }) {
+/*
+ * A five-card deck. The selected card sits raised in the middle; two neighbours on each side stand beside it,
+ * a little smaller and turned slightly away. It keeps turning by itself for as long as it is on screen, and only
+ * the pause button stops it. Each cover is shown whole: where its shape differs from the card, a blurred copy
+ * of the same cover fills the gap.
+ */
+export default function ProjectCarousel() {
   const [active, setActive] = useState(0);
-  const [instant, setInstant] = useState(false);
-  const [paused, setPaused] = useState(false);
-  const [keyboardFocus, setKeyboardFocus] = useState(false);
-  const [activity, setActivity] = useState(0);
-  const stageRef = useRef<HTMLDivElement>(null);
-  const gesture = useRef<{ x: number; y: number } | null>(null);
-  const swiped = useRef(false);
-  const selected = projects[active % projects.length];
-  const advance = useCallback(() => {
-    setInstant(false);
-    setActive(index => (index + 1) % projects.length);
-    setActivity(value => value + 1);
-  }, [projects.length]);
-  const { running, reducedMotion } = useCarouselAutoplay(stageRef, !paused && !keyboardFocus && projects.length > 1, activity, advance);
-  if (!selected) return null;
+  const [playing, setPlaying] = useState(true);
+  const [inView, setInView] = useState(false);
+  const section = useRef<HTMLElement>(null);
+  const dragFrom = useRef<number | null>(null);
+  const dragged = useRef(false);
 
-  const select = (index: number, keyboard = false) => {
-    setInstant(keyboard);
-    setActivity(value => value + 1);
-    setActive((index + projects.length) % projects.length);
+  const turn = useCallback((by: number) => setActive((current) => (current + by + count) % count), []);
+
+  useEffect(() => {
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) setPlaying(false);
+    const el = section.current;
+    if (!el) return;
+    const observer = new IntersectionObserver(([entry]) => setInView(entry.isIntersecting), { threshold: 0.3 });
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, []);
+
+  const running = playing && inView;
+  useEffect(() => {
+    if (!running) return;
+    const timer = window.setTimeout(() => turn(1), TURN_MS);
+    return () => window.clearTimeout(timer);
+  }, [running, active, turn]);
+
+  const onKey = (event: KeyboardEvent) => {
+    if (event.key === "ArrowRight") { event.preventDefault(); turn(1); }
+    if (event.key === "ArrowLeft") { event.preventDefault(); turn(-1); }
   };
-  const onKeyDown = (event: KeyboardEvent<HTMLElement>) => {
-    if (!["ArrowLeft", "ArrowRight", "Home", "End"].includes(event.key)) return;
-    event.preventDefault();
-    select(event.key === "Home" ? 0 : event.key === "End" ? projects.length - 1 : active + (event.key === "ArrowRight" ? 1 : -1), true);
+  const onDown = (event: PointerEvent) => { dragFrom.current = event.clientX; dragged.current = false; };
+  const onUp = (event: PointerEvent) => {
+    if (dragFrom.current === null) return;
+    const moved = event.clientX - dragFrom.current;
+    dragFrom.current = null;
+    if (Math.abs(moved) > 40) { dragged.current = true; turn(moved < 0 ? 1 : -1); }
   };
+
+  const current = items[active];
 
   return (
-    <section className={`project-carousel${instant ? " is-instant" : ""}`} aria-label="Selected project carousel" aria-roledescription="carousel"
-      data-autoplay={running ? "running" : "idle"}
-      onKeyDownCapture={() => setKeyboardFocus(true)}
-      onFocusCapture={(event) => setKeyboardFocus(event.target.matches(":focus-visible"))}
-      onBlurCapture={(event) => { if (!event.currentTarget.contains(event.relatedTarget)) setKeyboardFocus(false); }}>
-      <div className="project-carousel-toolbar">
-        <p aria-live={running ? "off" : "polite"} aria-atomic="true"><span>{String(active + 1).padStart(2, "0")} / {String(projects.length).padStart(2, "0")}</span> {selected.name}</p>
-        <div className="project-carousel-controls">
-          {!reducedMotion && <button type="button" aria-label={paused ? "Resume project autoplay" : "Pause project autoplay"} onClick={() => setPaused(value => !value)}>{paused ? <Play size={16} aria-hidden="true" /> : <Pause size={16} aria-hidden="true" />}</button>}
-          <button type="button" aria-label="Previous project" onClick={(e) => select(active - 1, e.detail === 0)}>←</button>
-          <button type="button" aria-label="Next project" onClick={(e) => select(active + 1, e.detail === 0)}>→</button>
+    <section id="work" className="work" ref={section} aria-labelledby="work-title" aria-roledescription="carousel" onKeyDown={onKey}>
+      <div className="wrap work-head">
+        <div>
+          <h2 id="work-title">Selected work</h2>
+          <p className="work-intro">Nine builds. Each one starts from a specific way things go wrong.</p>
+        </div>
+        <div className="work-controls">
+          <p className="work-count"><b>{String(active + 1).padStart(2, "0")}</b> / {String(count).padStart(2, "0")}</p>
+          <button type="button" className="round" onClick={() => turn(-1)} aria-label="Previous project">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14.5 5.5 8 12l6.5 6.5" /></svg>
+          </button>
+          <button type="button" className="round" onClick={() => setPlaying((value) => !value)} aria-label={playing ? "Pause rotation" : "Resume rotation"}>
+            {playing ? (
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 6v12M15 6v12" /></svg>
+            ) : (
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 6l9 6-9 6z" /></svg>
+            )}
+          </button>
+          <button type="button" className="round" onClick={() => turn(1)} aria-label="Next project">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9.5 5.5 16 12l-6.5 6.5" /></svg>
+          </button>
         </div>
       </div>
-      <div ref={stageRef} className="project-carousel-stage" tabIndex={0} aria-label="Project deck. Use arrow keys to browse." onKeyDown={onKeyDown}
-        onPointerDown={(e) => { gesture.current = { x: e.clientX, y: e.clientY }; swiped.current = false; }}
-        onPointerCancel={() => { gesture.current = null; }}
-        onPointerUp={(e) => {
-          const start = gesture.current;
-          gesture.current = null;
-          if (!start) return;
-          const dx = e.clientX - start.x;
-          const dy = e.clientY - start.y;
-          if (Math.abs(dx) > 40 && Math.abs(dx) > Math.abs(dy) * 1.3) {
-            swiped.current = true;
-            select(active + (dx < 0 ? 1 : -1));
-          }
-        }}>
-        {projects.map((project, index) => {
-          const offset = carouselOffset(index, active, projects.length);
-          const visible = Math.abs(offset) <= 2;
+
+      <div className="deck" onPointerDown={onDown} onPointerUp={onUp} onPointerCancel={() => { dragFrom.current = null; }}>
+        {items.map((item, index) => {
+          let slot = index - active;
+          if (slot > count / 2) slot -= count;
+          if (slot < -count / 2) slot += count;
+          const size = coverSize[item.data.preview] ?? [1600, 900];
+          const shown = Math.abs(slot) <= 2;
           return (
-            <button key={project.githubUrl} type="button" className={`project-deck-card${offset === 0 ? " is-selected" : ""}`}
-              style={{ "--slot": offset, "--distance": Math.abs(offset), zIndex: 5 - Math.abs(offset) } as CSSProperties}
-              data-visible={visible} aria-hidden={!visible} tabIndex={offset === 0 ? 0 : -1}
-              aria-label={`Show ${project.name}`} aria-pressed={offset === 0}
-              onClick={(e) => { if (swiped.current) { swiped.current = false; return; } select(index, e.detail === 0); }}>
-              <span className="project-deck-preview">
-                {project.preview ? <Image src={project.preview} alt="" width={1600} height={900} sizes="(max-width: 720px) 70vw, (max-width: 1200px) 30vw, 24vw" draggable={false} unoptimized={project.preview.endsWith(".svg")} /> : null}
+            <button
+              key={item.project}
+              type="button"
+              className={slot === 0 ? "deck-card is-front" : "deck-card"}
+              style={{ "--slot": slot, "--far": Math.abs(slot) } as CSSProperties}
+              onClick={() => { if (dragged.current) { dragged.current = false; return; } setActive(index); }}
+              tabIndex={shown && slot !== 0 ? 0 : -1}
+              aria-hidden={!shown}
+              aria-label={slot === 0 ? `${item.project}, showing` : `Show ${item.project}`}
+            >
+              <span className="deck-frame">
+                <Image className="deck-fill" src={item.data.preview} alt="" width={160} height={90} sizes="160px" loading="lazy" draggable={false} />
+                <Image className="deck-cover" src={item.data.preview} alt="" width={size[0]} height={size[1]} sizes="(max-width: 900px) 72vw, 34vw" priority={index < 3} draggable={false} />
+                {slot === 0 ? <i className={running ? "deck-timer is-running" : "deck-timer"} key={active} style={{ animationDuration: `${TURN_MS}ms` }} /> : null}
               </span>
-              <span className="project-deck-label"><small>{String(index + 1).padStart(2, "0")}</small><strong>{project.name}</strong></span>
-              <span className="project-deck-stack">{project.stack.slice(0, 2).join(" / ")}</span>
+              <span className="deck-label">
+                <b>{item.project}</b>
+                <small>{item.data.stack.slice(0, 2).join(", ")}</small>
+              </span>
             </button>
           );
         })}
       </div>
-      <nav className="project-carousel-index project-carousel-dots" aria-label="Choose a project">
-        {projects.map((project, index) => <button key={project.githubUrl} type="button" title={project.name} aria-label={`Select ${project.name}`} aria-current={index === active ? "true" : undefined} onClick={(e) => select(index, e.detail === 0)}><span aria-hidden="true" /></button>)}
-      </nav>
-      <article className="project-card project-selected-detail" aria-label={`${selected.name} case study`}>
-        <div className="project-selected-summary">
-          <div className="project-top"><span className="project-number">Selected system</span><a href={selected.githubUrl} target="_blank" rel="noreferrer">Repository ↗</a></div>
-          <h3>{selected.name}</h3>
-          <p className="project-description"><EmphasisText>{selected.description}</EmphasisText></p>
-          <p className="project-details"><EmphasisText>{selected.details}</EmphasisText></p>
-          {selected.analysis && <div className="project-brief-analysis"><span>Engineering analysis</span><p><EmphasisText>{selected.analysis}</EmphasisText></p><a href={`${selected.githubUrl}#readme`} target="_blank" rel="noreferrer">Explore the README ↗</a></div>}
-          <div className="project-tags">{selected.stack.map(tag => <span key={tag}>{tag}</span>)}</div>
-          {selected.homepage ? <div className="project-links"><a href={selected.homepage} target="_blank" rel="noreferrer">Live ↗</a></div> : null}
+
+      <div className="deck-dots" role="group" aria-label="Choose a project">
+        {items.map((item, index) => (
+          <button key={item.project} type="button" aria-label={`Show ${item.project}`} aria-current={index === active} onClick={() => setActive(index)}>
+            <span />
+          </button>
+        ))}
+      </div>
+
+      <div className="wrap work-detail" key={current.project} aria-live={playing ? "off" : "polite"}>
+        <h3>{current.statement}</h3>
+        <div className="work-side">
+          <p className="work-name">{current.project}</p>
+          <p className="work-text">{current.detail}</p>
+          <p className="work-stack">{current.data.stack.join(", ")}</p>
+          <div className="work-acts">
+            <Link className="btn" href={`/projects#${projectSlug(current.project)}`}>How {current.project} works</Link>
+            <Link className="link" href="/projects">All {featuredProjects.length} projects</Link>
+          </div>
         </div>
-        <div className="project-case-study">
-          {[["Challenge", selected.challenge], ["Implementation", selected.outcome], ["Design takeaway", selected.learning]].map(([label, copy]) => copy ? <div key={label}><span>{label}</span><p><EmphasisText>{copy.replace(/^Design takeaway: ([a-z])/, (_, initial: string) => initial.toUpperCase())}</EmphasisText></p></div> : null)}
-        </div>
-      </article>
+      </div>
     </section>
   );
 }
