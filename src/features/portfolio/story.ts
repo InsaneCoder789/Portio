@@ -76,6 +76,8 @@ export const coverSize: Record<string, [number, number]> = {
 export const roles = [
   {
     org: "Red Kite Productions",
+    logo: "/logos/companies/redkite.svg",
+    span: [11, 15] as [number, number | null],
     role: "ReactJS Architect Intern",
     kind: "Internship",
     when: "Apr to Jul 2026",
@@ -87,6 +89,8 @@ export const roles = [
   },
   {
     org: "Donum",
+    logo: "/logos/companies/donum.jpg",
+    span: [3, 16] as [number, number | null],
     role: "Junior Software Developer and Marketing Intern",
     kind: "Internship",
     when: "Aug 2025 to Aug 2026",
@@ -98,6 +102,8 @@ export const roles = [
   },
   {
     org: "CyberVault KIIT",
+    logo: "/logos/companies/cybervault.png",
+    span: [16, null] as [number, number | null],
     role: "Vice President",
     kind: "Leadership",
     when: "Sep 2026 to now",
@@ -109,6 +115,9 @@ export const roles = [
   },
   {
     org: "K-1000 KIIT",
+    logo: "/logos/companies/k1000.jpg",
+    span: [0, null] as [number, number | null],
+    mark: { at: 14, label: "Deputy Chief" },
     role: "Deputy Chief, Office of Technology and Innovation",
     kind: "Leadership",
     when: "May 2025 to now",
@@ -121,6 +130,8 @@ export const roles = [
   },
   {
     org: "GeeksforGeeks KIIT",
+    logo: "/logos/companies/gfg-kiit.jpg",
+    span: [8, null] as [number, number | null],
     role: "Android Developer",
     kind: "Student organisation",
     when: "Jan 2026 to now",
@@ -189,8 +200,47 @@ export const tracks = [
 ];
 
 export const facts = [
-  ["Studying", "B.Tech in Computer Science and Engineering at KIIT, Bhubaneswar. 2024 to 2028."],
+  ["Studying", "B.Tech in Computer Science and Engineering at KIIT, Bhubaneswar."],
   ["Recognition", "Second place at ScamBust, Kshitij, IIT Kharagpur (2026), for the team project Lakshman Rekha."],
   ["Certified", "HackerRank: Frontend Developer (React) and Software Engineer Intern, May 2026."],
 ];
 
+
+// The experience chart counts months from May 2025 (0) to December 2026 (19).
+export const timeline = {
+  months: 20,
+  now: 18,
+  ticks: [[0, "May 2025"], [3, "Aug"], [6, "Nov"], [8, "Jan 2026"], [11, "Apr"], [14, "Jul"], [17, "Oct"]] as [number, string][],
+};
+
+export const kpis = [
+  ["5", "roles: two internships, three teams"],
+  ["11", "projects, nine written up here"],
+  ["2nd", "place, ScamBust, IIT Kharagpur"],
+];
+
+// Which project uses what. Only technologies named in the résumés or the project write-ups are marked.
+export const matrix = {
+  cols: ["TypeScript", "Python", "Kotlin", "Next.js", "FastAPI", "PostgreSQL", "Redis", "ML", "Flutter"],
+  rows: [
+    ["Rail", ["TypeScript", "PostgreSQL"]],
+    ["OfflineQR Attendance", ["Python", "Next.js", "FastAPI", "PostgreSQL", "Redis", "Flutter"]],
+    ["IncidentLens", ["Python", "Next.js", "FastAPI", "PostgreSQL", "Redis"]],
+    ["StayPilot", ["TypeScript", "Next.js", "PostgreSQL"]],
+    ["MGHSIS", ["Python", "Next.js", "FastAPI", "Redis", "ML"]],
+    ["K-1000", ["Next.js"]],
+    ["ClassSync", ["Kotlin", "ML"]],
+    ["Lakshman Rekha", ["Kotlin", "ML"]],
+    ["KYLR", ["Kotlin"]],
+    ["Folio", ["Kotlin", "ML"]],
+    ["NavGate", ["Kotlin"]],
+  ] as [string, string[]][],
+};
+
+export const principles = [
+  ["Across the stack", "Apps, servers and the workflows between them."],
+  ["Real conditions", "How it behaves outside the demo."],
+  ["Failure first", "Scale, retries and recovery, designed in."],
+  ["Tested claims", "Concurrency and recovery tests behind each one."],
+  ["Built to maintain", "Designed, tested and kept running."],
+];
