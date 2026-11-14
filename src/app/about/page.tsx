@@ -4,8 +4,10 @@ import Link from "next/link";
 import Ambient from "@/components/Ambient";
 import JsonLd from "@/components/JsonLd";
 import { aboutLd } from "@/lib/seo";
+import LegalLinks from "@/components/LegalLinks";
 import TopBar from "@/components/TopBar";
-import { LanguageBar, PipelineDiagram, StackMatrix, Timeline } from "@/components/Charts";
+import BuildFlow from "@/components/BuildFlow";
+import { LanguageBar, StackMatrix, Timeline } from "@/components/Charts";
 import { aboutContent, credibilitySignals, portfolioSignals, skillsMatrix, writingNotes } from "@/features/portfolio/content";
 import { facts, kpis, principles, roles, tracks } from "@/features/portfolio/story";
 import { githubStats } from "@/lib/github-live";
@@ -119,12 +121,13 @@ export default async function AboutPage() {
             <header className="head">
               <div>
                 <h2>How I build</h2>
-                <p>The shape most of these systems share: record the request, do the work once, replay safely.</p>
+                <p>Most of these systems share one shape: write the request down, do the work once, replay it safely. Break it on purpose below and watch it hold.</p>
               </div>
+              <Link className="link" href="/projects">See it in the projects</Link>
             </header>
             <div className="bento">
-              <div className="card s12 card-diagram">
-                <PipelineDiagram />
+              <div className="card s12 flow-card">
+                <BuildFlow />
               </div>
               <ol className="s12 steps">
                 {principles.map(([title, line]) => (
@@ -242,6 +245,7 @@ export default async function AboutPage() {
               <Link className="link" href="/projects">All projects</Link>
               <Link className="link" href="/">Front page</Link>
             </div>
+            <LegalLinks />
             <p className="fine">© 2026 Rohan Chatterjee</p>
           </div>
         </section>
