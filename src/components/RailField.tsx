@@ -214,15 +214,20 @@ export default function RailField() {
         closing = closing * closing * (3 - 2 * closing);
       };
       const draw = () => {
+        if (lost) return;
         const cy = 4.2 + heroOut * 3, cz = 7, ly = -1.2 - heroOut * 2, lz = -4;
         camera.position.set(0, cy + (7.5 - cy) * closing, cz + (4 - cz) * closing);
         lookAt.set(0, ly + (-0.5 - ly) * closing, lz + (-6.5 - lz) * closing);
         camera.lookAt(lookAt);
         renderer.render(scene, camera);
       };
-      const resize = () => {
+      let sizedW = 0, sizedH = 0, lost = false;
+      const resize = (force = false) => {
         const w = window.innerWidth, h = window.innerHeight;
-        const dpr = Math.min(window.devicePixelRatio || 1, 2);
+        // phone toolbars growing and shrinking resize the window by a few dozen pixels: reallocating the canvas for that clears it
+        if (!force && sizedW === w && Math.abs(sizedH - h) < 160) return;
+        sizedW = w; sizedH = h;
+        const dpr = Math.max(1, Math.min(window.devicePixelRatio || 1, 2, Math.sqrt(3.4e6 / (w * h))));
         renderer.setPixelRatio(dpr);
         renderer.setSize(w, h, false);
         uniforms.uDpr.value = dpr;
@@ -256,7 +261,7 @@ export default function RailField() {
 
       const tick = (now: number) => {
         frame = 0;
-        if (!running) return;
+        if (!running || lost) return;
         const dt = Math.min(0.05, (now - previous) / 1000);
         previous = now;
         uniforms.uTime.value += dt;
@@ -268,7 +273,7 @@ export default function RailField() {
       };
       const seen = new Map<Element, boolean>();
       const sync = () => {
-        running = !document.hidden && [...seen.values()].some(Boolean);
+        running = !document.hidden && !lost && document.documentElement.dataset.boot !== "running" && [...seen.values()].some(Boolean);
         if (!running || frame) return;
         if (reduced.matches) { draw(); return; }
         previous = performance.now();
@@ -282,6 +287,14 @@ export default function RailField() {
 
       const onScroll = () => { readScroll(); if (reduced.matches && running) draw(); };
       const onResize = () => { resize(); readScroll(); if (running) draw(); };
+      // if the browser takes the graphics context away (memory pressure, a sleeping GPU), stop cleanly and redraw when it returns
+      const onLost = (event: Event) => { event.preventDefault(); lost = true; cancelAnimationFrame(frame); frame = 0; };
+      const onRestored = () => { lost = false; resize(true); readScroll(); draw(); sync(); };
+      canvas.addEventListener("webglcontextlost", onLost);
+      canvas.addEventListener("webglcontextrestored", onRestored);
+      // the opening film covers the page: nothing underneath should be drawing while it plays
+      const bootWatch = new MutationObserver(sync);
+      bootWatch.observe(document.documentElement, { attributes: true, attributeFilter: ["data-boot"] });
       window.addEventListener("scroll", onScroll, { passive: true });
       window.addEventListener("resize", onResize);
       window.addEventListener("pointermove", onPointer, { passive: true });
@@ -289,7 +302,7 @@ export default function RailField() {
       document.addEventListener("visibilitychange", sync);
       reduced.addEventListener("change", sync);
 
-      resize();
+      resize(true);
       readScroll();
       draw();
       canvas.dataset.ready = "true";
@@ -297,6 +310,9 @@ export default function RailField() {
       cleanup = () => {
         cancelAnimationFrame(frame);
         observer.disconnect();
+        bootWatch.disconnect();
+        canvas.removeEventListener("webglcontextlost", onLost);
+        canvas.removeEventListener("webglcontextrestored", onRestored);
         window.removeEventListener("scroll", onScroll);
         window.removeEventListener("resize", onResize);
         window.removeEventListener("pointermove", onPointer);
