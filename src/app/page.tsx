@@ -3,6 +3,7 @@ import Link from "next/link";
 import Ambient from "@/components/Ambient";
 import RailField from "@/components/RailField";
 import JsonLd from "@/components/JsonLd";
+import LegalLinks from "@/components/LegalLinks";
 import TopBar from "@/components/TopBar";
 import PortraitStage from "@/components/PortraitStage";
 import ProjectCarousel from "@/components/ProjectCarousel";
@@ -163,6 +164,7 @@ export default async function Page() {
               <a className="link" href={contactContent.instagram} target="_blank" rel="noreferrer">Instagram</a>
             </div>
             <div className="closing-foot">
+              <LegalLinks />
               <p>© 2026 Rohan Chatterjee</p>
               <a href="#top">Back to top</a>
             </div>

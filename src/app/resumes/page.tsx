@@ -4,6 +4,7 @@ import Link from "next/link";
 import Ambient from "@/components/Ambient";
 import JsonLd from "@/components/JsonLd";
 import { resumesLd } from "@/lib/seo";
+import LegalLinks from "@/components/LegalLinks";
 import TopBar from "@/components/TopBar";
 import { facts, roles, tracks } from "@/features/portfolio/story";
 
@@ -125,6 +126,7 @@ export default function ResumesPage() {
               <Link className="link" href="/about">Profile</Link>
               <Link className="link" href="/">Front page</Link>
             </div>
+            <LegalLinks />
             <p className="fine">© 2026 Rohan Chatterjee</p>
           </div>
         </section>

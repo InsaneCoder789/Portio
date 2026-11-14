@@ -4,6 +4,7 @@ import Link from "next/link";
 import Ambient from "@/components/Ambient";
 import JsonLd from "@/components/JsonLd";
 import { projectsLd } from "@/lib/seo";
+import LegalLinks from "@/components/LegalLinks";
 import TopBar from "@/components/TopBar";
 import { featuredProjects } from "@/features/portfolio/content";
 import { coverSize } from "@/features/portfolio/story";
@@ -79,6 +80,7 @@ export default function ProjectsPage() {
               <Link className="link" href="/#work">Back to the overview</Link>
               <Link className="link" href="/about">Full profile</Link>
             </div>
+            <LegalLinks />
             <p className="fine">© 2026 Rohan Chatterjee</p>
           </div>
         </section>
