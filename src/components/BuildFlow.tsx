@@ -170,16 +170,19 @@ export default function BuildFlow() {
 
           {/* the way back: the answer, over the top */}
           <path d={`M${X(3) + W / 2} ${Y - 6} C${X(3) + W / 2} 22 ${X(0) + W / 2} 22 ${X(0) + W / 2} ${Y - 8}`} className={edgeOn("ack") ? "flow-edge is-on dashed" : "flow-edge dashed"} markerEnd={edgeOn("ack") ? "url(#flow-arrow-on)" : "url(#flow-arrow)"} />
-          <text x="600" y="48" textAnchor="middle" className={edgeOn("ack") ? "flow-note is-on" : "flow-note"}>the answer</text>
+          <text x="600" y="34" textAnchor="middle" className={edgeOn("ack") ? "flow-note is-on" : "flow-note"}>the answer comes back</text>
 
           {/* the lease coming back round on the outbox */}
           <path d={`M${X(2) + W - 40} ${Y + H + 4} C${X(2) + W - 40} ${Y + H + 70} ${X(2) + 40} ${Y + H + 70} ${X(2) + 40} ${Y + H + 6}`} className={edgeOn("retry") ? "flow-edge is-on dashed" : "flow-edge dashed"} markerEnd={edgeOn("retry") ? "url(#flow-arrow-on)" : "url(#flow-arrow)"} />
           <text x={X(2) + W / 2} y={Y + H + 90} textAnchor="middle" className={edgeOn("retry") ? "flow-note is-on" : "flow-note"}>lease expires, taken again</text>
 
-          {([["send", "request + key"], ["append", "one transaction"], ["apply", "unique key"]] as [EdgeId, string][]).map(([id, label], i) => (
+          {([["send", ["request", "+ key"]], ["append", ["one", "transaction"]], ["apply", ["unique", "key"]]] as [EdgeId, [string, string]][]).map(([id, label], i) => (
             <g key={id}>
               <line x1={X(i) + W + 8} y1={Y + H / 2} x2={X(i + 1) - 10} y2={Y + H / 2} className={edgeOn(id) ? "flow-edge is-on" : "flow-edge"} markerEnd={edgeOn(id) ? "url(#flow-arrow-on)" : "url(#flow-arrow)"} />
-              <text x={(X(i) + W + X(i + 1)) / 2} y={Y + H / 2 - 12} textAnchor="middle" className={edgeOn(id) ? "flow-tag is-on" : "flow-tag"}>{label}</text>
+              <text textAnchor="middle" className={edgeOn(id) ? "flow-tag is-on" : "flow-tag"}>
+                <tspan x={(X(i) + W + X(i + 1)) / 2} y={Y + H / 2 - 26}>{label[0]}</tspan>
+                <tspan x={(X(i) + W + X(i + 1)) / 2} y={Y + H / 2 - 11}>{label[1]}</tspan>
+              </text>
             </g>
           ))}
 
@@ -233,7 +236,10 @@ export default function BuildFlow() {
             <div><dt>Reply</dt><dd className="is-word" key={step.state.reply}>{step.state.reply === "none" ? "none yet" : step.state.reply === "lost" ? "lost" : "received"}</dd></div>
           </dl>
           <ol className="flow-log" aria-label="Event log">
-            {history.map((line, i) => <li key={`${line}${i}`} className={i === history.length - 1 ? "is-new" : undefined}>{line}</li>)}
+            {history.map((line, i) => {
+              const [, who = "", verb = "", rest = ""] = line.match(/^(\S+)\s+(\S+)\s*(.*)$/) ?? [];
+              return <li key={`${line}${i}`} className={i === history.length - 1 ? "is-new" : undefined}><b>{who}</b><span>{verb}</span><em>{rest.replace(/\s{2,}/g, "  ")}</em></li>;
+            })}
           </ol>
         </section>
 

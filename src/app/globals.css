@@ -431,7 +431,7 @@ html[data-boot=running] .hero-title .line>span{animation-play-state:paused}
 .flow-edge.is-on{stroke:var(--signal);stroke-width:2.6;filter:drop-shadow(0 0 6px rgb(255 184 28/.7))}
 .flow-head{fill:rgb(255 255 255/.4)}
 .flow-head-on{fill:var(--signal)}
-.flow-tag,.flow-note{fill:var(--mist);font:600 12px var(--font);letter-spacing:.05em;transition:fill .2s}
+.flow-tag,.flow-note{fill:var(--mist);font:600 12px var(--font);letter-spacing:.03em;transition:fill .2s}
 .flow-tag.is-on,.flow-note.is-on{fill:var(--signal)}
 .flow-node{cursor:pointer;outline:none}
 .flow-fill{transition:fill .2s}
@@ -469,10 +469,12 @@ html[data-boot=running] .hero-title .line>span{animation-play-state:paused}
 .flow-meters dd.is-word{font-size:clamp(20px,2.2vw,26px);padding-top:6px}
 .flow-meters .is-key{border-color:rgb(255 184 28/.7);background:rgb(255 184 28/.08)}
 .flow-meters .is-key dd{color:var(--signal)}
-.flow-log{margin:0;padding:0;list-style:none;display:grid;gap:4px;font:500 12.5px ui-monospace,SFMono-Regular,Menlo,monospace;color:var(--mist);overflow-x:auto}
-.flow-log li{white-space:pre-wrap;overflow-wrap:anywhere;opacity:.7}
+.flow-log{margin:0;padding:0;list-style:none;display:grid;gap:6px;font:500 12.5px ui-monospace,SFMono-Regular,Menlo,monospace;color:var(--mist)}
+.flow-log li{display:grid;grid-template-columns:5em 4.2em minmax(0,1fr);gap:6px;opacity:.7;line-height:1.4}
+.flow-log li b{font-weight:700}
+.flow-log li em{font-style:normal;overflow-wrap:anywhere}
 .flow-log li.is-new{color:var(--bone);opacity:1}
-.flow-log li.is-new::before{content:"› ";color:var(--signal)}
+.flow-log li.is-new b{color:var(--signal)}
 .flow-detail dl{margin:0;display:grid;gap:12px}
 .flow-detail dt{color:var(--signal);font-size:12px;font-weight:700;letter-spacing:.12em;text-transform:uppercase}
 .flow-detail dd{margin:2px 0 0;color:var(--mist);font-size:15px;line-height:1.5}
