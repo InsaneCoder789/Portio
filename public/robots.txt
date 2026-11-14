@@ -1,4 +1,0 @@
-User-agent: *
-Allow: /
-
-Sitemap: https://rochiee24.vercel.app/sitemap.xml
