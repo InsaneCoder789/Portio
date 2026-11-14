@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
+import Ambient from "@/components/Ambient";
 import TopBar from "@/components/TopBar";
 import { featuredProjects } from "@/features/portfolio/content";
 import { coverSize } from "@/features/portfolio/story";
@@ -19,7 +20,7 @@ export default function ProjectsPage() {
       <TopBar solid />
 
       <main className="sub">
-        <header className="sheet sub-head">
+        <header className="band sub-head">
           <div className="wrap">
             <h1>All projects</h1>
             <p className="sub-lead">
@@ -34,7 +35,9 @@ export default function ProjectsPage() {
           </div>
         </header>
 
-        <div id="list" className="sheet cases">
+        <div className="mid">
+        <Ambient />
+        <div id="list" className="band cases">
           <div className="wrap">
             {featuredProjects.map((project, index) => (
               <article key={project.name} id={projectSlug(project.name)} className="case">
@@ -62,15 +65,17 @@ export default function ProjectsPage() {
           </div>
         </div>
 
-        <section className="closing closing-short">
+        </div>
+
+        <section className="band closing-short">
           <div className="wrap">
             <h2>Seen enough to talk?</h2>
-            <div className="closing-links">
+            <div className="acts">
               <Link className="btn" href="/#contact">Get in touch</Link>
               <Link className="link" href="/#work">Back to the overview</Link>
               <Link className="link" href="/about">Full profile</Link>
             </div>
-            <p className="closing-fine">© 2026 Rohan Chatterjee</p>
+            <p className="fine">© 2026 Rohan Chatterjee</p>
           </div>
         </section>
       </main>

@@ -9,13 +9,13 @@ import { projectSlug } from "@/lib/projects";
 
 const items = reel.map((item) => ({ ...item, data: featuredProjects.find((project) => project.name === item.project)! }));
 const count = items.length;
-const TURN_MS = 2200;
+const TURN_MS = 1900;
 
 /*
- * A five-card deck. The selected card sits raised in the middle; two neighbours on each side stand beside it,
- * a little smaller and turned slightly away. It keeps turning by itself for as long as it is on screen, and only
- * the pause button stops it. Each cover is shown whole: where its shape differs from the card, a blurred copy
- * of the same cover fills the gap.
+ * A plain card carousel. Three cover cards in a row: the selected one in the middle, one on its left, one on its
+ * right. The row slides one card at a time and never ends; there is no tilt, fade or zoom. It keeps moving by
+ * itself while on screen, and only the pause button stops it. The summary of the middle project sits underneath;
+ * the full write-up is on the projects page.
  */
 export default function ProjectCarousel() {
   const [active, setActive] = useState(0);
@@ -58,54 +58,55 @@ export default function ProjectCarousel() {
   const current = items[active];
 
   return (
-    <section id="work" className="work" ref={section} aria-labelledby="work-title" aria-roledescription="carousel" onKeyDown={onKey}>
-      <div className="wrap work-head">
-        <div>
-          <h2 id="work-title">Selected work</h2>
-          <p className="work-intro">Nine builds. Each one starts from a specific way things go wrong.</p>
-        </div>
-        <div className="work-controls">
-          <p className="work-count"><b>{String(active + 1).padStart(2, "0")}</b> / {String(count).padStart(2, "0")}</p>
-          <button type="button" className="round" onClick={() => turn(-1)} aria-label="Previous project">
-            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14.5 5.5 8 12l6.5 6.5" /></svg>
-          </button>
-          <button type="button" className="round" onClick={() => setPlaying((value) => !value)} aria-label={playing ? "Pause rotation" : "Resume rotation"}>
-            {playing ? (
-              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 6v12M15 6v12" /></svg>
-            ) : (
-              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 6l9 6-9 6z" /></svg>
-            )}
-          </button>
-          <button type="button" className="round" onClick={() => turn(1)} aria-label="Next project">
-            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9.5 5.5 16 12l-6.5 6.5" /></svg>
-          </button>
-        </div>
+    <section id="work" className="band work" ref={section} aria-labelledby="work-title" aria-roledescription="carousel" onKeyDown={onKey}>
+      <div className="wrap">
+        <header className="head">
+          <div>
+            <h2 id="work-title">Selected work</h2>
+            <p>Nine builds. Each one starts from a specific way things go wrong.</p>
+          </div>
+          <div className="controls">
+            <p className="count"><b>{String(active + 1).padStart(2, "0")}</b> / {String(count).padStart(2, "0")}</p>
+            <button type="button" className="round" onClick={() => turn(-1)} aria-label="Previous project">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14.5 5.5 8 12l6.5 6.5" /></svg>
+            </button>
+            <button type="button" className="round" onClick={() => setPlaying((value) => !value)} aria-label={playing ? "Pause rotation" : "Resume rotation"}>
+              {playing ? (
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 6v12M15 6v12" /></svg>
+              ) : (
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 6l9 6-9 6z" /></svg>
+              )}
+            </button>
+            <button type="button" className="round" onClick={() => turn(1)} aria-label="Next project">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9.5 5.5 16 12l-6.5 6.5" /></svg>
+            </button>
+          </div>
+        </header>
       </div>
 
-      <div className="deck" onPointerDown={onDown} onPointerUp={onUp} onPointerCancel={() => { dragFrom.current = null; }}>
+      <div className="strip" onPointerDown={onDown} onPointerUp={onUp} onPointerCancel={() => { dragFrom.current = null; }}>
         {items.map((item, index) => {
           let slot = index - active;
           if (slot > count / 2) slot -= count;
           if (slot < -count / 2) slot += count;
           const size = coverSize[item.data.preview] ?? [1600, 900];
-          const shown = Math.abs(slot) <= 2;
+          const near = Math.abs(slot) <= 2;
           return (
             <button
               key={item.project}
               type="button"
-              className={slot === 0 ? "deck-card is-front" : "deck-card"}
-              style={{ "--slot": slot, "--far": Math.abs(slot) } as CSSProperties}
+              className={`strip-card${slot === 0 ? " is-front" : ""}${near ? "" : " is-far"}`}
+              style={{ "--slot": slot } as CSSProperties}
               onClick={() => { if (dragged.current) { dragged.current = false; return; } setActive(index); }}
-              tabIndex={shown && slot !== 0 ? 0 : -1}
-              aria-hidden={!shown}
+              tabIndex={Math.abs(slot) === 1 ? 0 : -1}
+              aria-hidden={Math.abs(slot) > 1}
               aria-label={slot === 0 ? `${item.project}, showing` : `Show ${item.project}`}
             >
-              <span className="deck-frame">
-                <Image className="deck-fill" src={item.data.preview} alt="" width={160} height={90} sizes="160px" loading="lazy" draggable={false} />
-                <Image className="deck-cover" src={item.data.preview} alt="" width={size[0]} height={size[1]} sizes="(max-width: 900px) 72vw, 34vw" priority={index < 3} draggable={false} />
-                {slot === 0 ? <i className={running ? "deck-timer is-running" : "deck-timer"} key={active} style={{ animationDuration: `${TURN_MS}ms` }} /> : null}
+              <span className="strip-frame">
+                <Image className="strip-fill" src={item.data.preview} alt="" width={160} height={90} sizes="160px" loading="lazy" draggable={false} />
+                <Image className="strip-cover" src={item.data.preview} alt="" width={size[0]} height={size[1]} sizes="(max-width: 900px) 78vw, 34vw" priority={index < 2 || index === count - 1} draggable={false} />
               </span>
-              <span className="deck-label">
+              <span className="strip-label">
                 <b>{item.project}</b>
                 <small>{item.data.stack.slice(0, 2).join(", ")}</small>
               </span>
@@ -114,23 +115,21 @@ export default function ProjectCarousel() {
         })}
       </div>
 
-      <div className="deck-dots" role="group" aria-label="Choose a project">
-        {items.map((item, index) => (
-          <button key={item.project} type="button" aria-label={`Show ${item.project}`} aria-current={index === active} onClick={() => setActive(index)}>
-            <span />
-          </button>
-        ))}
-      </div>
-
-      <div className="wrap work-detail" key={current.project} aria-live={playing ? "off" : "polite"}>
-        <h3>{current.statement}</h3>
-        <div className="work-side">
-          <p className="work-name">{current.project}</p>
-          <p className="work-text">{current.detail}</p>
-          <p className="work-stack">{current.data.stack.join(", ")}</p>
-          <div className="work-acts">
-            <Link className="btn" href={`/projects#${projectSlug(current.project)}`}>How {current.project} works</Link>
-            <Link className="link" href="/projects">All {featuredProjects.length} projects</Link>
+      <div className="wrap">
+        <div className="card summary" key={current.project} aria-live={playing ? "off" : "polite"}>
+          <div>
+            <p className="summary-name">{current.project}</p>
+            <h3>{current.statement}</h3>
+          </div>
+          <div className="summary-side">
+            <p>{current.detail}</p>
+            <ul className="tags">
+              {current.data.stack.map((item) => <li key={item}>{item}</li>)}
+            </ul>
+            <div className="acts">
+              <Link className="btn" href={`/projects#${projectSlug(current.project)}`}>The full project</Link>
+              <Link className="link" href="/projects">All {featuredProjects.length} projects</Link>
+            </div>
           </div>
         </div>
       </div>

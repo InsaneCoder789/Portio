@@ -1,38 +1,34 @@
 import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
+import Ambient from "@/components/Ambient";
 import TopBar from "@/components/TopBar";
-import {
-  aboutContent,
-  credibilitySignals,
-  portfolioSignals,
-  skillsMatrix,
-  writingNotes,
-} from "@/features/portfolio/content";
-import { facts, roles } from "@/features/portfolio/story";
+import { LanguageBar, PipelineDiagram, StackMatrix, Timeline } from "@/components/Charts";
+import { aboutContent, credibilitySignals, portfolioSignals, skillsMatrix, writingNotes } from "@/features/portfolio/content";
+import { facts, kpis, principles, roles, tracks } from "@/features/portfolio/story";
+import { githubStats } from "@/lib/github-live";
 
 export const metadata: Metadata = {
   title: "Profile",
-  description: "Rohan Chatterjee in full: every role, the toolkit, how he works and what he is writing.",
+  description: "Rohan Chatterjee in charts: the experience timeline, which project uses what, how the systems are built, and the toolkit.",
   alternates: { canonical: "/about" },
 };
 
 const toolGroups = [
-  { title: "Core tools", note: "Across frontend platforms and Android delivery.", tools: ["React", "TypeScript", "Next.js", "Kotlin", "Node.js"] },
-  { title: "Applied in projects", note: "Implementation paths you can inspect.", tools: ["FastAPI", "Postgres", "Redis", "Flutter", "SQLite"] },
-  { title: "Currently exploring", note: "Learning directions, not claims of mastery.", tools: ["Distributed systems", "System design", "Software architecture"] },
+  { title: "Core", tools: ["React", "TypeScript", "Next.js", "Kotlin", "Node.js"] },
+  { title: "Applied in projects", tools: ["FastAPI", "Postgres", "Redis", "Flutter", "SQLite"] },
 ];
 const grouped = toolGroups.flatMap((group) => group.tools);
-const supporting = skillsMatrix.filter((skill) => !grouped.includes(skill.label));
+const supporting = skillsMatrix.filter((skill) => !grouped.includes(skill.label)).map((skill) => skill.label);
 
 function Tools({ names }: { names: string[] }) {
   return (
-    <ul className="tools">
+    <ul className="tags tags-logo">
       {names.map((name) => {
         const logo = skillsMatrix.find((skill) => skill.label === name)?.logo;
         return (
           <li key={name}>
-            {logo ? <Image src={logo} alt="" width={18} height={18} unoptimized /> : null}
+            {logo ? <Image src={logo} alt="" width={20} height={20} unoptimized loading="eager" /> : null}
             {name}
           </li>
         );
@@ -41,150 +37,208 @@ function Tools({ names }: { names: string[] }) {
   );
 }
 
-// Everything the front page leaves out: the long version of each segment.
-export default function AboutPage() {
+// The profile, shown rather than described: a timeline, a matrix, a diagram and a few tables.
+export default async function AboutPage() {
+  const github = await githubStats();
+
   return (
     <>
-      <a className="skip-link" href="#experience">Skip to experience</a>
+      <a className="skip-link" href="#experience">Skip to the timeline</a>
       <TopBar solid />
 
-      <main className="sub">
+      <main className="sub calm">
         <header className="band sub-head">
           <div className="wrap">
             <h1>Profile</h1>
-            <p className="sub-lead">{aboutContent.lead}</p>
-            <nav className="jump" aria-label="On this page">
-              <a href="#experience">Experience</a>
-              <a href="#resumes">Résumés</a>
-              <a href="#education">Education</a>
-              <a href="#toolkit">Toolkit</a>
-              <a href="#principles">Principles</a>
-              <a href="#signals">Signals</a>
-            </nav>
+            <p className="sub-lead">Backend, full-stack and Android engineer. The rest of this page is mostly charts.</p>
+            <dl className="bento kpis">
+              {kpis.map(([value, label], index) => (
+                <div key={label} className={index === 0 ? "card tile s4 tile-hot" : "card tile s4"}>
+                  <dd className="tile-num">{value}</dd>
+                  <dt className="tile-label">{label}</dt>
+                </div>
+              ))}
+            </dl>
           </div>
         </header>
 
-        <section id="experience" className="band band-raised">
+        <div className="mid">
+        <Ambient calm />
+        <section id="experience" className="band">
           <div className="wrap">
-            <h2>Experience</h2>
-            <ol className="ledger">
+            <header className="head">
+              <div>
+                <h2>Timeline</h2>
+                <p>Every role on one axis, May 2025 to now.</p>
+              </div>
+              <Link className="btn" href="/resumes">Both résumés</Link>
+            </header>
+            <div className="card">
+              <Timeline />
+            </div>
+            <div className="role-notes">
               {roles.map((role) => (
-                <li key={role.org}>
-                  <p className="ledger-when">
-                    <span>{role.when}</span>
-                    <span>{role.kind}</span>
-                  </p>
-                  <div>
-                    <h3>{role.org}</h3>
-                    <p className="ledger-role">{role.role}</p>
-                    <ul className="ledger-points">
-                      {role.points.map((point) => <li key={point}>{point}</li>)}
-                    </ul>
-                  </div>
-                </li>
+                <details key={role.org} className="card" name="roles">
+                  <summary>
+                    <Image src={role.logo} alt="" width={44} height={44} unoptimized />
+                    <span>
+                      <b>{role.org}</b>
+                      <span>{role.role}</span>
+                    </span>
+                  </summary>
+                  <ul>
+                    {role.points.map((point) => <li key={point}>{point}</li>)}
+                  </ul>
+                </details>
               ))}
-            </ol>
-          </div>
-        </section>
-
-        <section id="resumes" className="band">
-          <div className="wrap principles">
-            <h2>Two résumés</h2>
-            <div className="cv-pointer">
-              <p>One for backend and full-stack roles, one for Android. Same person and experience; different work goes first.</p>
-              <Link className="btn" href="/resumes">See both résumés</Link>
             </div>
           </div>
         </section>
 
-        <section id="education" className="band band-raised">
-          <div className="wrap principles">
-            <h2>Education and recognition</h2>
-            <dl className="stage-facts">
-              {facts.map(([term, detail]) => (
-                <div key={term}><dt>{term}</dt><dd>{detail}</dd></div>
-              ))}
-              <div><dt>School</dt><dd>Mayoor Private School, Abu Dhabi (CBSE).</dd></div>
-            </dl>
+        <section id="stack" className="band">
+          <div className="wrap">
+            <header className="head">
+              <div>
+                <h2>What runs where</h2>
+                <p>Eleven projects against the nine technologies I use most.</p>
+              </div>
+              <Link className="link" href="/projects">Read the projects</Link>
+            </header>
+            <div className="card">
+              <StackMatrix />
+            </div>
+          </div>
+        </section>
+
+        <section id="method" className="band">
+          <div className="wrap">
+            <header className="head">
+              <div>
+                <h2>How I build</h2>
+                <p>The shape most of these systems share: record the request, do the work once, replay safely.</p>
+              </div>
+            </header>
+            <div className="bento">
+              <div className="card s12 card-diagram">
+                <PipelineDiagram />
+              </div>
+              <ol className="s12 steps">
+                {principles.map(([title, line]) => (
+                  <li key={title}>
+                    <b>{title}</b>
+                    <span>{line}</span>
+                  </li>
+                ))}
+              </ol>
+            </div>
           </div>
         </section>
 
         <section id="toolkit" className="band">
           <div className="wrap">
-            <h2>Toolkit</h2>
-            <div className="toolkit">
-              {toolGroups.map((group) => (
-                <article key={group.title}>
-                  <h3>{group.title}</h3>
-                  <p className="quiet">{group.note}</p>
-                  <Tools names={group.tools} />
-                </article>
-              ))}
-              <article>
-                <h3>Supporting toolkit</h3>
-                <p className="quiet">The rest of the stack I have shipped with.</p>
-                <Tools names={supporting.map((tool) => tool.label)} />
-              </article>
+            <header className="head">
+              <div>
+                <h2>Toolkit</h2>
+                <p>What I reach for, and how much of my code is in each language.</p>
+              </div>
+            </header>
+            <div className="bento">
+              {github.languages.length ? (
+                <div className="card s7">
+                  <h3 className="card-title">Languages on GitHub{github.live ? ", live" : ""}</h3>
+                  <LanguageBar languages={github.languages} />
+                </div>
+              ) : null}
+              <div className={github.languages.length ? "card s5" : "card s12"}>
+                {toolGroups.map((group) => (
+                  <div key={group.title} className="tool-group">
+                    <h3 className="card-title">{group.title}</h3>
+                    <Tools names={group.tools} />
+                  </div>
+                ))}
+              </div>
+              <div className="card s7">
+                <h3 className="card-title">Also shipped with</h3>
+                <Tools names={supporting} />
+              </div>
+              <div className="card s5">
+                <h3 className="card-title">Focused on now</h3>
+                <ul className="tags">
+                  {aboutContent.focus.map((item) => <li key={item}>{item}</li>)}
+                </ul>
+              </div>
             </div>
           </div>
         </section>
 
-        <section id="principles" className="band band-raised">
-          <div className="wrap principles">
-            <h2>Principles</h2>
-            <div>
-              <ol className="principle-list">
-                {aboutContent.points.map((point) => <li key={point}>{point}</li>)}
-              </ol>
-              <h3>What I&rsquo;m focused on</h3>
-              <ul className="tools">
-                {aboutContent.focus.map((item) => <li key={item}>{item}</li>)}
-              </ul>
-            </div>
-          </div>
-        </section>
-
-        <section id="signals" className="band">
+        <section id="record" className="band">
           <div className="wrap">
-            <h2>Signals</h2>
-            <div className="signals">
-              <article>
-                <h3>Fit</h3>
-                <dl>
-                  {portfolioSignals.map((item) => (
-                    <div key={item.title}><dt>{item.title}</dt><dd>{item.description}</dd></div>
-                  ))}
-                </dl>
-              </article>
-              <article>
-                <h3>Writing</h3>
-                <dl>
-                  {writingNotes.map((note) => (
-                    <div key={note.title}><dt>{note.title}</dt><dd>{note.summary}</dd><dd className="status">{note.status}</dd></div>
-                  ))}
-                </dl>
-              </article>
-              <article>
-                <h3>Proof</h3>
-                <dl>
-                  {credibilitySignals.map((signal) => (
-                    <div key={signal.title}><dt>{signal.title}</dt><dd>{signal.description}</dd></div>
-                  ))}
-                </dl>
-              </article>
+            <header className="head">
+              <div>
+                <h2>On the record</h2>
+                <p>Education, recognition, the two résumés and what I am writing.</p>
+              </div>
+            </header>
+            <div className="bento">
+              <div className="card s6">
+                <h3 className="card-title">Education and recognition</h3>
+                <table className="plain">
+                  <tbody>
+                    {facts.map(([term, detail]) => (
+                      <tr key={term}><th scope="row">{term}</th><td>{detail}</td></tr>
+                    ))}
+                    <tr><th scope="row">School</th><td>Mayoor Private School, Abu Dhabi (CBSE).</td></tr>
+                  </tbody>
+                </table>
+              </div>
+              <div className="card s6">
+                <h3 className="card-title">Two résumés</h3>
+                <table className="plain">
+                  <thead><tr><th scope="col">Version</th><th scope="col">Leads with</th></tr></thead>
+                  <tbody>
+                    {tracks.map((track) => (
+                      <tr key={track.id}><th scope="row">{track.label}</th><td>{track.projects}</td></tr>
+                    ))}
+                  </tbody>
+                </table>
+                <Link className="link" href="/resumes">Compare them side by side</Link>
+              </div>
+              <div className="card s6">
+                <h3 className="card-title">Writing</h3>
+                <table className="plain">
+                  <thead><tr><th scope="col">Note</th><th scope="col">Status</th></tr></thead>
+                  <tbody>
+                    {writingNotes.map((note) => (
+                      <tr key={note.title}><th scope="row">{note.title}</th><td><span className="pill">{note.status}</span></td></tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+              <div className="card s6">
+                <h3 className="card-title">Working with me</h3>
+                <table className="plain">
+                  <tbody>
+                    {[...portfolioSignals.slice(0, 2), ...credibilitySignals.slice(1)].map((item) => (
+                      <tr key={item.title}><th scope="row">{item.title}</th><td>{item.description}</td></tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
             </div>
           </div>
         </section>
 
-        <section className="closing closing-short">
+        </div>
+
+        <section className="band closing-short">
           <div className="wrap">
             <h2>Seen enough to talk?</h2>
-            <div className="closing-links">
+            <div className="acts">
               <Link className="btn" href="/#contact">Get in touch</Link>
               <Link className="link" href="/projects">All projects</Link>
-              <Link className="link" href="/">Back to the front page</Link>
+              <Link className="link" href="/">Front page</Link>
             </div>
-            <p className="closing-fine">© 2026 Rohan Chatterjee</p>
+            <p className="fine">© 2026 Rohan Chatterjee</p>
           </div>
         </section>
       </main>

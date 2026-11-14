@@ -62,7 +62,7 @@ export default function TopBar({ solid: alwaysSolid = false }: { solid?: boolean
         </button>
       </header>
 
-      <div id="menu-sheet" className={open ? "menu-sheet is-open" : "menu-sheet"} inert={!open}>
+      <div id="menu-sheet" className={open ? "menu-sheet is-open" : "menu-sheet"} aria-hidden={!open}>
         <nav aria-label="Menu">
           {items.map(([label, href, where]) => (
             <Link key={label} href={href} onClick={() => setOpen(false)}>
