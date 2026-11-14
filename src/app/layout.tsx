@@ -3,6 +3,7 @@ import type { ReactNode } from "react";
 import { Bricolage_Grotesque } from "next/font/google";
 import { Analytics } from "@vercel/analytics/next";
 import Boot from "@/components/Boot";
+import { DESCRIPTION, KEYWORDS, NAME, SITE } from "@/lib/seo";
 import "./globals.css";
 
 const bricolage = Bricolage_Grotesque({
@@ -12,30 +13,22 @@ const bricolage = Bricolage_Grotesque({
   display: "swap",
 });
 
-// The address Vercel serves this project from; falls back to localhost when run on a laptop.
-const site = process.env.VERCEL_PROJECT_PRODUCTION_URL ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}` : "http://localhost:3000";
-
-const title = "Rohan Chatterjee, software engineer";
-const description =
-  "Full-stack and Android engineer. Offline-first payments, on-device safety tools and operations software built to keep working when the network doesn't.";
-
 export const metadata: Metadata = {
-  metadataBase: new URL(site),
-  title: { default: title, template: "%s | Rohan Chatterjee" },
-  description,
-  authors: [{ name: "Rohan Chatterjee" }],
+  metadataBase: new URL(SITE),
+  title: { default: NAME, template: `%s | ${NAME}` },
+  description: DESCRIPTION,
+  applicationName: NAME,
+  authors: [{ name: NAME, url: SITE }],
+  creator: NAME,
+  publisher: NAME,
+  keywords: KEYWORDS,
+  category: "technology",
   alternates: { canonical: "/" },
-  openGraph: {
-    type: "website",
-    title,
-    description,
-    url: site,
-    siteName: "Rohan Chatterjee",
-    images: [{ url: "/og-image.png", width: 1200, height: 630, alt: "Rohan Chatterjee portfolio" }],
-  },
-  twitter: { card: "summary_large_image", title, description, images: ["/og-image.png"] },
+  openGraph: { type: "website", title: NAME, description: DESCRIPTION, url: SITE, siteName: NAME, locale: "en_IN" },
+  twitter: { card: "summary_large_image", title: NAME, description: DESCRIPTION },
+  formatDetection: { telephone: false, email: false, address: false },
   icons: { icon: "/favicon.ico", shortcut: "/favicon.ico", apple: "/favicon.ico" },
-  robots: { index: true, follow: true },
+  robots: { index: true, follow: true, googleBot: { index: true, follow: true, "max-image-preview": "large", "max-snippet": -1, "max-video-preview": -1 } },
 };
 
 export const viewport: Viewport = { themeColor: "#000000" };

@@ -3,7 +3,7 @@ import Link from "next/link";
 import Ambient from "@/components/Ambient";
 import TopBar from "@/components/TopBar";
 
-export const metadata: Metadata = { title: "Page not found" };
+export const metadata: Metadata = { title: "Page not found", robots: { index: false, follow: true } };
 
 const places = [
   ["Front page", "/", "The short version of everything"],

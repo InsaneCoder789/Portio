@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import Ambient from "@/components/Ambient";
+import JsonLd from "@/components/JsonLd";
+import { projectsLd } from "@/lib/seo";
 import TopBar from "@/components/TopBar";
 import { featuredProjects } from "@/features/portfolio/content";
 import { coverSize } from "@/features/portfolio/story";
@@ -9,13 +11,15 @@ import { projectSlug } from "@/lib/projects";
 
 export const metadata: Metadata = {
   title: "Projects",
-  description: "Every project in full: the problem, how it works, the outcome and what it taught me.",
+  description: "Nine projects in full: Rail, OfflineQR Attendance, IncidentLens, StayPilot, ClassSync, NavGate, Folio and more. The problem, how each one works, what happened and what it taught me.",
   alternates: { canonical: "/projects" },
+  openGraph: { type: "website", title: "Projects | Rohan Chatterjee", description: "Nine builds in full: the problem, how each one works, the outcome and what it taught me.", url: "/projects", siteName: "Rohan Chatterjee", locale: "en_IN" },
 };
 
 export default function ProjectsPage() {
   return (
     <>
+      <JsonLd data={projectsLd} />
       <a className="skip-link" href="#list">Skip to the projects</a>
       <TopBar solid />
 

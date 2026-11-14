@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import Ambient from "@/components/Ambient";
+import JsonLd from "@/components/JsonLd";
+import { aboutLd } from "@/lib/seo";
 import TopBar from "@/components/TopBar";
 import { LanguageBar, PipelineDiagram, StackMatrix, Timeline } from "@/components/Charts";
 import { aboutContent, credibilitySignals, portfolioSignals, skillsMatrix, writingNotes } from "@/features/portfolio/content";
@@ -10,8 +12,9 @@ import { githubStats } from "@/lib/github-live";
 
 export const metadata: Metadata = {
   title: "Profile",
-  description: "Rohan Chatterjee in charts: the experience timeline, which project uses what, how the systems are built, and the toolkit.",
+  description: "Rohan Chatterjee's profile: five roles on one timeline, which technology each project uses, the five principles behind how his systems are built, and the full toolkit.",
   alternates: { canonical: "/about" },
+  openGraph: { type: "profile", title: "Profile | Rohan Chatterjee", description: "Five roles on one timeline, which technology each project uses, how the systems are built, and the full toolkit.", url: "/about", siteName: "Rohan Chatterjee", locale: "en_IN", firstName: "Rohan", lastName: "Chatterjee" },
 };
 
 const toolGroups = [
@@ -43,6 +46,7 @@ export default async function AboutPage() {
 
   return (
     <>
+      <JsonLd data={aboutLd} />
       <a className="skip-link" href="#experience">Skip to the timeline</a>
       <TopBar solid />
 

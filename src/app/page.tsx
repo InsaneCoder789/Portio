@@ -2,6 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 import Ambient from "@/components/Ambient";
 import RailField from "@/components/RailField";
+import JsonLd from "@/components/JsonLd";
 import TopBar from "@/components/TopBar";
 import PortraitStage from "@/components/PortraitStage";
 import ProjectCarousel from "@/components/ProjectCarousel";
@@ -9,6 +10,7 @@ import { LanguageBar, Ring } from "@/components/Charts";
 import { contactContent } from "@/features/portfolio/content";
 import { disciplines, premise, roles } from "@/features/portfolio/story";
 import { githubStats } from "@/lib/github-live";
+import { homeLd } from "@/lib/seo";
 
 const number = (text: string | undefined) => Number((text ?? "").replace(/[^\d.]/g, "")) || 0;
 
@@ -19,6 +21,7 @@ export default async function Page() {
 
   return (
     <>
+      <JsonLd data={homeLd} />
       <a className="skip-link" href="#work">Skip to the work</a>
       <RailField />
       <TopBar />

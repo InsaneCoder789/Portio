@@ -2,19 +2,23 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import Ambient from "@/components/Ambient";
+import JsonLd from "@/components/JsonLd";
+import { resumesLd } from "@/lib/seo";
 import TopBar from "@/components/TopBar";
 import { facts, roles, tracks } from "@/features/portfolio/story";
 
 export const metadata: Metadata = {
   title: "Résumés",
-  description: "Two résumés side by side: backend and full-stack, and Android. What each leads with, and what they share.",
+  description: "Two résumés for Rohan Chatterjee: one for backend and full-stack roles and one for Android. Each has a PDF to download, a list of what it covers, and the roles and degree both share.",
   alternates: { canonical: "/resumes" },
+  openGraph: { type: "website", title: "Résumés | Rohan Chatterjee", description: "One for backend and full-stack roles, one for Android. Side by side, with PDFs.", url: "/resumes", siteName: "Rohan Chatterjee", locale: "en_IN" },
 };
 
 // The two résumés next to each other, then what each one lists, then what they have in common.
 export default function ResumesPage() {
   return (
     <>
+      <JsonLd data={resumesLd} />
       <a className="skip-link" href="#pair">Skip to the résumés</a>
       <TopBar solid />
 

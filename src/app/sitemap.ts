@@ -1,10 +1,10 @@
 import type { MetadataRoute } from "next";
-
-const site = process.env.VERCEL_PROJECT_PRODUCTION_URL ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}` : "http://localhost:3000";
+import { SITE } from "@/lib/seo";
 
 export default function sitemap(): MetadataRoute.Sitemap {
   return ["", "/about", "/projects", "/resumes"].map((path, index) => ({
-    url: `${site}${path}`,
+    url: `${SITE}${path}`,
+    lastModified: new Date(),
     changeFrequency: "weekly",
     priority: index === 0 ? 1 : 0.7,
   }));
