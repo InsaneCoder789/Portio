@@ -62,7 +62,7 @@ export default function Lost({ email }: { email: string }) {
         </nav>
 
         <div className="acts">
-          <button type="button" className="btn" onClick={() => window.history.back()}>Go back</button>
+          <button type="button" className="btn" onClick={() => { if (window.history.length > 1) window.history.back(); else window.location.assign("/"); }}>Go back</button>
           <a className="link" href={`mailto:${email}?subject=${subject}&body=${body}`}>Report this link</a>
           <Link className="link" href="/#contact">Get in touch</Link>
         </div>

@@ -71,6 +71,8 @@ main{z-index:1;position:relative}
 .top>nav{align-items:center;gap:2px;font-size:14.5px;font-weight:600;display:flex}
 .top>nav a{white-space:nowrap;border-radius:0;align-items:center;min-height:40px;padding:0 13px;transition:background .2s,color .2s;display:inline-flex}
 .top>nav a:hover{background:#ffffff17}
+.top>nav a[aria-current]{box-shadow:inset 0 -3px 0 var(--signal)}
+.top>nav a.nav-pill[aria-current]{background:var(--signal);border-color:var(--signal);box-shadow:none}
 .top>nav a.nav-pill{background:var(--bone);color:var(--black);margin-left:8px;border:2px solid var(--bone)}
 .top>nav a.nav-pill:hover{background:var(--signal);border-color:var(--signal)}
 .menu-btn{background:var(--bone);min-height:40px;color:var(--black);cursor:pointer;border:2px solid var(--bone);border-radius:0;align-items:center;padding:0 18px;font-size:15px;font-weight:700;display:none}
@@ -78,7 +80,7 @@ main{z-index:1;position:relative}
 .menu-sheet.is-open{visibility:visible;opacity:1;transition:opacity .25s,transform .3s var(--ease);transform:none}
 .menu-sheet nav{display:grid}
 .menu-sheet nav a{border-bottom:1px solid var(--stroke);letter-spacing:-.01em;justify-content:space-between;align-items:center;min-height:58px;font-size:clamp(30px,9vw,44px);font-weight:800;font-stretch:75%;line-height:1;display:flex}
-.menu-sheet nav a:active{color:var(--signal)}
+.menu-sheet nav a:active,.menu-sheet nav a[aria-current]{color:var(--signal)}
 .menu-sheet nav a span{letter-spacing:0;color:var(--mist);font-size:14px;font-weight:500;font-stretch:100%}
 .menu-sheet p{color:var(--mist);font-size:14px}
 .hero{min-height:100svh;padding-block:calc(var(--top) + 24px) clamp(28px,5svh,56px);align-items:flex-end;display:flex;position:relative}

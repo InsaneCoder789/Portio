@@ -21,6 +21,7 @@ export default function ProjectCarousel() {
   const [active, setActive] = useState(0);
   const [playing, setPlaying] = useState(true);
   const [inView, setInView] = useState(false);
+  const [hold, setHold] = useState(false); // the pointer is over it, or the keyboard is in it: leave it alone
   const section = useRef<HTMLElement>(null);
   const dragFrom = useRef<number | null>(null);
   const dragged = useRef(false);
@@ -36,7 +37,7 @@ export default function ProjectCarousel() {
     return () => observer.disconnect();
   }, []);
 
-  const running = playing && inView;
+  const running = playing && inView && !hold;
   useEffect(() => {
     if (!running) return;
     const timer = window.setTimeout(() => turn(1), TURN_MS);
@@ -58,7 +59,13 @@ export default function ProjectCarousel() {
   const current = items[active];
 
   return (
-    <section id="work" className="band work" ref={section} aria-labelledby="work-title" aria-roledescription="carousel" onKeyDown={onKey}>
+    <section
+      id="work" className="band work" ref={section} aria-labelledby="work-title" aria-roledescription="carousel" onKeyDown={onKey}
+      onPointerEnter={(event) => { if (event.pointerType === "mouse") setHold(true); }}
+      onPointerLeave={(event) => { if (event.pointerType === "mouse") setHold(false); }}
+      onFocus={(event) => { if (event.target.matches(":focus-visible")) setHold(true); }}
+      onBlur={(event) => { if (!event.currentTarget.contains(event.relatedTarget as Node | null)) setHold(false); }}
+    >
       <div className="wrap">
         <header className="head">
           <div>

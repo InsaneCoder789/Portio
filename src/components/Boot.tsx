@@ -143,9 +143,14 @@ export default function Boot() {
       }
     };
 
+    // while the film plays, the page behind it cannot be reached by keyboard or screen reader
+    const behind = Array.from(document.body.children).filter((el): el is HTMLElement => el instanceof HTMLElement && el !== root.current && el.tagName !== "SCRIPT");
+    behind.forEach((el) => { el.inert = true; });
+    const release = () => behind.forEach((el) => { el.inert = false; });
     const finish = () => {
       if (finished) return;
       finished = true;
+      release();
       cancelAnimationFrame(frame);
       html.dataset.boot = "done";
       setGone(true);
@@ -185,6 +190,7 @@ export default function Boot() {
     frame = requestAnimationFrame((now) => { previous = now; startedAt = now; frame = requestAnimationFrame(tick); });
 
     return () => {
+      release();
       cancelAnimationFrame(frame);
       window.clearTimeout(failsafe);
       window.removeEventListener("resize", resize);

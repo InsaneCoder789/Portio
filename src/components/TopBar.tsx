@@ -1,7 +1,8 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 
 const items = [
   ["About", "/#about", "On this page"],
@@ -19,6 +20,30 @@ const items = [
 export default function TopBar({ solid: alwaysSolid = false }: { solid?: boolean }) {
   const [solid, setSolid] = useState(alwaysSolid);
   const [open, setOpen] = useState(false);
+  const [spy, setSpy] = useState("");
+  const pathname = usePathname();
+  const button = useRef<HTMLButtonElement>(null);
+  const sheet = useRef<HTMLDivElement>(null);
+
+  // Which section of the front page is on screen, so the bar can say where you are.
+  useEffect(() => {
+    if (pathname !== "/") { setSpy(""); return; }
+    const ids = items.filter(([, href]) => href.startsWith("/#")).map(([, href]) => href.slice(2));
+    const targets = ids.map((id) => document.getElementById(id)).filter((el): el is HTMLElement => !!el);
+    const visible = new Map<string, number>();
+    const observer = new IntersectionObserver((entries) => {
+      for (const entry of entries) { if (entry.isIntersecting) visible.set(entry.target.id, entry.intersectionRatio); else visible.delete(entry.target.id); }
+      const best = [...visible.entries()].sort((a, b) => b[1] - a[1])[0];
+      setSpy(best ? best[0] : "");
+    }, { rootMargin: "-35% 0px -45% 0px", threshold: [0, 0.1, 0.3, 0.6] });
+    targets.forEach((el) => observer.observe(el));
+    return () => observer.disconnect();
+  }, [pathname]);
+
+  const current = (href: string): "page" | "location" | undefined => {
+    if (href.startsWith("/#")) return pathname === "/" && spy === href.slice(2) ? "location" : undefined;
+    return pathname === href ? "page" : undefined;
+  };
 
   useEffect(() => {
     if (alwaysSolid) return;
@@ -29,11 +54,19 @@ export default function TopBar({ solid: alwaysSolid = false }: { solid?: boolean
     return () => observer.disconnect();
   }, [alwaysSolid]);
 
-  // While the sheet is open the page behind it stays put, and Escape closes it.
+  // While the sheet is open the page behind it stays put, focus stays inside it, and Escape closes it and gives focus back.
   useEffect(() => {
     if (!open) return;
     document.documentElement.style.overflow = "hidden";
-    const onKey = (event: KeyboardEvent) => { if (event.key === "Escape") setOpen(false); };
+    const links = () => [button.current, ...Array.from(sheet.current?.querySelectorAll<HTMLElement>("a") ?? [])].filter((el): el is HTMLElement => !!el);
+    requestAnimationFrame(() => sheet.current?.querySelector<HTMLElement>("a")?.focus());
+    const onKey = (event: KeyboardEvent) => {
+      if (event.key === "Escape") { setOpen(false); button.current?.focus(); return; }
+      if (event.key !== "Tab") return;
+      const all = links(), first = all[0], last = all[all.length - 1], active = document.activeElement;
+      if (event.shiftKey && active === first) { event.preventDefault(); last.focus(); }
+      else if (!event.shiftKey && active === last) { event.preventDefault(); first.focus(); }
+    };
     const wide = window.matchMedia("(min-width: 821px)");
     const onWide = () => { if (wide.matches) setOpen(false); };
     window.addEventListener("keydown", onKey);
@@ -54,18 +87,18 @@ export default function TopBar({ solid: alwaysSolid = false }: { solid?: boolean
         </Link>
         <nav aria-label="Sections">
           {items.map(([label, href]) => (
-            <Link key={label} href={href} className={label === "Contact" ? "nav-pill" : undefined}>{label}</Link>
+            <Link key={label} href={href} aria-current={current(href)} className={label === "Contact" ? "nav-pill" : undefined}>{label}</Link>
           ))}
         </nav>
-        <button type="button" className="menu-btn" aria-expanded={open} aria-controls="menu-sheet" onClick={() => setOpen((value) => !value)}>
+        <button ref={button} type="button" className="menu-btn" aria-expanded={open} aria-controls="menu-sheet" onClick={() => setOpen((value) => !value)}>
           {open ? "Close" : "Menu"}
         </button>
       </header>
 
-      <div id="menu-sheet" className={open ? "menu-sheet is-open" : "menu-sheet"} aria-hidden={!open}>
+      <div ref={sheet} id="menu-sheet" className={open ? "menu-sheet is-open" : "menu-sheet"} aria-hidden={!open}>
         <nav aria-label="Menu">
           {items.map(([label, href, where]) => (
-            <Link key={label} href={href} onClick={() => setOpen(false)}>
+            <Link key={label} href={href} aria-current={current(href)} onClick={() => setOpen(false)}>
               {label}
               <span>{where}</span>
             </Link>

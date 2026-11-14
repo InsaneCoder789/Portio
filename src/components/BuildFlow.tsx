@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useMemo, useState, type KeyboardEvent } from "react";
+import { useCallback, useMemo, useRef, useState, type KeyboardEvent } from "react";
 import Link from "next/link";
 import { projectSlug } from "@/lib/projects";
 
@@ -121,6 +121,7 @@ export default function BuildFlow() {
   const [scenarioId, setScenarioId] = useState(SCENARIOS[0].id);
   const [index, setIndex] = useState(0);
   const [picked, setPicked] = useState<NodeId | null>(null);
+  const tabs = useRef<(HTMLButtonElement | null)[]>([]);
 
   const scenario = SCENARIOS.find((item) => item.id === scenarioId) ?? SCENARIOS[0];
   const step = scenario.steps[index];
@@ -130,6 +131,16 @@ export default function BuildFlow() {
 
   const choose = useCallback((id: string) => { setScenarioId(id); setIndex(0); setPicked(null); }, []);
   const go = useCallback((by: number) => { setIndex((current) => Math.min(last, Math.max(0, current + by))); setPicked(null); }, [last]);
+
+  // Arrow keys move along the tabs, as in any tab list; only the selected one is in the tab order.
+  const onTabKey = (event: KeyboardEvent, at: number) => {
+    const to = event.key === "ArrowRight" ? at + 1 : event.key === "ArrowLeft" ? at - 1 : event.key === "Home" ? 0 : event.key === "End" ? SCENARIOS.length - 1 : null;
+    if (to === null) return;
+    event.preventDefault();
+    const next = (to + SCENARIOS.length) % SCENARIOS.length;
+    choose(SCENARIOS[next].id);
+    tabs.current[next]?.focus();
+  };
 
   const onKey = (event: KeyboardEvent) => {
     if (event.target instanceof HTMLElement && event.target.closest("[role=tablist]")) return;
@@ -147,8 +158,12 @@ export default function BuildFlow() {
     <div className="flow" onKeyDown={onKey}>
       <div className="flow-top">
         <div className="flow-tabs" role="tablist" aria-label="Choose what goes wrong">
-          {SCENARIOS.map((item) => (
-            <button key={item.id} type="button" role="tab" aria-selected={item.id === scenarioId} className={item.id === scenarioId ? "is-on" : undefined} onClick={() => choose(item.id)}>
+          {SCENARIOS.map((item, at) => (
+            <button
+              key={item.id} ref={(el) => { tabs.current[at] = el; }} type="button" role="tab" id={`flow-tab-${item.id}`} aria-selected={item.id === scenarioId}
+              tabIndex={item.id === scenarioId ? 0 : -1} className={item.id === scenarioId ? "is-on" : undefined}
+              onClick={() => choose(item.id)} onKeyDown={(event) => onTabKey(event, at)}
+            >
               {item.label}
             </button>
           ))}
