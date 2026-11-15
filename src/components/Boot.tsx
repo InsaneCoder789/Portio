@@ -47,10 +47,10 @@ export default function Boot() {
 
     // Adaptive resolution: the picture is drawn at a fraction of the screen's pixels and scaled up by the browser, and that
     // fraction follows the measured frame time, so a slow device keeps every frame instead of dropping them.
-    let quality = 1, avg = 16.7, slow = 0, fast = 0, frames = 0;
+    let quality = clamp(Math.sqrt(2.1e6 / (window.innerWidth * window.innerHeight * Math.min(window.devicePixelRatio || 1, 1.5) ** 2)), 0.5, 1), avg = 16.7, slow = 0, fast = 0, frames = 0;
     const shown: Record<string, string> = {};
     const resize = () => {
-      dpr = Math.min(window.devicePixelRatio || 1, 1.75);
+      dpr = Math.min(window.devicePixelRatio || 1, 1.5);
       width = window.innerWidth;
       height = window.innerHeight;
       element.width = Math.max(2, Math.round(width * dpr * quality));
@@ -73,7 +73,7 @@ export default function Boot() {
       c.globalCompositeOperation = "source-over";
       const { depthM, focus } = drawScene(c, element.width, element.height, t); // the picture is drawn in device pixels
       // fast movement is blended over two earlier instants, like a camera shutter, so it reads as motion rather than as steps
-      if (quality > 0.7 && inMotion(t)) {
+      if (quality > 0.7 && avg < 9 && inMotion(t)) { // only when there is time to spare
         const buf = (bufRef.current ??= document.createElement("canvas")), bc = buf.getContext("2d");
         if (bc) {
           if (buf.width !== element.width || buf.height !== element.height) { buf.width = element.width; buf.height = element.height; }
@@ -156,10 +156,11 @@ export default function Boot() {
       setGone(true);
     };
     const tick = (now: number) => {
-      // the timeline follows the clock, so a slow device skips frames instead of stretching the film
+      // the film advances by the time each frame took, capped: a hitch (a script compiling, the tab busy) holds the picture
+      // for a moment and carries on from the same spot, instead of jumping ahead and dropping the frames in between
       const ms = now - previous;
       previous = now;
-      t = (now - startedAt) / 1000;
+      t += Math.min(ms, 34) / 1000;
       if (t >= tOpen && !opened) { opened = true; html.dataset.boot = "reveal"; }
       // a drawing error must never leave the cover over the site: on any failure, open it straight away
       try { draw(); } catch { finish(); return; }
@@ -170,7 +171,7 @@ export default function Boot() {
 
     skipRef.current = () => { if (t < tOpen) { tOpen = t; tEnd = t + 0.5; } };
     const onKey = (event: KeyboardEvent) => { if (["Escape", "Enter", " "].includes(event.key)) skipRef.current(); };
-    const failsafe = window.setTimeout(finish, seek === null ? (T_END + 4) * 1000 : 600000);
+    const failsafe = window.setTimeout(finish, seek === null ? (T_END + 14) * 1000 : 600000);
     resize();
     if (seek !== null && Number.isFinite(seek)) {
       t = seek;

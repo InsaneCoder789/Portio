@@ -132,10 +132,20 @@ export default function RailField() {
     if (!canvas) return;
     let disposed = false;
     let cleanup = () => {};
+    let cleanupWait = () => {};
 
     (async () => {
       const THREE = await import("three");
       if (disposed) return;
+      // building the renderer and compiling the shaders is a long task: wait until the opening film has handed over the page
+      if (document.documentElement.dataset.boot === "running") {
+        await new Promise<void>((resolve) => {
+          const watch = new MutationObserver(() => { if (document.documentElement.dataset.boot !== "running") { watch.disconnect(); resolve(); } });
+          watch.observe(document.documentElement, { attributes: true, attributeFilter: ["data-boot"] });
+          cleanupWait = () => { watch.disconnect(); resolve(); };
+        });
+        if (disposed) return;
+      }
 
       let renderer: import("three").WebGLRenderer;
       try {
@@ -221,13 +231,13 @@ export default function RailField() {
         camera.lookAt(lookAt);
         renderer.render(scene, camera);
       };
-      let sizedW = 0, sizedH = 0, lost = false;
+      let sizedW = 0, sizedH = 0, lost = false, dprCap = 2, avgMs = 16.7, slowRun = 0;
       const resize = (force = false) => {
         const w = window.innerWidth, h = window.innerHeight;
         // phone toolbars growing and shrinking resize the window by a few dozen pixels: reallocating the canvas for that clears it
         if (!force && sizedW === w && Math.abs(sizedH - h) < 160) return;
         sizedW = w; sizedH = h;
-        const dpr = Math.max(1, Math.min(window.devicePixelRatio || 1, 2, Math.sqrt(3.4e6 / (w * h))));
+        const dpr = Math.max(1, Math.min(window.devicePixelRatio || 1, 1.75, dprCap, Math.sqrt(2.6e6 / (w * h))));
         renderer.setPixelRatio(dpr);
         renderer.setSize(w, h, false);
         uniforms.uDpr.value = dpr;
@@ -262,8 +272,12 @@ export default function RailField() {
       const tick = (now: number) => {
         frame = 0;
         if (!running || lost) return;
-        const dt = Math.min(0.05, (now - previous) / 1000);
+        const raw = now - previous;
+        const dt = Math.min(0.05, raw / 1000);
         previous = now;
+        // a device that cannot hold the frame rate gets fewer pixels, in steps, rather than a stutter
+        avgMs = avgMs * 0.9 + Math.min(raw, 80) * 0.1;
+        if (avgMs > 22 && dprCap > 1) { if (++slowRun > 20) { dprCap = Math.max(1, dprCap - 0.25); slowRun = 0; avgMs = 16.7; resize(true); } } else slowRun = 0;
         uniforms.uTime.value += dt;
         const target = uniforms.uTime.value - lastMove < 0.25 ? 1 : 0;
         heat += (target - heat) * Math.min(1, dt * (target ? 8 : 2.2));
@@ -326,6 +340,7 @@ export default function RailField() {
 
     return () => {
       disposed = true;
+      cleanupWait();
       cleanup();
     };
   }, []);
