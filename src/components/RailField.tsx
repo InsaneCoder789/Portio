@@ -318,8 +318,9 @@ export default function RailField() {
 
       resize(true);
       readScroll();
-      draw();
-      canvas.dataset.ready = "true";
+      // compile the shaders on the browser's parallel path, so the first frame does not freeze the page while it waits for them
+      try { await renderer.compileAsync(scene, camera); } catch { /* the first draw compiles them instead */ }
+      if (!disposed) { draw(); canvas.dataset.ready = "true"; }
 
       cleanup = () => {
         cancelAnimationFrame(frame);
@@ -336,6 +337,7 @@ export default function RailField() {
         surfaceGeo.dispose(); packetGeo.dispose(); surfaceMat.dispose(); packetMat.dispose();
         renderer.dispose();
       };
+      if (disposed) cleanup(); // the page was left while the shaders compiled
     })();
 
     return () => {
