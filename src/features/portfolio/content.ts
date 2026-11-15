@@ -12,7 +12,6 @@ export const heroContent = {
     "Across frontend, backend, and Android domains, I work with Next.js, Express.js, React, Kotlin, Jetpack Compose, Android SDK tools, MySQL, and PostgreSQL to build fast, maintainable platforms with clear technical architecture.",
   profilePhoto: PROFILE_PHOTO,
   heroPrimary: publicAsset("transparent1.webp"),
-  heroSecondary: publicAsset("transparent2.png"),
 };
 
 export const aboutContent = {
