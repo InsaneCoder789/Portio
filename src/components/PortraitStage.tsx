@@ -12,7 +12,7 @@ export default function PortraitStage() {
       <div className="stage">
         <p className="stage-name stage-name-back" aria-hidden="true">Rohan</p>
         <div className="stage-figure">
-          <Image className="stage-photo" src="/transparent1.png" alt="Rohan Chatterjee in a navy suit and sunglasses" width={1536} height={1536} sizes="(max-width: 900px) 120vw, 60vw" />
+          <Image className="stage-photo" src="/transparent1.webp" alt="Rohan Chatterjee in a navy suit and sunglasses" width={1536} height={1536} sizes="(max-width: 900px) 120vw, 60vw" />
         </div>
         <div className="stage-floor" aria-hidden="true" />
         <p className="stage-name stage-name-front" aria-hidden="true">Chatterjee</p>

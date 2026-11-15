@@ -11,7 +11,7 @@ export const heroContent = {
   summary:
     "Across frontend, backend, and Android domains, I work with Next.js, Express.js, React, Kotlin, Jetpack Compose, Android SDK tools, MySQL, and PostgreSQL to build fast, maintainable platforms with clear technical architecture.",
   profilePhoto: PROFILE_PHOTO,
-  heroPrimary: publicAsset("transparent1.png"),
+  heroPrimary: publicAsset("transparent1.webp"),
   heroSecondary: publicAsset("transparent2.png"),
 };
 
@@ -43,7 +43,7 @@ export const featuredProjects = [
   {
     name: "Rail",
     analysis: "Authorization-first execution separates permission to spend from the actual transfer. PostgreSQL stores reservations, token headroom, idempotency records, and ledger events; both immediate execution and reconnect-time replay use the same pipeline. The architectural value is consistency across retries—not replacing a bank or claiming production payment readiness.",
-    preview: publicAsset("projects/rail-header.png"),
+    preview: publicAsset("projects/rail-header.webp"),
     description:
       "Designed an offline-first payment orchestration service with deferred synchronization pipelines that maintain operational continuity during unstable network conditions.",
     details:
@@ -60,7 +60,7 @@ export const featuredProjects = [
   {
     name: "Lakshman-Rekha",
     analysis: "The app treats scams as a sequence of pressure and actions rather than an isolated suspicious message. Call context, notifications, and on-screen signals feed deterministic risk scoring alongside on-device ML. User-selected protection modes change the response, while the model supplies signals instead of directly blocking people. Permission handling and false-positive behavior remain important validation areas.",
-    preview: publicAsset("projects/lakshman-rekha-header.png"),
+    preview: publicAsset("projects/lakshman-rekha-header.webp"),
     description:
       "Built an Android safety application focused on scam and phishing detection during calls and messaging workflows with contextual warning systems.",
     details:
@@ -77,7 +77,7 @@ export const featuredProjects = [
   {
     name: "K1000",
     analysis: "The README describes an immersive research-program interface: a neural boot sequence, six domain panels, leadership, event galleries, and application pathways. Typed content and reusable navigation connect the cinematic layer to useful information. Simulated telemetry is presentation, not live organizational data; the engineering challenge is keeping the 3D experience readable and responsive.",
-    preview: publicAsset("projects/k1000-platform-header.png"),
+    preview: publicAsset("projects/k1000-platform-header.webp"),
     description:
       "Developed an immersive React and Next.js research-program website connecting domains, leadership, events, and student application pathways through a reusable interface system.",
     details:
@@ -94,7 +94,7 @@ export const featuredProjects = [
   {
     name: "KYLR",
     analysis: "Jetpack Compose and StateFlow connect onboarding, bank discovery, contact search, and amount entry to explicit payment state. The documented KylrVault pipeline isolates balance and ledger updates from screen composition. This creates a useful separation between interface confidence and transaction logic; the README's compliance ambitions are not independent certification or proof of live banking integration.",
-    preview: publicAsset("projects/kylr-header.png"),
+    preview: publicAsset("projects/kylr-header.webp"),
     description:
       "Built a high-trust Android payments experience focused on clean money movement flows, sharp visual hierarchy, and confidence-first interaction design.",
     details:
@@ -135,7 +135,7 @@ export const featuredProjects = [
   {
     name: "ClassSync",
     analysis: "Google Classroom, optional Gmail, and manual input converge into locally stored events and tasks. Hard rules protect trusted deadlines and exam signals, while confidence policy decides when TensorFlow Lite can assist. Room and DataStore feed Compose views, reminders, and the widget without a custom backend. The documented Android release is closed testing, not evidence of broad adoption.",
-    preview: publicAsset("projects/classsync-header.png"),
+    preview: publicAsset("projects/classsync-header.webp"),
     description: "A local-first Android academic workspace bringing Google Classroom, optional Gmail updates, manual tasks, study planning, and reminders together.",
     details: "Jetpack Compose sits above Room and DataStore. A hybrid rules-and-TensorFlow-Lite pipeline classifies academic updates, with safe rule-based fallback when inference is unavailable.",
     challenge: "Turn mixed academic signals into useful tasks without losing trusted deadlines or making the student workflow depend on a custom backend.",
@@ -159,7 +159,7 @@ export const featuredProjects = [
   {
     name: "OfflineQR Attendance",
     analysis: "A rotating signed classroom challenge becomes a device-signed proof stored atomically in a local outbox. On reconnection, the server rechecks signatures, enrollment, device status, timing, and duplicate rules before updating the roster. ICT governance handles controlled device replacement. This supports delayed verification, not a guarantee against physical collusion; institution-specific identity and device rollout checks remain required.",
-    preview: publicAsset("projects/offlineqr-header.png"),
+    preview: publicAsset("projects/offlineqr-header.webp"),
     description: "An offline-first attendance ecosystem connecting a Flutter student app, a faculty portal, device governance, and centrally verified attendance proofs.",
     details: "Rotating signed QR challenges, device-bound Ed25519 proofs, a durable SQLite outbox, and idempotent synchronization preserve valid scans through connectivity loss.",
     challenge: "Capture attendance without Internet access while keeping device identity, replay rules, and delayed reconciliation verifiable across mobile and server implementations.",

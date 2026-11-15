@@ -61,15 +61,15 @@ export const reel = [
 
 // Real pixel sizes of each cover, so every image is shown whole at its own proportions.
 export const coverSize: Record<string, [number, number]> = {
-  "/projects/rail-header.png": [1600, 819],
-  "/projects/lakshman-rekha-header.png": [1600, 888],
-  "/projects/k1000-platform-header.png": [1800, 983],
-  "/projects/kylr-header.png": [1600, 800],
+  "/projects/rail-header.webp": [1600, 819],
+  "/projects/lakshman-rekha-header.webp": [1600, 888],
+  "/projects/k1000-platform-header.webp": [1800, 983],
+  "/projects/kylr-header.webp": [1600, 800],
   "/projects/incidentlens-cover.webp": [1600, 900],
   "/projects/staypilot-cover.webp": [1600, 900],
-  "/projects/classsync-header.png": [1691, 930],
+  "/projects/classsync-header.webp": [1691, 930],
   "/projects/mghsis-cover.webp": [1600, 900],
-  "/projects/offlineqr-header.png": [1672, 941],
+  "/projects/offlineqr-header.webp": [1672, 941],
 };
 
 // Taken from the two résumés. `line` is the front-page sentence; `points` is the full version on the profile page.
@@ -160,7 +160,7 @@ export const tracks = [
       ["Tools", "Git, GitHub Actions, Postman, Firebase, Supabase"],
     ],
     file: "/resume-backend-full-stack.pdf",
-    preview: "/resume-backend-full-stack.png",
+    preview: "/resume-backend-full-stack.webp",
     forRoles: "Written for backend and full-stack roles",
     story:
       "This one is for teams where the hard part is the server. It opens with APIs, transactions and what happens when a request is retried or a connection drops, and it backs each claim with the tests that prove it: concurrency, conflicting retries and lost-response recovery.",
@@ -186,7 +186,7 @@ export const tracks = [
       ["Tools and web", "Git, GitHub Actions, Postman, React.js, Next.js"],
     ],
     file: "/resume-android.pdf",
-    preview: "/resume-android.png",
+    preview: "/resume-android.webp",
     forRoles: "Written for Android roles",
     story:
       "This one is for teams shipping native apps. It opens with Kotlin and Jetpack Compose, then the parts of Android that are easy to get wrong: local storage, background sync, the camera and on-device models. Every project on it runs on a phone.",
