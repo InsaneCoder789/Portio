@@ -30,7 +30,7 @@ export default function Boot() {
   useEffect(() => {
     const html = document.documentElement;
     const element = canvas.current;
-    const context = element?.getContext("2d");
+    const context = element?.getContext("2d", { alpha: true, willReadFrequently: false });
     if (html.dataset.boot !== "running" || !element || !context) {
       html.dataset.boot = "done";
       setGone(true);
@@ -74,7 +74,7 @@ export default function Boot() {
       const { depthM, focus } = drawScene(c, element.width, element.height, t); // the picture is drawn in device pixels
       // fast movement is blended over two earlier instants, like a camera shutter, so it reads as motion rather than as steps
       if (quality > 0.7 && avg < 9 && inMotion(t)) { // only when there is time to spare
-        const buf = (bufRef.current ??= document.createElement("canvas")), bc = buf.getContext("2d");
+        const buf = (bufRef.current ??= document.createElement("canvas")), bc = buf.getContext("2d", { alpha: true, willReadFrequently: false });
         if (bc) {
           if (buf.width !== element.width || buf.height !== element.height) { buf.width = element.width; buf.height = element.height; }
           for (let k = 1; k <= 2; k++) {
