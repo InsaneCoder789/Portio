@@ -41,7 +41,7 @@ export default function Boot() {
     const seekParam = process.env.NODE_ENV !== "production" ? new URLSearchParams(window.location.search).get("bootSeek") : null;
     const seek = seekParam === null ? null : Number(seekParam);
 
-    let width = 0, height = 0, dpr = 1, frame = 0, previous = 0, startedAt = 0;
+    let width = 0, height = 0, dpr = 1, frame = 0, previous = 0, startedAt = 0, resizeNext = false, started = false;
     let t = 0, opened = false, finished = false;
     let tOpen = T_OPEN, tEnd = T_END;
 
@@ -60,8 +60,8 @@ export default function Boot() {
       avg = avg * 0.88 + Math.min(ms, 80) * 0.12;
       if (frames % 20 === 0 && root.current) root.current.dataset.perf = `${avg.toFixed(1)}ms q${quality.toFixed(2)}`;
       if (++frames < 8) return;
-      if (avg > 19 && quality > 0.5) { if (++slow >= 6) { quality = Math.max(0.5, quality - 0.12); slow = 0; resize(); } fast = 0; }
-      else if (avg < 12.5 && quality < 1) { if (++fast >= 140) { quality = Math.min(1, quality + 0.06); fast = 0; resize(); } slow = 0; }
+      if (avg > 19 && quality > 0.5) { if (++slow >= 6) { quality = Math.max(0.5, quality - 0.12); slow = 0; resizeNext = true; } fast = 0; }
+      else if (avg < 12.5 && quality < 1) { if (++fast >= 140) { quality = Math.min(1, quality + 0.06); fast = 0; resizeNext = true; } slow = 0; }
       else { slow = Math.max(0, slow - 1); }
     };
 
@@ -163,7 +163,8 @@ export default function Boot() {
       t += Math.min(ms, 34) / 1000;
       if (t >= tOpen && !opened) { opened = true; html.dataset.boot = "reveal"; }
       // a drawing error must never leave the cover over the site: on any failure, open it straight away
-      try { draw(); } catch { finish(); return; }
+      // (changing the canvas size empties it, so it happens here, immediately before the draw, and never between frames)
+      try { if (resizeNext) { resizeNext = false; resize(); } draw(); } catch { finish(); return; }
       adapt(ms);
       if (t >= tEnd) { finish(); return; }
       frame = requestAnimationFrame(tick);
@@ -183,14 +184,32 @@ export default function Boot() {
       window.addEventListener("resize", () => { resize(); draw(); });
       return () => window.clearTimeout(failsafe);
     }
-    // paint the first frame straight away, then let the overlay's own background go so the opening can show the site through
-    try { draw(); } catch { finish(); return; }
-    root.current?.classList.add("is-live");
-    window.addEventListener("resize", resize);
-    window.addEventListener("keydown", onKey);
-    frame = requestAnimationFrame((now) => { previous = now; startedAt = now; frame = requestAnimationFrame(tick); });
+    // The film starts once the page has finished loading, so the first frames are not fighting scripts and images for the thread.
+    // The heaviest moments are drawn once beforehand, so the browser has already compiled and cached what they need.
+    const go = () => {
+      if (started || finished) return;
+      started = true;
+      try {
+        for (const at of [2.6, 4.6]) { t = at; draw(); }
+        t = 0; draw();
+      } catch { finish(); return; }
+      avg = 16.7; frames = 0; slow = 0; fast = 0;
+      root.current?.classList.add("is-live"); // the cover's own background goes, so the opening can show the site through
+      window.addEventListener("resize", resize);
+      window.addEventListener("keydown", onKey);
+      frame = requestAnimationFrame((now) => { previous = now; startedAt = now; frame = requestAnimationFrame(tick); });
+    };
+    const timers: number[] = [];
+    const onLoad = () => { timers.push(window.setTimeout(go, 80)); };
+    if (document.readyState === "complete") onLoad();
+    else {
+      window.addEventListener("load", onLoad, { once: true });
+      timers.push(window.setTimeout(go, 2500)); // a slow image must not hold the film back for long
+    }
 
     return () => {
+      timers.forEach((id) => window.clearTimeout(id));
+      window.removeEventListener("load", onLoad);
       release();
       cancelAnimationFrame(frame);
       window.clearTimeout(failsafe);
