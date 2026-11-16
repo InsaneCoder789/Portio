@@ -367,7 +367,10 @@ main{z-index:1;position:relative}
   .gantt{--label:0px;gap:14px;min-width:0}
   .gantt-row{grid-template-columns:minmax(0,1fr);gap:6px}
   .gantt-label{align-items:baseline;gap:10px;padding:0;display:flex}
+  .gantt-label{flex-wrap:wrap}
   .gantt-label b{flex:none;font-size:19px}
+  .gantt-label span{white-space:normal;text-overflow:clip;overflow:visible;min-width:0;flex:1 1 100%}
+  .gantt-now b{display:none}
   .gantt-track{min-height:34px}
   .gantt-axis span:nth-child(2n),.gantt-mark b{display:none}
   .bento>.tile.tile-ring{flex-direction:row;grid-column:span 12;align-items:center;gap:18px;min-height:0}
