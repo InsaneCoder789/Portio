@@ -27,7 +27,6 @@ export const metadata: Metadata = {
   openGraph: { type: "website", title: NAME, description: DESCRIPTION, url: SITE, siteName: NAME, locale: "en_IN" },
   twitter: { card: "summary_large_image", title: NAME, description: DESCRIPTION },
   formatDetection: { telephone: false, email: false, address: false },
-  icons: { icon: "/favicon.ico", shortcut: "/favicon.ico", apple: "/favicon.ico" },
   robots: { index: true, follow: true, googleBot: { index: true, follow: true, "max-image-preview": "large", "max-snippet": -1, "max-video-preview": -1 } },
 };
 

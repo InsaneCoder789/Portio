@@ -98,7 +98,7 @@ export default function TopBar({ solid: alwaysSolid = false }: { solid?: boolean
       <div ref={sheet} id="menu-sheet" className={open ? "menu-sheet is-open" : "menu-sheet"} aria-hidden={!open}>
         <nav aria-label="Menu">
           {items.map(([label, href, where]) => (
-            <Link key={label} href={href} aria-current={current(href)} onClick={() => setOpen(false)}>
+            <Link key={label} href={href} prefetch={false} aria-current={current(href)} onClick={() => setOpen(false)}>
               {label}
               <span>{where}</span>
             </Link>

@@ -111,7 +111,7 @@ export default function ProjectCarousel() {
             >
               <span className="strip-frame">
                 <Image className="strip-fill" src={item.data.preview} alt="" width={160} height={90} sizes="160px" loading="lazy" draggable={false} />
-                <Image className="strip-cover" src={item.data.preview} alt="" width={size[0]} height={size[1]} sizes="(max-width: 900px) 78vw, 34vw" priority={index < 2 || index === count - 1} draggable={false} />
+                <Image className="strip-cover" src={item.data.preview} alt="" width={size[0]} height={size[1]} sizes="(max-width: 900px) 78vw, 34vw" loading="lazy" draggable={false} />
               </span>
               <span className="strip-label">
                 <b>{item.project}</b>

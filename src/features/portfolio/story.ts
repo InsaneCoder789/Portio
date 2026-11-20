@@ -102,7 +102,7 @@ export const roles = [
   },
   {
     org: "CyberVault KIIT",
-    logo: "/logos/companies/cybervault.png",
+    logo: "/logos/companies/cybervault.webp",
     span: [16, null] as [number, number | null],
     role: "Vice President",
     kind: "Leadership",
